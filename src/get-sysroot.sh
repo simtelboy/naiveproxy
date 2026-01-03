@@ -69,4 +69,7 @@ case "$target_os" in
       arm) WITH_ANDROID_IMG=armeabi-v7a-24_r07;;
     esac
   ;;
+  ohos)
+    WITH_SYSROOT=
+  ;;
 esac

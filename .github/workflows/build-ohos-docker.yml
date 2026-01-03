@@ -1,0 +1,344 @@
+name: Build NaiveProxy for HarmonyOS
+
+on:
+  push:
+    branches: [master, ohos-*]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: '目标架构'
+        required: false
+        default: 'arm64'
+        type: choice
+        options:
+          - arm64
+          - x64
+          - both
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CACHE_EPOCH: 1
+
+jobs:
+  build-ohos-so:
+    name: 编译鸿蒙 .so 库 (${{ matrix.arch }})
+    runs-on: ubuntu-22.04
+
+    container:
+      image: ubuntu:22.04
+      options: --privileged
+
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: ${{ github.event.inputs.arch == 'both' && fromJSON('["arm64", "x64"]') || github.event.inputs.arch == '' && fromJSON('["arm64"]') || fromJSON(format('["{0}"]', github.event.inputs.arch)) }}
+
+    steps:
+      - name: 安装基础工具
+        run: |
+          apt-get update
+          apt-get install -y \
+            curl wget git python3 python3-pip \
+            build-essential ninja-build pkg-config \
+            ccache unzip tar xz-utils \
+            ca-certificates gnupg lsb-release
+
+      - name: Checkout 代码
+        uses: actions/checkout@v4
+
+      - name: 下载并安装鸿蒙 NDK
+        run: |
+          echo "========================================="
+          echo "下载鸿蒙 NDK"
+          echo "========================================="
+
+          # TODO: 替换为实际的鸿蒙 NDK 下载链接
+          # 方案 1: 从你的 GitHub Release 下载
+          # OHOS_NDK_URL="https://github.com/simtelboy/naiveproxy/releases/download/ndk/ohos-ndk.tar.gz"
+
+          # 方案 2: 从 GitHub Secrets 获取
+          # OHOS_NDK_URL="${{ secrets.OHOS_NDK_URL }}"
+
+          # 临时方案：使用 Android NDK 测试编译流程
+          echo "注意: 当前使用 Android NDK 测试编译流程"
+          echo "实际编译鸿蒙版本需要替换为鸿蒙 NDK"
+
+          mkdir -p /opt/ohos-ndk
+          echo "OHOS_NDK_HOME=/opt/ohos-ndk/native" >> $GITHUB_ENV
+
+      - name: 缓存编译工具链
+        uses: actions/cache@v4
+        with:
+          path: |
+            src/third_party/llvm-build/Release+Asserts/
+            src/gn/
+          key: toolchains-ohos-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
+
+      - name: 缓存 ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-ohos-${{ matrix.arch }}-${{ hashFiles('CHROMIUM_VERSION') }}-${{ github.run_number }}
+          restore-keys: |
+            ccache-ohos-${{ matrix.arch }}-${{ hashFiles('CHROMIUM_VERSION') }}-
+
+      - name: 修改构建配置支持鸿蒙
+        working-directory: src
+        run: |
+          echo "========================================="
+          echo "修改 GN 配置以支持鸿蒙平台"
+          echo "========================================="
+
+          # 1. 修改 get-sysroot.sh 添加鸿蒙支持
+          if ! grep -q "ohos)" get-sysroot.sh; then
+            sed -i '/android)/a\  ohos)\n    WITH_SYSROOT=\n  ;;' get-sysroot.sh
+          fi
+
+          echo "配置修改完成"
+
+      - name: 修改 BUILD.gn 添加共享库目标
+        working-directory: src
+        run: |
+          echo "========================================="
+          echo "添加 shared_library 编译目标"
+          echo "========================================="
+
+          # 在 net/BUILD.gn 中添加共享库目标
+          cat >> net/BUILD.gn << 'EOF'
+
+# 鸿蒙共享库版本
+if (target_os == "ohos" || target_os == "android") {
+  shared_library("naive_shared") {
+    output_name = "naive"
+
+    sources = [
+      "tools/naive/http_proxy_server_socket.cc",
+      "tools/naive/http_proxy_server_socket.h",
+      "tools/naive/naive_config.cc",
+      "tools/naive/naive_config.h",
+      "tools/naive/naive_connection.cc",
+      "tools/naive/naive_connection.h",
+      "tools/naive/naive_padding_framer.cc",
+      "tools/naive/naive_padding_framer.h",
+      "tools/naive/naive_padding_socket.cc",
+      "tools/naive/naive_padding_socket.h",
+      "tools/naive/naive_protocol.cc",
+      "tools/naive/naive_protocol.h",
+      "tools/naive/naive_proxy.cc",
+      "tools/naive/naive_proxy.h",
+      "tools/naive/naive_proxy_bin.cc",
+      "tools/naive/naive_proxy_delegate.cc",
+      "tools/naive/naive_proxy_delegate.h",
+      "tools/naive/redirect_resolver.cc",
+      "tools/naive/redirect_resolver.h",
+      "tools/naive/socks5_server_socket.cc",
+      "tools/naive/socks5_server_socket.h",
+    ]
+
+    deps = [
+      ":net",
+      "//base",
+    ]
+
+    configs -= [ "//build/config/gcc:symbol_visibility_hidden" ]
+    configs += [ "//build/config/gcc:symbol_visibility_default" ]
+  }
+}
+EOF
+
+          echo "BUILD.gn 修改完成"
+
+      - name: 获取编译工具链
+        working-directory: src
+        run: |
+          export EXTRA_FLAGS='target_os="android" target_cpu="${{ matrix.arch }}"'
+          ./get-clang.sh
+
+      - name: 配置编译参数
+        working-directory: src
+        run: |
+          echo "========================================="
+          echo "配置编译参数"
+          echo "========================================="
+
+          export EXTRA_FLAGS='target_os="android" target_cpu="${{ matrix.arch }}"'
+          export TMPDIR="$PWD/tmp"
+          mkdir -p "$TMPDIR"
+
+          FLAGS='
+            is_official_build=true
+            exclude_unwind_tables=true
+            enable_resource_allowlist_generation=false
+            symbol_level=0
+
+            is_clang=true
+            use_sysroot=false
+
+            fatal_linker_warnings=false
+            treat_warnings_as_errors=false
+
+            is_cronet_build=true
+            chrome_pgo_phase=0
+
+            enable_base_tracing=false
+            use_udev=false
+            use_aura=false
+            use_ozone=false
+            use_gio=false
+            use_platform_icu_alternatives=true
+            use_glib=false
+
+            disable_file_support=true
+            enable_websockets=false
+            use_kerberos=false
+            enable_mdns=false
+            enable_reporting=false
+            include_transport_security_state_preload_list=false
+            enable_device_bound_sessions=false
+            enable_bracketed_proxy_uris=true
+            enable_quic_proxy_support=true
+
+            use_nss_certs=false
+
+            enable_backup_ref_ptr_support=false
+            enable_dangling_raw_ptr_checks=false
+            enable_shadow_metadata=false
+          '
+
+          FLAGS="$FLAGS
+            default_min_sdk_version=24
+            is_high_end_android=true
+          "
+
+          ./gn/out/gn gen "out/Release-ohos-${{ matrix.arch }}" --args="$FLAGS $EXTRA_FLAGS"
+
+      - name: 编译共享库
+        working-directory: src
+        run: |
+          echo "========================================="
+          echo "开始编译 libnaive.so"
+          echo "========================================="
+
+          ccache -z
+          ninja -C "out/Release-ohos-${{ matrix.arch }}" naive_shared
+          ccache -s
+
+          echo "========================================="
+          echo "编译完成"
+          echo "========================================="
+
+      - name: 检查编译产物
+        working-directory: src
+        run: |
+          echo "========================================="
+          echo "编译产物信息"
+          echo "========================================="
+
+          SO_FILE="out/Release-ohos-${{ matrix.arch }}/libnaive.so"
+
+          if [ -f "$SO_FILE" ]; then
+            echo "✅ 编译成功！"
+            echo ""
+            echo "文件信息:"
+            ls -lh "$SO_FILE"
+            echo ""
+            echo "文件类型:"
+            file "$SO_FILE"
+            echo ""
+            echo "依赖库:"
+            readelf -d "$SO_FILE" | grep NEEDED || true
+          else
+            echo "❌ 编译失败：找不到 $SO_FILE"
+            exit 1
+          fi
+
+      - name: 打包产物
+        working-directory: src
+        run: |
+          BUNDLE="libnaive-ohos-${{ matrix.arch }}"
+          mkdir -p "$BUNDLE"
+
+          cp "out/Release-ohos-${{ matrix.arch }}/libnaive.so" "$BUNDLE/"
+          cp config.json ../LICENSE ../USAGE.txt "$BUNDLE/" || true
+
+          cat > "$BUNDLE/README.md" << 'EOF'
+# NaiveProxy 鸿蒙共享库
+
+## 文件说明
+
+- `libnaive.so` - NaiveProxy 核心库
+- `config.json` - 配置文件示例
+
+## 使用方法
+
+### 集成到鸿蒙应用
+
+1. 将 `libnaive.so` 复制到你的鸿蒙项目：
+   ```
+   YourHarmonyApp/entry/libs/arm64-v8a/libnaive.so
+   ```
+
+2. 在 ArkTS 中调用：
+   ```typescript
+   import naive from 'libnaive.so';
+   ```
+
+## 架构
+
+- arm64-v8a: 鸿蒙手机（ARM64）
+- x86_64: 鸿蒙模拟器
+
+## 许可证
+
+BSD License
+EOF
+
+          tar czf "$BUNDLE.tar.gz" "$BUNDLE"
+          sha256sum "out/Release-ohos-${{ matrix.arch }}/libnaive.so" > sha256sum.txt
+          echo "SHA256SUM=$(cut -d' ' -f1 sha256sum.txt)" >> $GITHUB_ENV
+
+      - name: 上传编译产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: libnaive-ohos-${{ matrix.arch }}-sha256-${{ env.SHA256SUM }}
+          path: |
+            src/libnaive-ohos-${{ matrix.arch }}.tar.gz
+            src/sha256sum.txt
+          retention-days: 30
+
+      - name: 上传到 Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            src/libnaive-ohos-${{ matrix.arch }}.tar.gz
+            src/sha256sum.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  summary:
+    name: 编译摘要
+    needs: build-ohos-so
+    runs-on: ubuntu-22.04
+    if: always()
+
+    steps:
+      - name: 生成摘要
+        run: |
+          echo "## 🎉 NaiveProxy 鸿蒙版本编译完成" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 编译产物" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "在 **Artifacts** 部分下载编译好的 .so 文件" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📝 下一步" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "1. 下载 \`libnaive-ohos-arm64.tar.gz\`" >> $GITHUB_STEP_SUMMARY
+          echo "2. 解压得到 \`libnaive.so\`" >> $GITHUB_STEP_SUMMARY
+          echo "3. 集成到你的鸿蒙应用项目" >> $GITHUB_STEP_SUMMARY
+          echo "4. 参考 README.md 进行开发" >> $GITHUB_STEP_SUMMARY
