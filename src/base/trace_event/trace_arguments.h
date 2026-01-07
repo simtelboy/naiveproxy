@@ -225,7 +225,7 @@ union BASE_EXPORT TraceValue {
   RAW_PTR_EXCLUSION ConvertableToTraceFormat* as_convertable;
   // This field is not a raw_ptr<> because it was filtered by the rewriter for:
   // #union
-  RAW_PTR_EXCLUSION protozero::HeapBuffered<
+  RAW_PTR_EXCLUSION perfetto::protozero::HeapBuffered<
       perfetto::protos::pbzero::DebugAnnotation>* as_proto;
 
   // Static method to create a new TraceValue instance from a given
@@ -346,7 +346,7 @@ union BASE_EXPORT TraceValue {
         !HasHelperSupport<T> &&
         perfetto::internal::has_traced_value_support<std::decay_t<T>>::value)
   void Init(T&& value) {
-    as_proto = new protozero::HeapBuffered<
+    as_proto = new perfetto::protozero::HeapBuffered<
         perfetto::protos::pbzero::DebugAnnotation>();
     perfetto::WriteIntoTracedValue(
         perfetto::internal::CreateTracedValueFromProto(as_proto->get()),
