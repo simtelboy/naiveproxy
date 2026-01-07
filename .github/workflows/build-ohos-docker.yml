@@ -181,6 +181,10 @@ jobs:
             # Path to LLVM build directory
             llvm_build_dir = ""
           }
+
+          # Define is_cross_compiling for perfetto
+          # This is true when target_os != host_os or target_cpu != host_cpu
+          is_cross_compiling = target_os != host_os || target_cpu != host_cpu
           EOFLLVM
 
           echo "GN 配置文件创建完成"
@@ -239,7 +243,6 @@ jobs:
           FLAGS="$FLAGS
             default_min_sdk_version=24
             is_high_end_android=true
-            is_cross_compiling=true
           "
 
           ./gn/out/gn gen "out/Release-ohos-${{ matrix.arch }}" --args="$FLAGS $EXTRA_FLAGS"
