@@ -141,14 +141,17 @@ jobs:
           export EXTRA_FLAGS='target_os="android" target_cpu="${{ matrix.arch }}"'
           ./get-clang.sh
 
-      - name: 创建 android.gni 文件
+      - name: 创建 GN 配置文件
         working-directory: src
         run: |
           echo "========================================="
-          echo "创建 android.gni 配置文件"
+          echo "创建 GN 配置文件"
           echo "========================================="
 
-          mkdir -p gn/standalone
+          # 创建目录结构
+          mkdir -p gn/standalone/libc++
+
+          # 创建 android.gni
           cat > gn/standalone/android.gni <<'EOFANDROID'
           # Android configuration for OHOS build
           declare_args() {
@@ -159,7 +162,16 @@ jobs:
           }
           EOFANDROID
 
-          echo "android.gni 创建完成"
+          # 创建 libc++.gni
+          cat > gn/standalone/libc++/libc++.gni <<'EOFLIBCXX'
+          # libc++ configuration for OHOS build
+          declare_args() {
+            # Use custom libc++ for OHOS build
+            use_custom_libcxx = false
+          }
+          EOFLIBCXX
+
+          echo "GN 配置文件创建完成"
 
       - name: 配置编译参数
         working-directory: src
