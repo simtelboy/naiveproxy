@@ -248,37 +248,37 @@ jobs:
           cp "out/Release-ohos-${{ matrix.arch }}/libnaive.so" "$BUNDLE/"
           cp config.json ../LICENSE ../USAGE.txt "$BUNDLE/" || true
 
-          cat > "$BUNDLE/README.md" << 'EOF'
-# NaiveProxy 鸿蒙共享库
+          cat > "$BUNDLE/README.md" <<'EOFREADME'
+          # NaiveProxy 鸿蒙共享库
 
-## 文件说明
+          ## 文件说明
 
-- `libnaive.so` - NaiveProxy 核心库
-- `config.json` - 配置文件示例
+          - `libnaive.so` - NaiveProxy 核心库
+          - `config.json` - 配置文件示例
 
-## 使用方法
+          ## 使用方法
 
-### 集成到鸿蒙应用
+          ### 集成到鸿蒙应用
 
-1. 将 `libnaive.so` 复制到你的鸿蒙项目：
-   ```
-   YourHarmonyApp/entry/libs/arm64-v8a/libnaive.so
-   ```
+          1. 将 `libnaive.so` 复制到你的鸿蒙项目：
+             ```
+             YourHarmonyApp/entry/libs/arm64-v8a/libnaive.so
+             ```
 
-2. 在 ArkTS 中调用：
-   ```typescript
-   import naive from 'libnaive.so';
-   ```
+          2. 在 ArkTS 中调用：
+             ```typescript
+             import naive from 'libnaive.so';
+             ```
 
-## 架构
+          ## 架构
 
-- arm64-v8a: 鸿蒙手机（ARM64）
-- x86_64: 鸿蒙模拟器
+          - arm64-v8a: 鸿蒙手机（ARM64）
+          - x86_64: 鸿蒙模拟器
 
-## 许可证
+          ## 许可证
 
-BSD License
-EOF
+          BSD License
+          EOFREADME
 
           tar czf "$BUNDLE.tar.gz" "$BUNDLE"
           sha256sum "out/Release-ohos-${{ matrix.arch }}/libnaive.so" > sha256sum.txt
