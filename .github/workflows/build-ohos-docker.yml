@@ -162,13 +162,11 @@ jobs:
           }
           EOFANDROID
 
-          # 创建 libc++.gni
+          # 创建 libc++.gni（导入已有的 c++ 配置）
           cat > gn/standalone/libc++/libc++.gni <<'EOFLIBCXX'
           # libc++ configuration for OHOS build
-          declare_args() {
-            # Use custom libc++ for OHOS build
-            use_custom_libcxx = false
-          }
+          # Import the existing c++ config which already defines use_custom_libcxx
+          import("//build/config/c++/c++.gni")
           EOFLIBCXX
 
           echo "GN 配置文件创建完成"
