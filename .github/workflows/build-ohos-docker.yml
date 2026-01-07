@@ -239,6 +239,7 @@ jobs:
           FLAGS="$FLAGS
             default_min_sdk_version=24
             is_high_end_android=true
+            is_cross_compiling=true
           "
 
           ./gn/out/gn gen "out/Release-ohos-${{ matrix.arch }}" --args="$FLAGS $EXTRA_FLAGS"
