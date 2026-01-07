@@ -5,18 +5,17 @@
 #ifndef BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
 #define BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
 
-// See third_party/perfetto/include/perfetto/tracing/track_event.h for
-// documentation of Trace Event Macros.
+// Stub implementation for OpenHarmony - Perfetto tracing disabled
 
 ////////////////////////////////////////////////////////////////////////////////
-// Perfetto trace macros
+// Stub trace macros
 
 #include "base/threading/platform_thread.h"
 #include "base/time/time.h"
 #include "build/build_config.h"
 
-// Enable legacy trace event macros (e.g., TRACE_EVENT{0,1,2}).
-#define PERFETTO_ENABLE_LEGACY_TRACE_EVENTS 1
+// Disable Perfetto tracing for OpenHarmony
+#define PERFETTO_ENABLE_LEGACY_TRACE_EVENTS 0
 
 // Macros for reading the current trace time (bypassing any virtual time
 // overrides).
@@ -26,52 +25,82 @@
 // Implementation detail: trace event macros create temporary variables
 // to keep instrumentation overhead low. These macros give each temporary
 // variable a unique name based on the line number to prevent name collisions.
-#define INTERNAL_TRACE_EVENT_UID(name_prefix) PERFETTO_UID(name_prefix)
+#define INTERNAL_TRACE_EVENT_UID(name_prefix) name_prefix##__LINE__
 
-// Declare debug annotation converters for base time types, so they can be
-// passed as trace event arguments.
-// TODO(skyostil): Serialize timestamps using perfetto::TracedValue instead.
+// Stub macros to replace Perfetto trace event macros
+#define PERFETTO_UID(name_prefix) name_prefix##__LINE__
+#define PERFETTO_DEFINE_TEST_CATEGORY_PREFIXES(...)
+#define PERFETTO_DEFINE_CATEGORIES_IN_NAMESPACE_WITH_ATTRS(ns, attrs, ...)
+#define PERFETTO_USE_CATEGORIES_FROM_NAMESPACE(ns)
+
+// Legacy trace event macros - all disabled
+#define TRACE_EVENT0(category, name)
+#define TRACE_EVENT1(category, name, arg1_name, arg1_val)
+#define TRACE_EVENT2(category, name, arg1_name, arg1_val, arg2_name, arg2_val)
+#define TRACE_EVENT_INSTANT0(category, name, scope)
+#define TRACE_EVENT_BEGIN0(category, name)
+#define TRACE_EVENT_END0(category, name)
+#define TRACE_EVENT_ASYNC_BEGIN0(category, name, id)
+#define TRACE_EVENT_ASYNC_END0(category, name, id)
+#define TRACE_EVENT_OBJECT_CREATED_WITH_ID(category, name, id)
+#define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(category, name, id, snapshot)
+#define TRACE_EVENT_OBJECT_DELETED_WITH_ID(category, name, id)
+
+// Stub namespace declarations for compatibility
 namespace perfetto {
+class Category {
+ public:
+  explicit Category(const char*) {}
+  Category& SetDescription(const char*) { return *this; }
+  template<typename... Args>
+  Category& SetTags(Args&&...) { return *this; }
+  class Group {
+   public:
+    explicit Group(const char*) {}
+  };
+};
+
+class Tracing {
+ public:
+  static bool IsInitialized() { return false; }
+};
+
+class ThreadTrack {};
+
+namespace legacy {
+template <typename T>
+ThreadTrack ConvertThreadId(const T&) { return ThreadTrack(); }
+}  // namespace legacy
+
+struct TraceTimestamp {};
+
+template <typename T>
+struct TraceTimestampTraits {
+  static TraceTimestamp ConvertTimestampToTraceTimeNs(const T&) {
+    return TraceTimestamp();
+  }
+};
+
 namespace protos {
 namespace pbzero {
 class DebugAnnotation;
 }  // namespace pbzero
 }  // namespace protos
+
 namespace internal {
-
-void BASE_EXPORT
-WriteDebugAnnotation(protos::pbzero::DebugAnnotation* annotation,
-                     ::base::TimeTicks);
-void BASE_EXPORT
-WriteDebugAnnotation(protos::pbzero::DebugAnnotation* annotation, ::base::Time);
-
+inline void WriteDebugAnnotation(protos::pbzero::DebugAnnotation*, ...) {}
 }  // namespace internal
+
 }  // namespace perfetto
 
-// Pull in the tracing macro definitions from Perfetto.
-#include "third_party/perfetto/include/perfetto/tracing/track_event.h"  // IWYU pragma: export
-#include "third_party/perfetto/include/perfetto/tracing/track_event_legacy.h"  // IWYU pragma: export
-
-namespace perfetto {
-namespace legacy {
-
-template <>
-perfetto::ThreadTrack BASE_EXPORT
-ConvertThreadId(const ::base::PlatformThreadId& thread);
-
-#if BUILDFLAG(IS_WIN)
-template <>
-perfetto::ThreadTrack BASE_EXPORT ConvertThreadId(const int& thread);
-#endif  // BUILDFLAG(IS_WIN)
-
-}  // namespace legacy
-
-template <>
-struct BASE_EXPORT TraceTimestampTraits<::base::TimeTicks> {
-  static TraceTimestamp ConvertTimestampToTraceTimeNs(
-      const ::base::TimeTicks& ticks);
+namespace base {
+class TrackEvent {
+ public:
+  template <typename T, typename D>
+  static void SetTrackDescriptor(const T&, const D&) {}
+  template <typename T>
+  static void EraseTrackDescriptor(const T&) {}
 };
-
-}  // namespace perfetto
+}  // namespace base
 
 #endif  // BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
