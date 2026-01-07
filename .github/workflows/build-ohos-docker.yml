@@ -151,23 +151,18 @@ jobs:
 
           echo "BUILD.gn 修改完成"
 
-      - name: 配置华为 NDK 编译器
+      - name: 获取 Chromium 编译工具链
         working-directory: src
         run: |
           echo "========================================="
-          echo "配置华为 HarmonyOS NDK 编译器"
+          echo "获取 Chromium 编译工具链"
           echo "========================================="
 
-          # 验证华为编译器
-          echo "Clang 版本:"
-          ${OHOS_NDK_HOME}/llvm/bin/clang-15 --version
+          # 使用 Chromium 的 clang，不是华为的
+          export EXTRA_FLAGS='target_os="android" target_cpu="${{ matrix.arch }}"'
+          ./get-clang.sh
 
-          echo ""
-          echo "Sysroot 路径: $OHOS_SYSROOT"
-          ls -la $OHOS_SYSROOT/usr/lib
-
-          echo ""
-          echo "✅ 华为 NDK 编译器配置完成"
+          echo "✅ Chromium 编译工具链准备完成"
 
       - name: 获取 GN 构建工具
         working-directory: src
@@ -262,8 +257,6 @@ jobs:
             symbol_level=0
 
             is_clang=true
-            clang_base_path="'${OHOS_NDK_HOME}'/llvm"
-            clang_use_chrome_plugins=false
             use_sysroot=false
 
             fatal_linker_warnings=false
