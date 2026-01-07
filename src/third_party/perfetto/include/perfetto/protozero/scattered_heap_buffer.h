@@ -47,4 +47,8 @@ class HeapBuffered {
 }  // namespace protozero
 }  // namespace perfetto
 
+// Import protozero into global namespace for convenience
+// This allows code to use protozero::HeapBuffered without perfetto:: prefix
+using namespace perfetto::protozero;
+
 #endif  // INCLUDE_PERFETTO_PROTOZERO_SCATTERED_HEAP_BUFFER_H_
