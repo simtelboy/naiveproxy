@@ -153,15 +153,11 @@ jobs:
           mkdir -p gn/standalone/sanitizers
           mkdir -p gn/standalone/toolchain
 
-          # 创建 android.gni
+          # 创建 android.gni（导入已有的 Android 配置）
           cat > gn/standalone/android.gni <<'EOFANDROID'
           # Android configuration for OHOS build
-          declare_args() {
-            android_api_level = 24
-            android_ndk_root = ""
-            android_ndk_version = ""
-            android_ndk_major_version = 0
-          }
+          # Import the existing Android config which already defines these variables
+          import("//build/config/android/config.gni")
           EOFANDROID
 
           # 创建 libc++.gni（导入已有的 c++ 配置）
