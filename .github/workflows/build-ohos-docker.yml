@@ -150,6 +150,8 @@ jobs:
 
           # 创建目录结构
           mkdir -p gn/standalone/libc++
+          mkdir -p gn/standalone/sanitizers
+          mkdir -p gn/standalone/toolchain
 
           # 创建 android.gni
           cat > gn/standalone/android.gni <<'EOFANDROID'
@@ -168,6 +170,28 @@ jobs:
           # Import the existing c++ config which already defines use_custom_libcxx
           import("//build/config/c++/c++.gni")
           EOFLIBCXX
+
+          # 创建 sanitizers/vars.gni
+          cat > gn/standalone/sanitizers/vars.gni <<'EOFSANITIZERS'
+          # Sanitizers configuration for OHOS build
+          declare_args() {
+            is_fuzzer = false
+            is_asan = false
+            is_lsan = false
+            is_msan = false
+            is_tsan = false
+            is_ubsan = false
+          }
+          EOFSANITIZERS
+
+          # 创建 toolchain/llvm.gni
+          cat > gn/standalone/toolchain/llvm.gni <<'EOFLLVM'
+          # LLVM toolchain configuration for OHOS build
+          declare_args() {
+            # Path to LLVM build directory
+            llvm_build_dir = ""
+          }
+          EOFLLVM
 
           echo "GN 配置文件创建完成"
 
