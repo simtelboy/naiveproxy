@@ -2,7 +2,6 @@
 #ifndef INCLUDE_PERFETTO_TRACING_TRACED_PROTO_H_
 #define INCLUDE_PERFETTO_TRACING_TRACED_PROTO_H_
 
-#include "perfetto/base/template_util.h"
 #include <type_traits>
 
 namespace perfetto {
