@@ -233,8 +233,9 @@ jobs:
           echo "配置编译参数"
           echo "========================================="
 
-          # 使用华为 NDK 的编译器和 sysroot
-          export EXTRA_FLAGS='target_os="ohos" target_cpu="${{ matrix.arch }}"'
+          # 鸿蒙使用 target_os="android" 因为 BUILDCONFIG.gn 不支持 ohos
+          # 但是使用华为的 NDK 和 sysroot
+          export EXTRA_FLAGS='target_os="android" target_cpu="${{ matrix.arch }}"'
           export TMPDIR="$PWD/tmp"
           mkdir -p "$TMPDIR"
 
