@@ -83,6 +83,22 @@ jobs:
 
           echo "配置修改完成"
 
+      - name: 修改 BUILD.gn 排除 tracing
+        working-directory: src
+        run: |
+          echo "========================================="
+          echo "修改 base/BUILD.gn 排除 tracing 依赖"
+          echo "========================================="
+
+          # 备份原文件
+          cp base/BUILD.gn base/BUILD.gn.bak
+
+          # 注释掉 base/tracing/protos 的依赖
+          sed -i 's/"\/\/base\/tracing\/protos:chrome_track_event",/# "\/\/base\/tracing\/protos:chrome_track_event",/' base/BUILD.gn
+          sed -i 's/"\/\/base\/tracing\/protos:chrome_track_event_zero",/# "\/\/base\/tracing\/protos:chrome_track_event_zero",/' base/BUILD.gn
+
+          echo "✅ base/BUILD.gn 修改完成"
+
       - name: 修改 BUILD.gn 添加共享库目标
         working-directory: src
         run: |
@@ -220,13 +236,9 @@ jobs:
           is_cross_compiling = target_os != host_os || target_cpu != host_cpu
           EOFLLVM
 
-          # 创建 proto_library.gni
-          # 直接导入 Perfetto 的 standalone 版本，避免重复定义
-          cat > gn/standalone/proto_library.gni <<'EOFPROTO'
-          # Proto library configuration for OHOS build
-          # 导入 Perfetto 的 standalone proto_library 配置
-          import("//third_party/perfetto/gn/standalone/proto_library.gni")
-          EOFPROTO
+          # 注意：不创建 proto_library.gni
+          # 因为我们已经注释掉了 base/tracing/protos 的依赖
+          # 不再需要 proto_library 模板
 
           echo "GN 配置文件创建完成"
 
@@ -262,7 +274,6 @@ jobs:
 
             enable_base_tracing=false
             use_perfetto_client_library=false
-            perfetto_build_standalone=true
             use_udev=false
             use_aura=false
             use_ozone=false
