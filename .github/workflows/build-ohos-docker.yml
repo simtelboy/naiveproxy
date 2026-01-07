@@ -248,8 +248,7 @@ jobs:
             is_clang=true
             clang_base_path="'${OHOS_NDK_HOME}'/llvm"
             clang_use_chrome_plugins=false
-            use_sysroot=true
-            target_sysroot="'${OHOS_SYSROOT}'"
+            use_sysroot=false
 
             fatal_linker_warnings=false
             treat_warnings_as_errors=false
