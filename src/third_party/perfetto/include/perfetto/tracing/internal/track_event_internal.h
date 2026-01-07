@@ -5,10 +5,19 @@
 #include <memory>
 #include <utility>
 
-#include "perfetto/protozero/scattered_heap_buffer.h"
-#include "perfetto/trace/interned_data/interned_data.pbzero.h"
-
+// Forward declarations to avoid circular dependencies
 namespace perfetto {
+namespace protos {
+namespace pbzero {
+class InternedData;
+}  // namespace pbzero
+}  // namespace protos
+
+namespace protozero {
+template <typename T>
+class HeapBuffered;
+}  // namespace protozero
+
 namespace internal {
 
 // Stub for BaseTrackEventInternedDataIndex
