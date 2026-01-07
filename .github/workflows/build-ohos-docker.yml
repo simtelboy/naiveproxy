@@ -216,6 +216,7 @@ jobs:
             chrome_pgo_phase=0
 
             enable_base_tracing=false
+            use_perfetto_client_library=false
             use_udev=false
             use_aura=false
             use_ozone=false
