@@ -220,19 +220,12 @@ jobs:
           is_cross_compiling = target_os != host_os || target_cpu != host_cpu
           EOFLLVM
 
-          # 创建 proto_library.gni（必须创建，即使禁用了 perfetto）
-          # 因为 base/tracing 仍然会引用它
+          # 创建 proto_library.gni
+          # 直接导入 Perfetto 的 standalone 版本，避免重复定义
           cat > gn/standalone/proto_library.gni <<'EOFPROTO'
           # Proto library configuration for OHOS build
-          # 这是一个空的占位符，避免 Perfetto 找不到文件
-          # 由于 use_perfetto_client_library=false，这个文件不会被实际使用
-
-          # 定义一个空的 proto_library 模板作为占位符
-          template("proto_library") {
-            not_needed(invoker, "*")
-            group(target_name) {
-            }
-          }
+          # 导入 Perfetto 的 standalone proto_library 配置
+          import("//third_party/perfetto/gn/standalone/proto_library.gni")
           EOFPROTO
 
           echo "GN 配置文件创建完成"
@@ -269,6 +262,7 @@ jobs:
 
             enable_base_tracing=false
             use_perfetto_client_library=false
+            perfetto_build_standalone=true
             use_udev=false
             use_aura=false
             use_ozone=false
