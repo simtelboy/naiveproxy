@@ -8,6 +8,7 @@ namespace perfetto {
 
 // Forward declaration
 class TracedValue;
+class EventContext;
 
 // Stub for traced value support check
 template <typename T>
@@ -16,12 +17,39 @@ struct check_traced_value_support {
   using type = void;  // Add type member for SFINAE
 };
 
+// Type alias for convenience
+template <typename T>
+using check_traced_value_support_t = typename check_traced_value_support<T>::type;
+
 // Stub function for writing values into traced context
-// This must be declared here so it's available when strong_alias.h includes this file
 template <typename T>
 inline void WriteIntoTracedValue(TracedValue&& context, const T& value) {
   // Empty stub - does nothing
 }
+
+// Stub function for writing into traced proto
+template <typename T>
+inline void WriteIntoTracedProto(TracedValue&& context, const T& value) {
+  // Empty stub - does nothing
+}
+
+// Stub StaticString class
+class StaticString {
+ public:
+  constexpr StaticString(const char* str) : str_(str) {}
+  const char* c_str() const { return str_; }
+ private:
+  const char* str_;
+};
+
+// Stub NamedTrack class
+class NamedTrack {
+ public:
+  NamedTrack() = default;
+  explicit NamedTrack(const char* name) : name_(name) {}
+ private:
+  const char* name_ = nullptr;
+};
 
 }  // namespace perfetto
 

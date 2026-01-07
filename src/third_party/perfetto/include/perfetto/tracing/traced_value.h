@@ -7,6 +7,17 @@
 
 namespace perfetto {
 
+// Stub Dictionary class
+class TracedDictionary {
+ public:
+  TracedDictionary() = default;
+  ~TracedDictionary() = default;
+  
+  void Add(const char* key, int64_t value) {}
+  void Add(const char* key, const char* value) {}
+  void Add(const char* key, const std::string& value) {}
+};
+
 // Stub implementation
 class TracedValue {
  public:
@@ -20,9 +31,19 @@ class TracedValue {
   void WriteString(const char* value) {}
   void WriteString(const std::string& value) {}
   void WritePointer(const void* value) {}
+  
+  // Add WriteDictionary method
+  TracedDictionary WriteDictionary() { return TracedDictionary(); }
 };
 
-// Note: WriteIntoTracedValue is defined in traced_value_forward.h
+// Stub EventContext class
+class EventContext {
+ public:
+  EventContext() = default;
+  ~EventContext() = default;
+};
+
+// Note: WriteIntoTracedValue and other functions are defined in traced_value_forward.h
 // to avoid redefinition errors
 
 }  // namespace perfetto
