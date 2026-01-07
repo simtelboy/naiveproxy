@@ -187,6 +187,13 @@ jobs:
           is_cross_compiling = target_os != host_os || target_cpu != host_cpu
           EOFLLVM
 
+          # 创建 proto_library.gni（导入 perfetto 的 proto_library 配置）
+          cat > gn/standalone/proto_library.gni <<'EOFPROTO'
+          # Proto library configuration for OHOS build
+          # Import the existing perfetto proto_library config
+          import("//third_party/perfetto/gn/standalone/proto_library.gni")
+          EOFPROTO
+
           echo "GN 配置文件创建完成"
 
       - name: 配置编译参数
