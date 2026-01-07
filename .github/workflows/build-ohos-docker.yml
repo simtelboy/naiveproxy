@@ -87,15 +87,18 @@ jobs:
         working-directory: src
         run: |
           echo "========================================="
-          echo "修改 base/BUILD.gn 排除 tracing 依赖"
+          echo "修改 base/BUILD.gn 排除 tracing 和 Perfetto 依赖"
           echo "========================================="
 
           # 备份原文件
           cp base/BUILD.gn base/BUILD.gn.bak
 
-          # 注释掉 base/tracing/protos 的依赖
+          # 注释掉所有 Perfetto 相关的依赖
           sed -i 's/"\/\/base\/tracing\/protos:chrome_track_event",/# "\/\/base\/tracing\/protos:chrome_track_event",/' base/BUILD.gn
           sed -i 's/"\/\/base\/tracing\/protos:chrome_track_event_zero",/# "\/\/base\/tracing\/protos:chrome_track_event_zero",/' base/BUILD.gn
+          sed -i 's/"\/\/third_party\/perfetto:libperfetto",/# "\/\/third_party\/perfetto:libperfetto",/' base/BUILD.gn
+          sed -i 's/"\/\/third_party\/perfetto\/include\/perfetto\/protozero",/# "\/\/third_party\/perfetto\/include\/perfetto\/protozero",/' base/BUILD.gn
+          sed -i 's/all_dependent_configs += \[ "\/\/third_party\/perfetto\/gn:public_config" \]/# all_dependent_configs += [ "\/\/third_party\/perfetto\/gn:public_config" ]/' base/BUILD.gn
 
           echo "✅ base/BUILD.gn 修改完成"
 
