@@ -1,10 +1,12 @@
 name: Build
 on:
-  push:
-    branches: [master]
-    paths-ignore: [README.md]
-  release:
-    types: [published]
+  # 暂时禁用此工作流，使用 build-ohos-docker.yml 编译鸿蒙版本
+  # push:
+  #   branches: [master]
+  #   paths-ignore: [README.md]
+  # release:
+  #   types: [published]
+  workflow_dispatch:
 defaults:
   run:
     shell: bash
