@@ -171,17 +171,11 @@ jobs:
           import("//build/config/c++/c++.gni")
           EOFLIBCXX
 
-          # 创建 sanitizers/vars.gni
+          # 创建 sanitizers/vars.gni（导入已有的 sanitizers 配置）
           cat > gn/standalone/sanitizers/vars.gni <<'EOFSANITIZERS'
           # Sanitizers configuration for OHOS build
-          declare_args() {
-            is_fuzzer = false
-            is_asan = false
-            is_lsan = false
-            is_msan = false
-            is_tsan = false
-            is_ubsan = false
-          }
+          # Import the existing sanitizers config which already defines these variables
+          import("//build/config/sanitizers/sanitizers.gni")
           EOFSANITIZERS
 
           # 创建 toolchain/llvm.gni
