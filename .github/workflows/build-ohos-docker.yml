@@ -220,9 +220,20 @@ jobs:
           is_cross_compiling = target_os != host_os || target_cpu != host_cpu
           EOFLLVM
 
-          # 注意：不创建 proto_library.gni
-          # 因为我们已经设置了 use_perfetto_client_library=false
-          # 创建它会导致与 Chromium 的 proto_library 冲突
+          # 创建 proto_library.gni（必须创建，即使禁用了 perfetto）
+          # 因为 base/tracing 仍然会引用它
+          cat > gn/standalone/proto_library.gni <<'EOFPROTO'
+          # Proto library configuration for OHOS build
+          # 这是一个空的占位符，避免 Perfetto 找不到文件
+          # 由于 use_perfetto_client_library=false，这个文件不会被实际使用
+
+          # 定义一个空的 proto_library 模板作为占位符
+          template("proto_library") {
+            not_needed(invoker, "*")
+            group(target_name) {
+            }
+          }
+          EOFPROTO
 
           echo "GN 配置文件创建完成"
 
