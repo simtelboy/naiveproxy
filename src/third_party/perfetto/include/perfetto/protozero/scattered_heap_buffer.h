@@ -28,6 +28,22 @@ class ScatteredHeapBuffer {
   size_t slice_count() const { return 0; }
 };
 
+// Stub HeapBuffered template
+template <typename T>
+class HeapBuffered {
+ public:
+  HeapBuffered() = default;
+  ~HeapBuffered() = default;
+  
+  T* get() { return &message_; }
+  const T* get() const { return &message_; }
+  T* operator->() { return &message_; }
+  const T* operator->() const { return &message_; }
+  
+ private:
+  T message_;
+};
+
 }  // namespace protozero
 }  // namespace perfetto
 

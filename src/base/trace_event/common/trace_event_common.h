@@ -33,6 +33,17 @@
 #define PERFETTO_DEFINE_CATEGORIES_IN_NAMESPACE_WITH_ATTRS(ns, attrs, ...)
 #define PERFETTO_USE_CATEGORIES_FROM_NAMESPACE(ns)
 
+// Trace value type constants
+#define TRACE_VALUE_TYPE_BOOL 1
+#define TRACE_VALUE_TYPE_UINT 2
+#define TRACE_VALUE_TYPE_INT 3
+#define TRACE_VALUE_TYPE_DOUBLE 4
+#define TRACE_VALUE_TYPE_POINTER 5
+#define TRACE_VALUE_TYPE_STRING 6
+#define TRACE_VALUE_TYPE_COPY_STRING 7
+#define TRACE_VALUE_TYPE_CONVERTABLE 8
+#define TRACE_VALUE_TYPE_PROTO 9
+
 // Legacy trace event macros - all disabled
 #define TRACE_EVENT0(category, name)
 #define TRACE_EVENT1(category, name, arg1_name, arg1_val)
@@ -48,6 +59,17 @@
 
 // Stub namespace declarations for compatibility
 namespace perfetto {
+
+// Forward declarations
+namespace protos {
+namespace pbzero {
+class DebugAnnotation;
+}  // namespace pbzero
+}  // namespace protos
+
+// Main DebugAnnotation in perfetto namespace (for inheritance)
+using DebugAnnotation = protos::pbzero::DebugAnnotation;
+
 class Category {
  public:
   explicit Category(const char*) {}
@@ -81,14 +103,19 @@ struct TraceTimestampTraits {
   }
 };
 
-namespace protos {
-namespace pbzero {
-class DebugAnnotation;
-}  // namespace pbzero
-}  // namespace protos
-
 namespace internal {
 inline void WriteDebugAnnotation(protos::pbzero::DebugAnnotation*, ...) {}
+
+// Stub for traced value support
+template <typename T>
+struct has_traced_value_support {
+  static constexpr bool value = false;
+};
+
+// Stub function
+template <typename T>
+inline void* CreateTracedValueFromProto(T*) { return nullptr; }
+
 }  // namespace internal
 
 }  // namespace perfetto
