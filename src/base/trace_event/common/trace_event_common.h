@@ -44,6 +44,34 @@
 #define TRACE_VALUE_TYPE_CONVERTABLE 8
 #define TRACE_VALUE_TYPE_PROTO 9
 
+// Trace event phase constants
+#define TRACE_EVENT_PHASE_BEGIN 'B'
+#define TRACE_EVENT_PHASE_END 'E'
+#define TRACE_EVENT_PHASE_COMPLETE 'X'
+#define TRACE_EVENT_PHASE_INSTANT 'I'
+#define TRACE_EVENT_PHASE_ASYNC_BEGIN 'S'
+#define TRACE_EVENT_PHASE_ASYNC_STEP_INTO 'T'
+#define TRACE_EVENT_PHASE_ASYNC_STEP_PAST 'p'
+#define TRACE_EVENT_PHASE_ASYNC_END 'F'
+#define TRACE_EVENT_PHASE_NESTABLE_ASYNC_BEGIN 'b'
+#define TRACE_EVENT_PHASE_NESTABLE_ASYNC_END 'e'
+#define TRACE_EVENT_PHASE_NESTABLE_ASYNC_INSTANT 'n'
+#define TRACE_EVENT_PHASE_FLOW_BEGIN 's'
+#define TRACE_EVENT_PHASE_FLOW_STEP 't'
+#define TRACE_EVENT_PHASE_FLOW_END 'f'
+#define TRACE_EVENT_PHASE_METADATA 'M'
+#define TRACE_EVENT_PHASE_COUNTER 'C'
+#define TRACE_EVENT_PHASE_SAMPLE 'P'
+#define TRACE_EVENT_PHASE_CREATE_OBJECT 'N'
+#define TRACE_EVENT_PHASE_SNAPSHOT_OBJECT 'O'
+#define TRACE_EVENT_PHASE_DELETE_OBJECT 'D'
+#define TRACE_EVENT_PHASE_MEMORY_DUMP 'v'
+#define TRACE_EVENT_PHASE_MARK 'R'
+#define TRACE_EVENT_PHASE_CLOCK_SYNC 'c'
+#define TRACE_EVENT_PHASE_ENTER_CONTEXT '('
+#define TRACE_EVENT_PHASE_LEAVE_CONTEXT ')'
+#define TRACE_EVENT_PHASE_LINK_IDS '='
+
 // Legacy trace event macros - all disabled
 #define TRACE_EVENT0(category, name)
 #define TRACE_EVENT1(category, name, arg1_name, arg1_val)
@@ -117,6 +145,10 @@ template <typename T>
 inline void* CreateTracedValueFromProto(T*) { return nullptr; }
 
 }  // namespace internal
+
+// Import protozero namespace for convenience
+namespace protozero {}
+using namespace protozero;
 
 }  // namespace perfetto
 

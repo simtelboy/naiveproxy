@@ -4,7 +4,6 @@
 
 #include <stdint.h>
 #include <string>
-#include <utility>
 
 namespace perfetto {
 
@@ -23,11 +22,8 @@ class TracedValue {
   void WritePointer(const void* value) {}
 };
 
-// Stub function for writing values into traced context
-template <typename T>
-inline void WriteIntoTracedValue(TracedValue&& context, const T& value) {
-  // Empty stub - does nothing
-}
+// Note: WriteIntoTracedValue is defined in traced_value_forward.h
+// to avoid redefinition errors
 
 }  // namespace perfetto
 

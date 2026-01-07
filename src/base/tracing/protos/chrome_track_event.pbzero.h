@@ -4,9 +4,15 @@
 
 #include <stdint.h>
 
+// Include SequenceManagerTask
+#include "third_party/perfetto/protos/perfetto/trace/track_event/sequence_manager_task.pbzero.h"
+
 namespace perfetto {
 namespace protos {
 namespace pbzero {
+
+// Re-export SequenceManagerTask for convenience
+using SequenceManagerTask = ::perfetto::protos::pbzero::SequenceManagerTask;
 
 // Stub Chrome track event protobuf message
 class ChromeTrackEvent {

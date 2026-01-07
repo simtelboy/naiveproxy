@@ -13,7 +13,7 @@ namespace pbzero {
 class DebugAnnotation {
  public:
   DebugAnnotation() = default;
-  ~DebugAnnotation() = default;
+  virtual ~DebugAnnotation() = default;  // Virtual destructor for inheritance
 
   void set_name(const char* data, size_t size) {}
   void set_bool_value(bool value) {}
@@ -22,6 +22,9 @@ class DebugAnnotation {
   void set_double_value(double value) {}
   void set_string_value(const char* data, size_t size) {}
   void set_pointer_value(uint64_t value) {}
+  
+  // Virtual method for derived classes
+  virtual void Add(DebugAnnotation*) const {}
 };
 
 }  // namespace pbzero
