@@ -2,8 +2,6 @@
 #ifndef INCLUDE_PERFETTO_TRACING_TRACED_PROTO_H_
 #define INCLUDE_PERFETTO_TRACING_TRACED_PROTO_H_
 
-#include <type_traits>
-
 namespace perfetto {
 
 // Stub TracedProto class

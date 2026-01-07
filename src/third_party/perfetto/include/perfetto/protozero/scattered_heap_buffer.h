@@ -1,34 +1,13 @@
 // Copyright 2024 Stub implementation for OpenHarmony
-#ifndef INCLUDE_PERFETTO_PROTOZERO_SCATTERED_HEAP_BUFFER_H_
-#define INCLUDE_PERFETTO_PROTOZERO_SCATTERED_HEAP_BUFFER_H_
+// Minimal stub to avoid Perfetto dependency
 
-#include <stddef.h>
-#include <stdint.h>
-#include <memory>
+#ifndef THIRD_PARTY_PERFETTO_INCLUDE_PERFETTO_PROTOZERO_SCATTERED_HEAP_BUFFER_H_
+#define THIRD_PARTY_PERFETTO_INCLUDE_PERFETTO_PROTOZERO_SCATTERED_HEAP_BUFFER_H_
 
 namespace perfetto {
 namespace protozero {
 
-// Stub implementation
-class ScatteredHeapBuffer {
- public:
-  class Slice {
-   public:
-    uint8_t* start() { return nullptr; }
-    size_t size() { return 0; }
-  };
-
-  ScatteredHeapBuffer(size_t initial_size = 0, size_t maximum_size = 0) {}
-  ~ScatteredHeapBuffer() = default;
-
-  Slice GetNewBuffer() { return Slice(); }
-  void AdjustUsedSizeOfCurrentSlice(size_t used_size) {}
-  
-  const Slice* slices() const { return nullptr; }
-  size_t slice_count() const { return 0; }
-};
-
-// Stub HeapBuffered template
+// Stub for HeapBuffered template
 template <typename T>
 class HeapBuffered {
  public:
@@ -47,4 +26,7 @@ class HeapBuffered {
 }  // namespace protozero
 }  // namespace perfetto
 
-#endif  // INCLUDE_PERFETTO_PROTOZERO_SCATTERED_HEAP_BUFFER_H_
+// Export protozero to global namespace for compatibility
+namespace protozero = perfetto::protozero;
+
+#endif  // THIRD_PARTY_PERFETTO_INCLUDE_PERFETTO_PROTOZERO_SCATTERED_HEAP_BUFFER_H_
