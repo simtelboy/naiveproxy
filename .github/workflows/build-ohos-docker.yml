@@ -135,11 +135,44 @@ jobs:
 
           echo "BUILD.gn 修改完成"
 
-      - name: 获取编译工具链
+      - name: 配置华为 NDK 编译器
         working-directory: src
         run: |
-          export EXTRA_FLAGS='target_os="android" target_cpu="${{ matrix.arch }}"'
-          ./get-clang.sh
+          echo "========================================="
+          echo "配置华为 HarmonyOS NDK 编译器"
+          echo "========================================="
+
+          # 验证华为编译器
+          echo "Clang 版本:"
+          ${OHOS_NDK_HOME}/llvm/bin/clang-15 --version
+
+          echo ""
+          echo "Sysroot 路径: $OHOS_SYSROOT"
+          ls -la $OHOS_SYSROOT/usr/lib
+
+          echo ""
+          echo "✅ 华为 NDK 编译器配置完成"
+
+      - name: 获取 GN 构建工具
+        working-directory: src
+        run: |
+          echo "========================================="
+          echo "获取 GN 构建工具"
+          echo "========================================="
+
+          # 下载预编译的 GN
+          if [ ! -f gn/out/gn ]; then
+            mkdir -p gn/out
+            wget -O gn.zip https://chrome-infra-packages.appspot.com/dl/gn/gn/linux-amd64/+/latest
+            unzip -o gn.zip -d gn/out
+            chmod +x gn/out/gn
+            rm gn.zip
+          fi
+
+          echo "GN 版本:"
+          ./gn/out/gn --version
+
+          echo "✅ GN 构建工具准备完成"
 
       - name: 创建 GN 配置文件
         working-directory: src
@@ -200,7 +233,8 @@ jobs:
           echo "配置编译参数"
           echo "========================================="
 
-          export EXTRA_FLAGS='target_os="android" target_cpu="${{ matrix.arch }}"'
+          # 使用华为 NDK 的编译器和 sysroot
+          export EXTRA_FLAGS='target_os="ohos" target_cpu="${{ matrix.arch }}"'
           export TMPDIR="$PWD/tmp"
           mkdir -p "$TMPDIR"
 
@@ -211,7 +245,10 @@ jobs:
             symbol_level=0
 
             is_clang=true
-            use_sysroot=false
+            clang_base_path="'${OHOS_NDK_HOME}'/llvm"
+            clang_use_chrome_plugins=false
+            use_sysroot=true
+            target_sysroot="'${OHOS_SYSROOT}'"
 
             fatal_linker_warnings=false
             treat_warnings_as_errors=false
