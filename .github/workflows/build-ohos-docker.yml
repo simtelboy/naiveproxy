@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     container:
-      image: ubuntu:22.04
+      image: simtelboyhotyi/ohos-build:latest
       options: --privileged
 
     strategy:
@@ -39,37 +39,19 @@ jobs:
         arch: ${{ github.event.inputs.arch == 'both' && fromJSON('["arm64", "x64"]') || github.event.inputs.arch == '' && fromJSON('["arm64"]') || fromJSON(format('["{0}"]', github.event.inputs.arch)) }}
 
     steps:
-      - name: 安装基础工具
-        run: |
-          apt-get update
-          apt-get install -y \
-            curl wget git python3 python3-pip \
-            build-essential ninja-build pkg-config \
-            ccache unzip tar xz-utils \
-            ca-certificates gnupg lsb-release
-
       - name: Checkout 代码
         uses: actions/checkout@v4
 
-      - name: 下载并安装鸿蒙 NDK
+      - name: 验证鸿蒙 NDK sysroot
         run: |
           echo "========================================="
-          echo "下载鸿蒙 NDK"
+          echo "验证鸿蒙 NDK sysroot"
           echo "========================================="
-
-          # TODO: 替换为实际的鸿蒙 NDK 下载链接
-          # 方案 1: 从你的 GitHub Release 下载
-          # OHOS_NDK_URL="https://github.com/simtelboy/naiveproxy/releases/download/ndk/ohos-ndk.tar.gz"
-
-          # 方案 2: 从 GitHub Secrets 获取
-          # OHOS_NDK_URL="${{ secrets.OHOS_NDK_URL }}"
-
-          # 临时方案：使用 Android NDK 测试编译流程
-          echo "注意: 当前使用 Android NDK 测试编译流程"
-          echo "实际编译鸿蒙版本需要替换为鸿蒙 NDK"
-
-          mkdir -p /opt/ohos-ndk
-          echo "OHOS_NDK_HOME=/opt/ohos-ndk/native" >> $GITHUB_ENV
+          echo "NDK 路径: $OHOS_NDK_HOME"
+          echo "Sysroot 路径: $OHOS_SYSROOT"
+          ls -la $OHOS_SYSROOT/usr/lib
+          echo ""
+          echo "✅ 鸿蒙 sysroot 已就绪！"
 
       - name: 缓存编译工具链
         uses: actions/cache@v4
