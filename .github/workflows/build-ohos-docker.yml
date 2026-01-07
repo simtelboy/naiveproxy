@@ -91,7 +91,7 @@ jobs:
           echo "========================================="
 
           # 在 net/BUILD.gn 中添加共享库目标
-          cat >> net/BUILD.gn << 'EOF'
+          cat >> net/BUILD.gn <<'EOF'
 
 # 鸿蒙共享库版本
 if (target_os == "ohos" || target_os == "android") {
