@@ -21,6 +21,10 @@ struct check_traced_value_support {
 template <typename T>
 using check_traced_value_support_t = typename check_traced_value_support<T>::type;
 
+// Base template for TraceFormatTraits (needed for specializations)
+template <typename T, typename Enable = void>
+struct TraceFormatTraits;
+
 // Stub function for writing values into traced context
 template <typename T>
 inline void WriteIntoTracedValue(TracedValue&& context, const T& value) {
@@ -42,13 +46,11 @@ class StaticString {
   const char* str_;
 };
 
-// Stub NamedTrack class
+// Stub NamedTrack class (remove unused field warning)
 class NamedTrack {
  public:
   NamedTrack() = default;
-  explicit NamedTrack(const char* name) : name_(name) {}
- private:
-  const char* name_ = nullptr;
+  explicit NamedTrack(const char*) {}
 };
 
 }  // namespace perfetto
