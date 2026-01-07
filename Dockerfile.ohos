@@ -1,0 +1,59 @@
+# 使用 Ubuntu 22.04 作为基础镜像
+FROM ubuntu:22.04
+
+# 设置非交互模式
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 更新包列表并安装基础工具
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    git \
+    python3 \
+    python3-pip \
+    build-essential \
+    ninja-build \
+    pkg-config \
+    ccache \
+    unzip \
+    tar \
+    xz-utils \
+    ca-certificates \
+    file \
+    && rm -rf /var/lib/apt/lists/*
+
+# 创建工作目录
+RUN mkdir -p /opt/harmonyos
+
+# 复制 zip 文件而不是解压后的目录（更快更可靠）
+COPY commandline-tools-linux-x64-6.0.0.878.zip /tmp/
+
+# 在镜像内解压
+RUN cd /tmp && \
+    unzip -q commandline-tools-linux-x64-6.0.0.878.zip && \
+    mv command-line-tools /opt/harmonyos/ && \
+    rm commandline-tools-linux-x64-6.0.0.878.zip
+
+# 设置环境变量
+ENV COMMAND_LINE_TOOLS_HOME=/opt/harmonyos/command-line-tools
+ENV OHOS_SDK_HOME=${COMMAND_LINE_TOOLS_HOME}/sdk/default/openharmony
+ENV OHOS_NDK_HOME=${OHOS_SDK_HOME}/native
+ENV OHOS_SYSROOT=${OHOS_NDK_HOME}/sysroot
+ENV PATH=${COMMAND_LINE_TOOLS_HOME}/bin:${OHOS_NDK_HOME}/llvm/bin:${OHOS_NDK_HOME}/build-tools/cmake/bin:${PATH}
+
+# 验证安装
+RUN echo "验证 HarmonyOS NDK 安装..." && \
+    ls -la ${OHOS_NDK_HOME} && \
+    test -f ${OHOS_NDK_HOME}/llvm/bin/clang-15 && echo "✓ clang-15 found" && \
+    cmake --version
+
+# 设置工作目录
+WORKDIR /workspace
+
+# 添加标签
+LABEL maintainer="simtelboy"
+LABEL description="HarmonyOS NDK build environment with official Command Line Tools"
+LABEL version="6.0.0.878"
+
+# 默认命令
+CMD ["/bin/bash"]
