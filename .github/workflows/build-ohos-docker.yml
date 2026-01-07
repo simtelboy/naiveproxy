@@ -91,47 +91,47 @@ jobs:
           echo "========================================="
 
           # 在 net/BUILD.gn 中添加共享库目标
-          cat >> net/BUILD.gn <<'EOF'
+          cat >> net/BUILD.gn <<'EOFBUILDGN'
 
-# 鸿蒙共享库版本
-if (target_os == "ohos" || target_os == "android") {
-  shared_library("naive_shared") {
-    output_name = "naive"
+          # 鸿蒙共享库版本
+          if (target_os == "ohos" || target_os == "android") {
+            shared_library("naive_shared") {
+              output_name = "naive"
 
-    sources = [
-      "tools/naive/http_proxy_server_socket.cc",
-      "tools/naive/http_proxy_server_socket.h",
-      "tools/naive/naive_config.cc",
-      "tools/naive/naive_config.h",
-      "tools/naive/naive_connection.cc",
-      "tools/naive/naive_connection.h",
-      "tools/naive/naive_padding_framer.cc",
-      "tools/naive/naive_padding_framer.h",
-      "tools/naive/naive_padding_socket.cc",
-      "tools/naive/naive_padding_socket.h",
-      "tools/naive/naive_protocol.cc",
-      "tools/naive/naive_protocol.h",
-      "tools/naive/naive_proxy.cc",
-      "tools/naive/naive_proxy.h",
-      "tools/naive/naive_proxy_bin.cc",
-      "tools/naive/naive_proxy_delegate.cc",
-      "tools/naive/naive_proxy_delegate.h",
-      "tools/naive/redirect_resolver.cc",
-      "tools/naive/redirect_resolver.h",
-      "tools/naive/socks5_server_socket.cc",
-      "tools/naive/socks5_server_socket.h",
-    ]
+              sources = [
+                "tools/naive/http_proxy_server_socket.cc",
+                "tools/naive/http_proxy_server_socket.h",
+                "tools/naive/naive_config.cc",
+                "tools/naive/naive_config.h",
+                "tools/naive/naive_connection.cc",
+                "tools/naive/naive_connection.h",
+                "tools/naive/naive_padding_framer.cc",
+                "tools/naive/naive_padding_framer.h",
+                "tools/naive/naive_padding_socket.cc",
+                "tools/naive/naive_padding_socket.h",
+                "tools/naive/naive_protocol.cc",
+                "tools/naive/naive_protocol.h",
+                "tools/naive/naive_proxy.cc",
+                "tools/naive/naive_proxy.h",
+                "tools/naive/naive_proxy_bin.cc",
+                "tools/naive/naive_proxy_delegate.cc",
+                "tools/naive/naive_proxy_delegate.h",
+                "tools/naive/redirect_resolver.cc",
+                "tools/naive/redirect_resolver.h",
+                "tools/naive/socks5_server_socket.cc",
+                "tools/naive/socks5_server_socket.h",
+              ]
 
-    deps = [
-      ":net",
-      "//base",
-    ]
+              deps = [
+                ":net",
+                "//base",
+              ]
 
-    configs -= [ "//build/config/gcc:symbol_visibility_hidden" ]
-    configs += [ "//build/config/gcc:symbol_visibility_default" ]
-  }
-}
-EOF
+              configs -= [ "//build/config/gcc:symbol_visibility_hidden" ]
+              configs += [ "//build/config/gcc:symbol_visibility_default" ]
+            }
+          }
+          EOFBUILDGN
 
           echo "BUILD.gn 修改完成"
 
