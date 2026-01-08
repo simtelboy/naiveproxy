@@ -18,6 +18,12 @@ class CounterDescriptor;
 // Stub implementation of TrackDescriptor
 class TrackDescriptor {
  public:
+  // SiblingMergeBehavior enum
+  enum SiblingMergeBehavior {
+    SIBLING_MERGE_BEHAVIOR_NONE = 0,
+    SIBLING_MERGE_BEHAVIOR_MERGE_BY_KEY = 1,
+  };
+
   TrackDescriptor() = default;
   ~TrackDescriptor() = default;
 
@@ -36,6 +42,14 @@ class TrackDescriptor {
   const ThreadDescriptor& thread() const { static ThreadDescriptor t; return t; }
   const CounterDescriptor& counter() const { static CounterDescriptor c; return c; }
 };
+
+// Create gen namespace alias for compatibility
+namespace gen {
+using TrackDescriptor = ::perfetto::protos::TrackDescriptor;
+using ProcessDescriptor = ::perfetto::protos::ProcessDescriptor;
+using ThreadDescriptor = ::perfetto::protos::ThreadDescriptor;
+using CounterDescriptor = ::perfetto::protos::CounterDescriptor;
+}  // namespace gen
 
 }  // namespace protos
 }  // namespace perfetto
