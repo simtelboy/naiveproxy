@@ -48,10 +48,13 @@
 #define PERFETTO_CHECK(x) do {} while (0)
 #endif
 
+// Include InternedData definition before using it in HeapBuffered
+#include "perfetto/protos/perfetto/trace/interned_data/interned_data.pbzero.h"
+
 namespace perfetto {
 namespace protos {
 namespace pbzero {
-class InternedData;
+// InternedData is already defined in the included header
 }
 }
 namespace protozero {
