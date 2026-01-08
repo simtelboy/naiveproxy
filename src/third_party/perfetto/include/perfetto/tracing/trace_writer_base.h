@@ -18,8 +18,8 @@
 #define INCLUDE_PERFETTO_TRACING_TRACE_WRITER_BASE_H_
 
 #include <cstdint>
-#include "perfetto/base/export.h"
-#include "perfetto/protozero/message_handle.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/protozero/message_handle.h"
 
 namespace perfetto {
 
