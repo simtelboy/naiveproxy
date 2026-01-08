@@ -46,6 +46,9 @@ class ChromeTaskAnnotator {
 
   void set_delay_policy(DelayPolicy value) {}
   DelayPolicy delay_policy() const { return FLEXIBLE_NO_SOONER; }
+
+  void set_task_delay_us(uint64_t value) {}
+  uint64_t task_delay_us() const { return 0; }
 };
 
 // Stub implementation of CurrentTask
@@ -56,6 +59,18 @@ class CurrentTask {
 
   void set_posted_from_iid(uint64_t value) {}
   uint64_t posted_from_iid() const { return 0; }
+
+  void set_task_queueing_time_us(uint64_t value) {}
+  uint64_t task_queueing_time_us() const { return 0; }
+
+  void set_task_queued_time_us(uint64_t value) {}
+  uint64_t task_queued_time_us() const { return 0; }
+
+  void set_event_offset_from_task_start_time_us(uint64_t value) {}
+  uint64_t event_offset_from_task_start_time_us() const { return 0; }
+
+  void set_task_start_time_us(uint64_t value) {}
+  uint64_t task_start_time_us() const { return 0; }
 };
 
 }  // namespace pbzero
