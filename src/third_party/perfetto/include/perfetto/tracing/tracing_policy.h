@@ -19,8 +19,8 @@
 
 #include <functional>
 
-#include "perfetto/base/export.h"
-#include "perfetto/tracing/backend_type.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/tracing/backend_type.h"
 
 namespace perfetto {
 
