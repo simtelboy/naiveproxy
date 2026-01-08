@@ -14,6 +14,23 @@ namespace pbzero {
 // Re-export SequenceManagerTask for convenience
 using SequenceManagerTask = ::perfetto::protos::pbzero::SequenceManagerTask;
 
+// Stub MemoryPressureLevel enum
+enum MemoryPressureLevel {
+  MEMORY_PRESSURE_LEVEL_NONE = 0,
+  MEMORY_PRESSURE_LEVEL_MODERATE = 1,
+  MEMORY_PRESSURE_LEVEL_CRITICAL = 2,
+};
+
+// Stub ChromeMemoryPressureNotification message
+class ChromeMemoryPressureNotification {
+ public:
+  ChromeMemoryPressureNotification() = default;
+  ~ChromeMemoryPressureNotification() = default;
+
+  void set_level(int32_t value) {}
+  void set_creation_location_iid(uint64_t value) {}
+};
+
 // Stub Chrome track event protobuf message
 class ChromeTrackEvent {
  public:
@@ -25,6 +42,14 @@ class ChromeTrackEvent {
   void set_category(const char* data, size_t size) {}
   void set_type(int32_t value) {}
   void set_id(uint64_t value) {}
+
+  // Memory pressure notification support
+  ChromeMemoryPressureNotification* set_chrome_memory_pressure_notification() {
+    return &notification_;
+  }
+
+ private:
+  ChromeMemoryPressureNotification notification_;
 };
 
 }  // namespace pbzero

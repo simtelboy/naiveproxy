@@ -33,6 +33,9 @@
 #define PERFETTO_DEFINE_CATEGORIES_IN_NAMESPACE_WITH_ATTRS(ns, attrs, ...)
 #define PERFETTO_USE_CATEGORIES_FROM_NAMESPACE(ns)
 
+// Category name macro for disabled-by-default categories
+#define TRACE_DISABLED_BY_DEFAULT(name) "disabled-by-default-" name
+
 // Trace value type constants
 #define TRACE_VALUE_TYPE_BOOL 1
 #define TRACE_VALUE_TYPE_UINT 2
