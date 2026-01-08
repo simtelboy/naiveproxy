@@ -25,7 +25,7 @@ env:
   CACHE_EPOCH: 1
 
 jobs:
-  # 新增:快速语法检查任务(5-10分钟)
+  # 快速语法检查任务 - 简化版,直接使用完整编译的前期步骤
   quick-syntax-check:
     name: 快速语法检查
     runs-on: ubuntu-22.04
@@ -36,8 +36,6 @@ jobs:
     steps:
       - name: Checkout 代码
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2  # 获取最近2次提交,用于对比
 
       - name: 缓存编译工具链
         uses: actions/cache@v4
@@ -53,48 +51,44 @@ jobs:
           echo "========================================="
           echo "🚀 方案1: 完整编译检查 (不链接)"
           echo "========================================="
-          echo "说明: 使用与完整编译完全相同的编译器和参数"
+          echo "说明: 使用与完整编译完全相同的步骤"
           echo "      只编译到 .o 文件,不进行链接"
           echo "      准确度: 99% (与完整编译几乎相同)"
           echo "      速度: 比完整编译快 5-10 倍"
           echo ""
 
-          # 1. 下载 gn 工具
-          echo "下载 gn 工具..."
-          if [ ! -f "gn/gn" ]; then
-            mkdir -p gn
-            cd gn
-            # 下载 gn (是一个 zip 文件)
-            curl -L -o gn.zip https://chrome-infra-packages.appspot.com/dl/gn/gn/linux-amd64/+/latest
-            # 解压
-            unzip -o gn.zip
-            rm gn.zip
-            chmod +x gn
-            # 验证下载的文件
-            file gn
-            ./gn --version
-            cd ..
+          # 1. 修改 get-sysroot.sh 添加鸿蒙支持
+          echo "修改构建配置..."
+          if ! grep -q "ohos)" get-sysroot.sh; then
+            sed -i '/android)/a\  ohos)\n    WITH_SYSROOT=\n  ;;' get-sysroot.sh
           fi
-          export PATH="$PWD/gn:$PATH"
 
-          # 验证 gn 可用
-          which gn
-          gn --version
+          # 2. 修改 BUILD.gn 排除 tracing 和 mojo 依赖
+          echo "修改 base/BUILD.gn 排除 tracing 依赖..."
+          cp base/BUILD.gn base/BUILD.gn.bak
+          sed -i 's/"\/\/base\/tracing\/protos:chrome_track_event",/# "\/\/base\/tracing\/protos:chrome_track_event",/' base/BUILD.gn
+          sed -i 's/"\/\/base\/tracing\/protos:chrome_track_event_zero",/# "\/\/base\/tracing\/protos:chrome_track_event_zero",/' base/BUILD.gn
+          sed -i 's/"\/\/third_party\/perfetto:libperfetto",/# "\/\/third_party\/perfetto:libperfetto",/' base/BUILD.gn
+          sed -i 's/"\/\/third_party\/perfetto\/include\/perfetto\/protozero",/# "\/\/third_party\/perfetto\/include\/perfetto\/protozero",/' base/BUILD.gn
+          sed -i 's/all_dependent_configs += \[ "\/\/third_party\/perfetto\/gn:public_config" \]/# all_dependent_configs += [ "\/\/third_party\/perfetto\/gn:public_config" ]/' base/BUILD.gn
 
-          # 2. 下载编译器
+          echo "修改 net/BUILD.gn 排除 mojo 依赖..."
+          cp net/BUILD.gn net/BUILD.gn.bak
+          # 注释掉 mojo 相关的依赖
+          sed -i 's/"\/\/mojo\/public\/cpp\/bindings:default_construct_tag",/# "\/\/mojo\/public\/cpp\/bindings:default_construct_tag",/' net/BUILD.gn
+
+          # 3. 下载工具链
           echo ""
-          echo "下载编译器..."
+          echo "下载编译工具链..."
           ./get-clang.sh
           EXTRA_FLAGS='target_os="android"' ./get-clang.sh
 
-          # 3. 生成构建配置
+          # 4. 生成构建配置
           echo ""
           echo "生成构建配置..."
           gn gen out/SyntaxCheck --args='target_os="android" target_cpu="arm64" is_official_build=true is_debug=false'
 
-          # 4. 方案1: 编译所有 .o 文件但不链接
-          # -k 0 = 遇到错误继续编译,显示所有错误
-          # 只编译 base 目标(不链接最终可执行文件)
+          # 5. 编译检查
           echo ""
           echo "开始编译检查 (编译到 .o 文件)..."
           START_TIME=$(date +%s)
