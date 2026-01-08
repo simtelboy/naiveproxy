@@ -21,7 +21,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "perfetto/public/compiler.h"
+#include "third_party/perfetto/include/perfetto/public/compiler.h"
 
 // Type of fields that can be found in a protobuf serialized message.
 enum PerfettoPbWireType {
