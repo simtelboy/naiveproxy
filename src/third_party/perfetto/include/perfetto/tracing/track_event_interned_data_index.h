@@ -49,7 +49,8 @@
 #endif
 
 // Include InternedData definition before using it in HeapBuffered
-#include "perfetto/protos/perfetto/trace/interned_data/interned_data.pbzero.h"
+// Use relative path from src/third_party/perfetto/include/
+#include "../../../protos/perfetto/trace/interned_data/interned_data.pbzero.h"
 
 namespace perfetto {
 namespace protos {
