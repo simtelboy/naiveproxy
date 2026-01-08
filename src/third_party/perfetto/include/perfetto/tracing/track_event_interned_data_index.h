@@ -18,6 +18,36 @@
 #define INCLUDE_PERFETTO_TRACING_TRACK_EVENT_INTERNED_DATA_INDEX_H_
 
 // Inline forward declarations to avoid missing header issues
+// Define PERFETTO_DCHECK_IS_ON if not already defined
+#ifndef PERFETTO_DCHECK_IS_ON
+#define PERFETTO_DCHECK_IS_ON() 0
+#endif
+
+// Define PERFETTO_LIKELY if not already defined
+#ifndef PERFETTO_LIKELY
+#define PERFETTO_LIKELY(x) (x)
+#endif
+
+// Define PERFETTO_DCHECK if not already defined
+#ifndef PERFETTO_DCHECK
+#define PERFETTO_DCHECK(x) do {} while (0)
+#endif
+
+// Define PERFETTO_FATAL if not already defined
+#ifndef PERFETTO_FATAL
+#define PERFETTO_FATAL(...) do {} while (0)
+#endif
+
+// Define PERFETTO_DEBUG_FUNCTION_IDENTIFIER if not already defined
+#ifndef PERFETTO_DEBUG_FUNCTION_IDENTIFIER
+#define PERFETTO_DEBUG_FUNCTION_IDENTIFIER() ""
+#endif
+
+// Define PERFETTO_CHECK if not already defined
+#ifndef PERFETTO_CHECK
+#define PERFETTO_CHECK(x) do {} while (0)
+#endif
+
 namespace perfetto {
 namespace protos {
 namespace pbzero {
@@ -52,7 +82,6 @@ struct TrackEventIncrementalState {
 }
 }
 
-#include "perfetto/base/compiler.h"
 #include "perfetto/tracing/event_context.h"
 
 #include <map>
