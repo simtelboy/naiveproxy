@@ -12,6 +12,13 @@ namespace protos {
 // Stub for CounterDescriptor
 class CounterDescriptor {
  public:
+  // BuiltinCounterType enum
+  enum BuiltinCounterType {
+    COUNTER_UNSPECIFIED = 0,
+    COUNTER_THREAD_TIME_NS = 1,
+    COUNTER_THREAD_INSTRUCTION_COUNT = 2,
+  };
+
   CounterDescriptor() = default;
   ~CounterDescriptor() = default;
 

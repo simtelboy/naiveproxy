@@ -14,6 +14,21 @@ namespace pbzero {
 // Stub implementation of CounterDescriptor
 class CounterDescriptor {
  public:
+  // Unit enum
+  enum Unit {
+    UNIT_UNSPECIFIED = 0,
+    UNIT_TIME_NS = 1,
+    UNIT_COUNT = 2,
+    UNIT_SIZE_BYTES = 3,
+  };
+
+  // BuiltinCounterType enum
+  enum BuiltinCounterType {
+    COUNTER_UNSPECIFIED = 0,
+    COUNTER_THREAD_TIME_NS = 1,
+    COUNTER_THREAD_INSTRUCTION_COUNT = 2,
+  };
+
   CounterDescriptor() = default;
   ~CounterDescriptor() = default;
 

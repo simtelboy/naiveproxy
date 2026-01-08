@@ -48,12 +48,8 @@ class StaticString {
   const char* value;
 };
 
-// Stub NamedTrack class (remove unused field warning)
-class NamedTrack {
- public:
-  NamedTrack() = default;
-  explicit NamedTrack(const char*) {}
-};
+// Note: NamedTrack is defined in perfetto/tracing/track.h
+// We don't define it here to avoid conflicts
 
 }  // namespace perfetto
 

@@ -120,11 +120,14 @@ class Category {
 // Note: Tracing class is defined in perfetto/tracing/tracing.h
 // which is included at the end of this file
 
-class ThreadTrack {};
+// Note: ThreadTrack is defined in perfetto/tracing/track.h
+// We don't define it here to avoid conflicts
 
 namespace legacy {
 template <typename T>
-ThreadTrack ConvertThreadId(const T&) { return ThreadTrack(); }
+class ThreadTrack {};
+template <typename T>
+ThreadTrack<T> ConvertThreadId(const T&) { return ThreadTrack<T>(); }
 }  // namespace legacy
 
 struct TraceTimestamp {};
