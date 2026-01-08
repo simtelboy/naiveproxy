@@ -41,8 +41,13 @@ namespace internal {
 struct TrackEventIncrementalState;
 }
 
-// Include ChromeTrackEvent definition
-#include "perfetto/protos/pbzero/chrome_track_event.pbzero.h"
+// Forward declare ChromeTrackEvent to avoid include issues
+namespace protos {
+namespace pbzero {
+class ChromeTrackEvent;
+class ChromeMemoryPressureNotification;
+}
+}
 
 // Stub EventContext class
 class EventContext {
