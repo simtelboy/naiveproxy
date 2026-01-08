@@ -15,6 +15,7 @@ class SequenceManagerTask {
   enum QueueName {
     QUEUE_NAME_UNKNOWN = 0,
     QUEUE_NAME_DEFAULT = 1,
+    DEFAULT_TQ = 1,  // Alias for QUEUE_NAME_DEFAULT
     QUEUE_NAME_CONTROL = 2,
   };
 

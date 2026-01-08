@@ -16,6 +16,7 @@ class ChromeMojoEventInfo;
 class TaskExecution;
 class CurrentTask;
 class SequenceManagerTask;
+class ChromeThreadPoolTask;
 
 // Stub implementation of ChromeTrackEvent
 class ChromeTrackEvent {
@@ -29,6 +30,8 @@ class ChromeTrackEvent {
   TaskExecution* set_task_execution() { return nullptr; }
   CurrentTask* set_current_task() { return nullptr; }
   SequenceManagerTask* set_sequence_manager_task() { return nullptr; }
+  ChromeThreadPoolTask* set_thread_pool_task() { return nullptr; }
+  void add_flow_ids(uint64_t value) {}
 };
 
 // Stub implementation of ChromeTaskAnnotator

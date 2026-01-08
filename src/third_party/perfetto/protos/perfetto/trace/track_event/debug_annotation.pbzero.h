@@ -22,7 +22,16 @@ class DebugAnnotation {
   void set_double_value(double value) {}
   void set_string_value(const char* data, size_t size) {}
   void set_pointer_value(uint64_t value) {}
-  
+  void set_legacy_json_value(const std::string& value) {}
+
+  // Scattered bytes support
+  struct ScatteredBytes {
+    const void* data;
+    size_t size;
+  };
+
+  void AppendScatteredBytes(uint32_t field_id, const ScatteredBytes* ranges, size_t num_ranges) {}
+
   // Virtual method for derived classes
   virtual void Add(DebugAnnotation*) const {}
 };

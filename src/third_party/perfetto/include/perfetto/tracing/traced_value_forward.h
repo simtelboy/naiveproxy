@@ -49,6 +49,40 @@ class StaticString {
   const char* value;
 };
 
+// Stub DynamicString class - for runtime strings
+class DynamicString {
+ public:
+  explicit DynamicString(const std::string& str) : value(str) {}
+  explicit DynamicString(std::string&& str) : value(std::move(str)) {}
+  explicit DynamicString(const char* str) : value(str ? str : "") {}
+  const std::string& str() const { return value; }
+ private:
+  std::string value;
+};
+
+// Stub TracedArray class
+class TracedArray {
+ public:
+  TracedArray() = default;
+  ~TracedArray() = default;
+
+  template <typename T>
+  void Append(const T& value) {}
+};
+
+// Stub TracedDictionary class
+class TracedDictionary {
+ public:
+  TracedDictionary() = default;
+  ~TracedDictionary() = default;
+
+  template <typename T>
+  void Add(const char* key, const T& value) {}
+
+  template <typename T>
+  void Add(const DynamicString& key, const T& value) {}
+};
+
 // Forward declaration of NamedTrack
 // Full definition is in perfetto/tracing/track.h
 #ifndef PERFETTO_NAMED_TRACK_DECLARED

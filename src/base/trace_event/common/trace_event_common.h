@@ -117,6 +117,13 @@
 #define TRACE_EVENT_INSTANT1(category, name, scope, arg1_name, arg1_val) do { (void)(category); (void)(name); (void)(scope); (void)(arg1_name); (void)(arg1_val); } while (0)
 #define TRACE_COUNTER1(category, name, value) do { (void)(category); (void)(name); (void)(value); } while (0)
 
+// String copy macro for trace arguments
+#define TRACE_STR_COPY(str) (str)
+
+// Async event macros
+#define TRACE_EVENT_NESTABLE_ASYNC_BEGIN0(category, name, id) do { (void)(category); (void)(name); (void)(id); } while (0)
+#define TRACE_EVENT_NESTABLE_ASYNC_END0(category, name, id) do { (void)(category); (void)(name); (void)(id); } while (0)
+
 // Stub namespace declarations for compatibility
 namespace perfetto {
 

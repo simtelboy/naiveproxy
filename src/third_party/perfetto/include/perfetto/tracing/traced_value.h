@@ -19,10 +19,20 @@ class TracedDictionary {
  public:
   TracedDictionary() = default;
   ~TracedDictionary() = default;
-  
+
   void Add(const char* key, int64_t value) {}
   void Add(const char* key, const char* value) {}
   void Add(const char* key, const std::string& value) {}
+};
+
+// Stub Array class
+class TracedArray {
+ public:
+  TracedArray() = default;
+  ~TracedArray() = default;
+
+  template <typename T>
+  void Append(const T& value) {}
 };
 
 // Stub implementation
@@ -38,9 +48,12 @@ class TracedValue {
   void WriteString(const char* value) {}
   void WriteString(const std::string& value) {}
   void WritePointer(const void* value) {}
-  
+
   // Add WriteDictionary method
   TracedDictionary WriteDictionary() { return TracedDictionary(); }
+
+  // Add WriteArray method
+  TracedArray WriteArray() { return TracedArray(); }
 };
 
 // Forward declaration for internal types
