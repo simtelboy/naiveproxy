@@ -17,14 +17,49 @@
 #ifndef INCLUDE_PERFETTO_TRACING_TRACK_EVENT_INTERNED_DATA_INDEX_H_
 #define INCLUDE_PERFETTO_TRACING_TRACK_EVENT_INTERNED_DATA_INDEX_H_
 
-#include "perfetto/tracing/internal/track_event_internal.h"
+// Inline forward declarations to avoid missing header issues
+namespace perfetto {
+namespace protos {
+namespace pbzero {
+class InternedData;
+}
+}
+namespace protozero {
+template <typename T>
+class HeapBuffered;
+}
+namespace internal {
+class BaseTrackEventInternedDataIndex {
+ public:
+  virtual ~BaseTrackEventInternedDataIndex() = default;
+#if PERFETTO_DCHECK_IS_ON()
+  const char* type_id_ = nullptr;
+  void* add_function_ptr_ = nullptr;
+#endif
+};
+struct TrackEventIncrementalState {
+  std::unique_ptr<protozero::HeapBuffered<protos::pbzero::InternedData>>
+      serialized_interned_data;
+  static constexpr size_t kMaxInternedDataFields = 32;
+  std::pair<size_t, std::unique_ptr<BaseTrackEventInternedDataIndex>>
+      interned_data_indices[kMaxInternedDataFields];
+  TrackEventIncrementalState() {
+    for (auto& entry : interned_data_indices) {
+      entry.first = 0;
+    }
+  }
+};
+}
+}
 
 #include "perfetto/base/compiler.h"
 #include "perfetto/tracing/event_context.h"
 
 #include <map>
+#include <memory>
 #include <type_traits>
 #include <unordered_map>
+#include <utility>
 
 // This file has templates for defining your own interned data types to be used
 // with track event. Interned data can be useful for avoiding repeating the same
