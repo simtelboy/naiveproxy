@@ -149,11 +149,11 @@
 
 #include <functional>
 
-#include "perfetto/protozero/field.h"
-#include "perfetto/tracing/core/forward_decls.h"
-#include "perfetto/tracing/internal/basic_types.h"
-#include "perfetto/tracing/internal/data_source_internal.h"
-#include "perfetto/tracing/locked_handle.h"
+#include "third_party/perfetto/include/perfetto/protozero/field.h"
+#include "third_party/perfetto/include/perfetto/tracing/core/forward_decls.h"
+#include "third_party/perfetto/include/perfetto/tracing/internal/basic_types.h"
+#include "third_party/perfetto/include/perfetto/tracing/internal/data_source_internal.h"
+#include "third_party/perfetto/include/perfetto/tracing/locked_handle.h"
 
 namespace {
 class MockTracingMuxer;
