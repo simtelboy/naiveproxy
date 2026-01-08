@@ -32,6 +32,7 @@
 #include "base/trace_event/trace_event.h"
 #include "base/tracing_buildflags.h"
 #include "build/build_config.h"
+#include "third_party/perfetto/include/perfetto/tracing/track.h"
 
 namespace base {
 
