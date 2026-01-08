@@ -25,6 +25,9 @@ class ChromeMojoEventInfo {
 
   void set_is_reply(bool value) {}
   bool is_reply() const { return false; }
+
+  void set_mojo_interface_method_iid(uint64_t value) {}
+  uint64_t mojo_interface_method_iid() const { return 0; }
 };
 
 }  // namespace pbzero

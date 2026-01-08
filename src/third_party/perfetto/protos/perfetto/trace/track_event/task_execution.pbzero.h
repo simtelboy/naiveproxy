@@ -25,6 +25,9 @@ class TaskExecution {
 
   void set_task_type(uint32_t value) {}
   uint32_t task_type() const { return 0; }
+
+  void set_posted_from_iid(uint64_t value) {}
+  uint64_t posted_from_iid() const { return 0; }
 };
 
 }  // namespace pbzero
