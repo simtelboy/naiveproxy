@@ -17,17 +17,17 @@
 #ifndef INCLUDE_PERFETTO_TRACING_TRACK_H_
 #define INCLUDE_PERFETTO_TRACING_TRACK_H_
 
-#include "perfetto/base/export.h"
-#include "perfetto/base/proc_utils.h"
-#include "perfetto/base/thread_utils.h"
-#include "perfetto/protozero/message_handle.h"
-#include "perfetto/protozero/scattered_heap_buffer.h"
-#include "perfetto/tracing/internal/fnv1a.h"
-#include "perfetto/tracing/internal/tracing_muxer.h"
-#include "perfetto/tracing/platform.h"
-#include "perfetto/tracing/string_helpers.h"
-#include "protos/perfetto/trace/trace_packet.pbzero.h"  // IWYU pragma: export
-#include "protos/perfetto/trace/track_event/counter_descriptor.gen.h"  // IWYU pragma: export
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/proc_utils.h"
+#include "third_party/perfetto/include/perfetto/base/thread_utils.h"
+#include "third_party/perfetto/include/perfetto/protozero/message_handle.h"
+#include "third_party/perfetto/include/perfetto/protozero/scattered_heap_buffer.h"
+#include "third_party/perfetto/include/perfetto/tracing/internal/fnv1a.h"
+#include "third_party/perfetto/include/perfetto/tracing/internal/tracing_muxer.h"
+#include "third_party/perfetto/include/perfetto/tracing/platform.h"
+#include "third_party/perfetto/include/perfetto/tracing/string_helpers.h"
+#include "third_party/perfetto/protos/perfetto/trace/trace_packet.pbzero.h"  // IWYU pragma: export
+#include "third_party/perfetto/protos/perfetto/trace/track_event/counter_descriptor.gen.h"  // IWYU pragma: export
 #include "protos/perfetto/trace/track_event/counter_descriptor.pbzero.h"  // IWYU pragma: export
 #include "protos/perfetto/trace/track_event/process_descriptor.gen.h"  // IWYU pragma: export
 #include "protos/perfetto/trace/track_event/process_descriptor.pbzero.h"  // IWYU pragma: export
