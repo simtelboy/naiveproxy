@@ -117,8 +117,11 @@ class Category {
   };
 };
 
-// Note: Tracing class is defined in perfetto/tracing/tracing.h
-// We don't define it here to avoid conflicts
+// Forward declaration of Tracing class from perfetto/tracing/tracing.h
+class Tracing {
+ public:
+  static bool IsInitialized() { return false; }
+};
 
 class ThreadTrack {};
 
@@ -156,6 +159,9 @@ namespace protozero {}
 using namespace protozero;
 
 }  // namespace perfetto
+
+// Include the real Tracing class after the stub definitions
+#include "third_party/perfetto/include/perfetto/tracing/tracing.h"
 
 namespace base {
 class TrackEvent {
