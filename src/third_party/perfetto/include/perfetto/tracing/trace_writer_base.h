@@ -59,7 +59,7 @@ class PERFETTO_EXPORT_COMPONENT TraceWriterBase {
   // BufferExhaustedPolicy::kDrop and the SMB is exhausted, it may be assigned
   // a garbage chunk and any trace data written into it will be lost. For more
   // details on buffer size choices: https://perfetto.dev/docs/concepts/buffers.
-  virtual protozero::MessageHandle<protos::pbzero::TracePacket>
+  virtual ::protozero::MessageHandle<protos::pbzero::TracePacket>
   NewTracePacket() = 0;
 
   // Tells the TraceWriterBase that the previous packet started with

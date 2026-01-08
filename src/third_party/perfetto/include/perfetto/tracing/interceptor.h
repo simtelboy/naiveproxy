@@ -226,7 +226,7 @@ class PERFETTO_EXPORT_COMPONENT InterceptorBase {
   struct TracePacketCallbackArgs {
     internal::DataSourceStaticState* static_state;
     uint32_t instance_index;
-    protozero::ConstBytes packet_data;
+    ::protozero::ConstBytes packet_data;
     ThreadLocalState* tls;
   };
 
@@ -307,7 +307,7 @@ class PERFETTO_EXPORT_COMPONENT Interceptor : public InterceptorBase {
 
     // A buffer containing the serialized TracePacket protocol buffer message.
     // This memory is only valid during the call to OnTracePacket.
-    protozero::ConstBytes packet_data;
+    ::protozero::ConstBytes packet_data;
 
    private:
     friend class Interceptor<InterceptorType>;
