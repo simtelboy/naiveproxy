@@ -20,13 +20,13 @@
 #include <atomic>
 #include <memory>
 
-#include "perfetto/base/export.h"
-#include "perfetto/tracing/buffer_exhausted_policy.h"
-#include "perfetto/tracing/core/forward_decls.h"
-#include "perfetto/tracing/interceptor.h"
-#include "perfetto/tracing/internal/basic_types.h"
-#include "perfetto/tracing/internal/tracing_tls.h"
-#include "perfetto/tracing/platform.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/tracing/buffer_exhausted_policy.h"
+#include "third_party/perfetto/include/perfetto/tracing/core/forward_decls.h"
+#include "third_party/perfetto/include/perfetto/tracing/interceptor.h"
+#include "third_party/perfetto/include/perfetto/tracing/internal/basic_types.h"
+#include "third_party/perfetto/include/perfetto/tracing/internal/tracing_tls.h"
+#include "third_party/perfetto/include/perfetto/tracing/platform.h"
 
 namespace perfetto {
 
