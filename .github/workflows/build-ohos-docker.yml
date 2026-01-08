@@ -319,33 +319,38 @@ jobs:
           ninja -C "out/Release-ohos-${{ matrix.arch }}" -k 10 naive_shared 2>&1 | tee full_build.log
           BUILD_STATUS=${PIPESTATUS[0]}
 
-          # 从完整日志中提取详细的错误信息到 build.log
-          # 包括错误行及其上下文(前后各3行)
+          # 如果编译失败,提取并显示详细的错误信息
           if [ $BUILD_STATUS -ne 0 ]; then
-            echo "=========================================" > build.log
-            echo "编译错误详细信息" >> build.log
-            echo "=========================================" >> build.log
-            echo "" >> build.log
+            echo ""
+            echo "========================================="
+            echo "🔴 编译失败 - 详细错误信息"
+            echo "========================================="
+            echo ""
 
-            # 提取所有错误及其上下文
-            grep -B 3 -A 3 "error:" full_build.log | grep -v "warning:" >> build.log
-
-            echo "" >> build.log
-            echo "=========================================" >> build.log
-            echo "错误统计" >> build.log
-            echo "=========================================" >> build.log
+            # 统计错误数量
             ERROR_COUNT=$(grep -c "error:" full_build.log || echo "0")
-            echo "总错误数: $ERROR_COUNT" >> build.log
-
-            # 在控制台显示错误摘要
-            echo ""
-            echo "========================================="
-            echo "编译失败 - 错误摘要"
-            echo "========================================="
-            grep "error:" full_build.log | head -20
-            echo ""
-            echo "完整错误详情已保存到 build.log (包含上下文)"
             echo "总错误数: $ERROR_COUNT"
+            echo ""
+
+            # 提取所有错误及其上下文(前后各5行,更详细)
+            echo "========================================="
+            echo "错误详情 (包含上下文):"
+            echo "========================================="
+            grep -B 5 -A 5 "error:" full_build.log | grep -v "warning:" | head -200
+
+            echo ""
+            echo "========================================="
+            echo "错误摘要 (仅错误行):"
+            echo "========================================="
+            grep "error:" full_build.log
+
+            echo ""
+            echo "========================================="
+            echo "💡 提示:"
+            echo "  - 上面显示了所有错误及其上下文"
+            echo "  - 错误数量: $ERROR_COUNT"
+            echo "  - 请根据错误信息修复代码"
+            echo "========================================="
 
             exit 1
           fi
@@ -381,14 +386,6 @@ jobs:
             echo "❌ 编译失败：找不到 $SO_FILE"
             exit 1
           fi
-
-      - name: 上传编译日志 (失败时)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-log-${{ matrix.arch }}
-          path: src/build.log
-          retention-days: 7
 
       - name: 打包产物
         working-directory: src
