@@ -25,7 +25,7 @@ class TracePacket {
   void set_timestamp_clock_id(uint32_t value) {}
   uint32_t timestamp_clock_id() const { return 0; }
 
-  TrackDescriptor* set_track_descriptor() { static TrackDescriptor t; return &t; }
+  TrackDescriptor* set_track_descriptor() { return nullptr; }
 };
 
 }  // namespace pbzero
