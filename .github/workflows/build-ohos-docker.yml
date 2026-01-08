@@ -64,20 +64,28 @@ jobs:
           if [ ! -f "gn/gn" ]; then
             mkdir -p gn
             cd gn
-            curl -LO https://chrome-infra-packages.appspot.com/dl/gn/gn/linux-amd64/+/latest
-            mv latest gn
+            # 使用正确的下载方式,添加 -L 跟随重定向
+            curl -L -o gn https://chrome-infra-packages.appspot.com/dl/gn/gn/linux-amd64/+/latest
             chmod +x gn
+            # 验证下载的文件
+            file gn
+            ./gn --version || echo "gn 下载可能有问题"
             cd ..
           fi
           export PATH="$PWD/gn:$PATH"
+
+          # 验证 gn 可用
+          which gn
           gn --version
 
           # 2. 下载编译器
+          echo ""
           echo "下载编译器..."
           ./get-clang.sh
           EXTRA_FLAGS='target_os="android"' ./get-clang.sh
 
           # 3. 生成构建配置
+          echo ""
           echo "生成构建配置..."
           gn gen out/SyntaxCheck --args='target_os="android" target_cpu="arm64" is_official_build=true is_debug=false'
 
