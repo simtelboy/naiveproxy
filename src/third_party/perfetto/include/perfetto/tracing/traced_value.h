@@ -82,6 +82,16 @@ class Flow {
   void operator()(EventContext& ctx) const {}
 };
 
+// Stub TerminatingFlow class for terminating flow tracking
+class TerminatingFlow {
+ public:
+  // ProcessScoped terminating flow
+  static TerminatingFlow ProcessScoped(uint64_t id) { return TerminatingFlow(); }
+
+  // Apply terminating flow to context (no-op)
+  void operator()(EventContext& ctx) const {}
+};
+
 // Note: WriteIntoTracedValue and other functions are defined in traced_value_forward.h
 // to avoid redefinition errors
 
