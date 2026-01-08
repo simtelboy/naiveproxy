@@ -9,6 +9,7 @@
 namespace perfetto {
 namespace protos {
 namespace chrome_enums {
+namespace pbzero {
 
 // Stub enum definitions matching chrome_enums.proto
 enum ProcessType {
@@ -104,6 +105,7 @@ enum ThreadType {
   THREAD_COMPOSITOR_GPU = 52,
 };
 
+}  // namespace pbzero
 }  // namespace chrome_enums
 }  // namespace protos
 }  // namespace perfetto
