@@ -17,6 +17,10 @@
 #ifndef INCLUDE_PERFETTO_TRACING_TRACK_H_
 #define INCLUDE_PERFETTO_TRACING_TRACK_H_
 
+// Define this macro to indicate that track.h is included
+// This prevents the stub NamedTrack in traced_value_forward.h from being defined
+#define PERFETTO_TRACK_H_INCLUDED
+
 #include "third_party/perfetto/include/perfetto/base/export.h"
 #include "third_party/perfetto/include/perfetto/base/proc_utils.h"
 #include "third_party/perfetto/include/perfetto/base/thread_utils.h"

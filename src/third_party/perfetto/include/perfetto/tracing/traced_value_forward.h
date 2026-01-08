@@ -48,8 +48,17 @@ class StaticString {
   const char* value;
 };
 
-// Forward declaration of NamedTrack (full definition in perfetto/tracing/track.h)
-class NamedTrack;
+// Stub NamedTrack class for use in headers that don't include track.h
+// The real definition is in perfetto/tracing/track.h
+// This stub will be replaced when track.h is included
+#ifndef PERFETTO_TRACK_H_INCLUDED
+class NamedTrack {
+ public:
+  NamedTrack() = default;
+  explicit NamedTrack(const char*) {}
+  explicit NamedTrack(const char*, uint64_t) {}
+};
+#endif  // PERFETTO_TRACK_H_INCLUDED
 
 }  // namespace perfetto
 
