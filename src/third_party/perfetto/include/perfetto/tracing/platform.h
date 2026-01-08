@@ -24,11 +24,11 @@
 #include <memory>
 #include <string>
 
-#include "perfetto/base/export.h"
-#include "perfetto/base/logging.h"
-#include "perfetto/base/proc_utils.h"
-#include "perfetto/base/thread_utils.h"
-#include "perfetto/tracing/tracing.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/logging.h"
+#include "third_party/perfetto/include/perfetto/base/proc_utils.h"
+#include "third_party/perfetto/include/perfetto/base/thread_utils.h"
+#include "third_party/perfetto/include/perfetto/tracing/tracing.h"
 
 namespace perfetto {
 
