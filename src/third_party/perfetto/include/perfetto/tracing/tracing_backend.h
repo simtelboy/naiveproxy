@@ -21,8 +21,8 @@
 #include <memory>
 #include <string>
 
-#include "perfetto/base/export.h"
-#include "perfetto/base/platform_handle.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/platform_handle.h"
 
 // The embedder can (but doesn't have to) extend the TracingBackend class and
 // pass as an argument to Tracing::Initialize(kCustomBackend) to override the
