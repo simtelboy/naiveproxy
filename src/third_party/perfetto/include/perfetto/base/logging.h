@@ -20,9 +20,9 @@
 #include <errno.h>
 #include <string.h>  // For strerror.
 
-#include "perfetto/base/build_config.h"
-#include "perfetto/base/compiler.h"
-#include "perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/build_config.h"
+#include "third_party/perfetto/include/perfetto/base/compiler.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
 
 #if defined(__GNUC__) || defined(__clang__)
 #if defined(__clang__)

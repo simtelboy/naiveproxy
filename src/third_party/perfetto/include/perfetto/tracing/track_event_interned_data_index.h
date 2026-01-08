@@ -317,6 +317,7 @@ class TrackEventInternedDataIndex
     }
     // Out of space in the interned data index table.
     PERFETTO_CHECK(false);
+    return nullptr;  // Unreachable, but needed for compiler
   }
 
   // The actual interning dictionary for this type of interned data. The actual
