@@ -82,6 +82,8 @@
 #define TRACE_EVENT_INSTANT0(category, name, scope)
 #define TRACE_EVENT_BEGIN0(category, name)
 #define TRACE_EVENT_END0(category, name)
+#define TRACE_EVENT_BEGIN(category, name, ...)
+#define TRACE_EVENT_END(category, name, ...)
 #define TRACE_EVENT_ASYNC_BEGIN0(category, name, id)
 #define TRACE_EVENT_ASYNC_END0(category, name, id)
 #define TRACE_EVENT_OBJECT_CREATED_WITH_ID(category, name, id)
@@ -104,6 +106,19 @@ class DebugAnnotation;
 
 // Main DebugAnnotation in perfetto namespace (for inheritance)
 using DebugAnnotation = protos::pbzero::DebugAnnotation;
+
+// DataSourceBase stub
+class DataSourceBase {
+ public:
+  struct StartArgs {};
+};
+
+// TrackEventSessionObserver stub
+class TrackEventSessionObserver {
+ public:
+  virtual ~TrackEventSessionObserver() = default;
+  virtual void OnStart(const DataSourceBase::StartArgs&) {}
+};
 
 class Category {
  public:
@@ -170,6 +185,7 @@ class TrackEvent {
   static void SetTrackDescriptor(const T&, const D&) {}
   template <typename T>
   static void EraseTrackDescriptor(const T&) {}
+  static void AddSessionObserver(perfetto::TrackEventSessionObserver*) {}
 };
 }  // namespace base
 
