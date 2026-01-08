@@ -21,7 +21,7 @@
 #include <type_traits>
 #include <variant>
 
-#include "perfetto/public/compiler.h"
+#include "third_party/perfetto/include/perfetto/public/compiler.h"
 
 #if defined(_MSC_VER)
 #define PERFETTO_ASSUME(x) __assume(x)
