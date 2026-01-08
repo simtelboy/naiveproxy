@@ -8,7 +8,4 @@
 // Just include traced_value.h which has the real EventContext definition
 #include "third_party/perfetto/include/perfetto/tracing/traced_value.h"
 
-// Include ChromeTrackEvent for code that needs it
-#include "third_party/perfetto/include/perfetto/protos/pbzero/chrome_track_event.pbzero.h"
-
 #endif  // INCLUDE_PERFETTO_TRACING_EVENT_CONTEXT_H_
