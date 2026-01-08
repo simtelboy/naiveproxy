@@ -7,6 +7,13 @@
 
 namespace perfetto {
 
+// Forward declarations for pbzero types
+namespace protos {
+namespace pbzero {
+class ChromeTrackEvent;
+}
+}
+
 // Stub Dictionary class
 class TracedDictionary {
  public:
@@ -58,6 +65,9 @@ class EventContext {
   // Template method to get event
   template <typename T>
   T* event() { return nullptr; }
+
+  // Specialization for ChromeTrackEvent (default when no template arg)
+  protos::pbzero::ChromeTrackEvent* event() { return nullptr; }
 
   internal::TrackEventIncrementalState* incremental_state_ = nullptr;
 };
