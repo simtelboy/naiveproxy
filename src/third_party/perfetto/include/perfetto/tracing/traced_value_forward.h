@@ -2,6 +2,7 @@
 #ifndef INCLUDE_PERFETTO_TRACING_TRACED_VALUE_FORWARD_H_
 #define INCLUDE_PERFETTO_TRACING_TRACED_VALUE_FORWARD_H_
 
+#include <cstddef>
 #include <utility>
 
 namespace perfetto {
