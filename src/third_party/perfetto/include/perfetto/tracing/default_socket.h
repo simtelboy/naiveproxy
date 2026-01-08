@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include "perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
 
 namespace perfetto {
 
