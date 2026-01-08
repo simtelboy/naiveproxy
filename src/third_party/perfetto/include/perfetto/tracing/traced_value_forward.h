@@ -48,8 +48,8 @@ class StaticString {
   const char* value;
 };
 
-// Note: NamedTrack is defined in perfetto/tracing/track.h
-// We don't define it here to avoid conflicts
+// Forward declaration of NamedTrack (full definition in perfetto/tracing/track.h)
+class NamedTrack;
 
 }  // namespace perfetto
 
