@@ -23,9 +23,9 @@
 #include <string_view>
 #include <vector>
 
-#include "perfetto/base/logging.h"
-#include "perfetto/protozero/contiguous_memory_range.h"
-#include "perfetto/protozero/proto_utils.h"
+#include "third_party/perfetto/include/perfetto/base/logging.h"
+#include "third_party/perfetto/include/perfetto/protozero/contiguous_memory_range.h"
+#include "third_party/perfetto/include/perfetto/protozero/proto_utils.h"
 
 namespace protozero {
 
