@@ -20,7 +20,9 @@ class TrackDescriptor {
  public:
   // SiblingMergeBehavior enum
   enum SiblingMergeBehavior {
+    SIBLING_MERGE_BEHAVIOR_UNSPECIFIED = 0,
     SIBLING_MERGE_BEHAVIOR_NONE = 0,
+    SIBLING_MERGE_BEHAVIOR_BY_SIBLING_MERGE_KEY = 1,
     SIBLING_MERGE_BEHAVIOR_MERGE_BY_KEY = 1,
   };
 

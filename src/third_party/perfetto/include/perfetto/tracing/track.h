@@ -544,7 +544,7 @@ class PERFETTO_EXPORT_COMPONENT TrackRegistry {
   template <typename TrackType>
   uint64_t SerializeTrack(
       const TrackType& track,
-      protozero::MessageHandle<protos::pbzero::TracePacket> packet) {
+      ::protozero::MessageHandle<protos::pbzero::TracePacket> packet) {
     // If the track has extra metadata (recorded with UpdateTrack), it will be
     // found in the registry. To minimize the time the lock is held, make a copy
     // of the data held in the registry and write it outside the lock.
@@ -577,7 +577,7 @@ class PERFETTO_EXPORT_COMPONENT TrackRegistry {
 
   static void WriteTrackDescriptor(
       const SerializedTrackDescriptor& desc,
-      protozero::MessageHandle<protos::pbzero::TracePacket> packet);
+      ::protozero::MessageHandle<protos::pbzero::TracePacket> packet);
 
  private:
   std::mutex mutex_;

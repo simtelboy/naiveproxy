@@ -9,6 +9,9 @@ namespace perfetto {
 namespace protos {
 namespace pbzero {
 
+// Forward declaration
+class TrackDescriptor;
+
 // Stub for TracePacket
 class TracePacket {
  public:
@@ -21,6 +24,8 @@ class TracePacket {
 
   void set_timestamp_clock_id(uint32_t value) {}
   uint32_t timestamp_clock_id() const { return 0; }
+
+  TrackDescriptor* set_track_descriptor() { static TrackDescriptor t; return &t; }
 };
 
 }  // namespace pbzero
