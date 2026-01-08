@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 
-#include "perfetto/base/build_config.h"
+#include "third_party/perfetto/include/perfetto/base/build_config.h"
 
 namespace perfetto {
 namespace base {
