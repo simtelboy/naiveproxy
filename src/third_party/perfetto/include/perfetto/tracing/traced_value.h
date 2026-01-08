@@ -36,11 +36,18 @@ class TracedValue {
   TracedDictionary WriteDictionary() { return TracedDictionary(); }
 };
 
+// Forward declaration for internal types
+namespace internal {
+struct TrackEventIncrementalState;
+}
+
 // Stub EventContext class
 class EventContext {
  public:
   EventContext() = default;
   ~EventContext() = default;
+
+  internal::TrackEventIncrementalState* incremental_state_ = nullptr;
 };
 
 // Note: WriteIntoTracedValue and other functions are defined in traced_value_forward.h

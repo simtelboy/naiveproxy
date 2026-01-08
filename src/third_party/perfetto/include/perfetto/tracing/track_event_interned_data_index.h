@@ -82,16 +82,6 @@ struct TrackEventIncrementalState {
 }
 }
 
-// Inline EventContext definition to avoid missing header
-namespace perfetto {
-class EventContext {
- public:
-  EventContext() = default;
-  ~EventContext() = default;
-  internal::TrackEventIncrementalState* incremental_state_ = nullptr;
-};
-}
-
 #include <map>
 #include <memory>
 #include <type_traits>
