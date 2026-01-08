@@ -363,6 +363,14 @@ jobs:
             exit 1
           fi
 
+      - name: 上传编译日志 (失败时)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log-${{ matrix.arch }}
+          path: src/build.log
+          retention-days: 7
+
       - name: 打包产物
         working-directory: src
         run: |
