@@ -117,10 +117,8 @@ class Category {
   };
 };
 
-class Tracing {
- public:
-  static bool IsInitialized() { return false; }
-};
+// Note: Tracing class is defined in perfetto/tracing/tracing.h
+// We don't define it here to avoid conflicts
 
 class ThreadTrack {};
 
