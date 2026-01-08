@@ -25,125 +25,9 @@ env:
   CACHE_EPOCH: 1
 
 jobs:
-  # 快速语法检查任务 - 简化版,直接使用完整编译的前期步骤
-  quick-syntax-check:
-    name: 快速语法检查
-    runs-on: ubuntu-22.04
-    container:
-      image: simtelboyhotyi/ohos-build:latest
-      options: --privileged
-
-    steps:
-      - name: Checkout 代码
-        uses: actions/checkout@v4
-
-      - name: 缓存编译工具链
-        uses: actions/cache@v4
-        with:
-          path: |
-            src/third_party/llvm-build/Release+Asserts/
-            src/gn/
-          key: toolchains-ohos-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
-
-      - name: 快速语法检查
-        working-directory: src
-        run: |
-          echo "========================================="
-          echo "🚀 方案1: 完整编译检查 (不链接)"
-          echo "========================================="
-          echo "说明: 使用与完整编译完全相同的步骤"
-          echo "      只编译到 .o 文件,不进行链接"
-          echo "      准确度: 99% (与完整编译几乎相同)"
-          echo "      速度: 比完整编译快 5-10 倍"
-          echo ""
-
-          # 1. 修改 get-sysroot.sh 添加鸿蒙支持
-          echo "修改构建配置..."
-          if ! grep -q "ohos)" get-sysroot.sh; then
-            sed -i '/android)/a\  ohos)\n    WITH_SYSROOT=\n  ;;' get-sysroot.sh
-          fi
-
-          # 2. 修改 BUILD.gn 排除 tracing 和 mojo 依赖
-          echo "修改 base/BUILD.gn 排除 tracing 依赖..."
-          cp base/BUILD.gn base/BUILD.gn.bak
-          sed -i 's/"\/\/base\/tracing\/protos:chrome_track_event",/# "\/\/base\/tracing\/protos:chrome_track_event",/' base/BUILD.gn
-          sed -i 's/"\/\/base\/tracing\/protos:chrome_track_event_zero",/# "\/\/base\/tracing\/protos:chrome_track_event_zero",/' base/BUILD.gn
-          sed -i 's/"\/\/third_party\/perfetto:libperfetto",/# "\/\/third_party\/perfetto:libperfetto",/' base/BUILD.gn
-          sed -i 's/"\/\/third_party\/perfetto\/include\/perfetto\/protozero",/# "\/\/third_party\/perfetto\/include\/perfetto\/protozero",/' base/BUILD.gn
-          sed -i 's/all_dependent_configs += \[ "\/\/third_party\/perfetto\/gn:public_config" \]/# all_dependent_configs += [ "\/\/third_party\/perfetto\/gn:public_config" ]/' base/BUILD.gn
-
-          echo "修改 net/BUILD.gn 排除 mojo 依赖..."
-          cp net/BUILD.gn net/BUILD.gn.bak
-          # 注释掉 mojo 相关的依赖
-          sed -i 's/"\/\/mojo\/public\/cpp\/bindings:default_construct_tag",/# "\/\/mojo\/public\/cpp\/bindings:default_construct_tag",/' net/BUILD.gn
-
-          # 3. 下载工具链
-          echo ""
-          echo "下载编译工具链..."
-          ./get-clang.sh
-          EXTRA_FLAGS='target_os="android"' ./get-clang.sh
-
-          # 4. 生成构建配置
-          echo ""
-          echo "生成构建配置..."
-          gn gen out/SyntaxCheck --args='target_os="android" target_cpu="arm64" is_official_build=true is_debug=false'
-
-          # 5. 编译检查
-          echo ""
-          echo "开始编译检查 (编译到 .o 文件)..."
-          START_TIME=$(date +%s)
-
-          # 编译 base 库的所有对象文件
-          ninja -C out/SyntaxCheck -k 0 -j $(nproc) base 2>&1 | tee syntax_check.log || true
-
-          END_TIME=$(date +%s)
-          ELAPSED=$((END_TIME - START_TIME))
-
-          # 统计错误和警告
-          ERROR_COUNT=$(grep -c "error:" syntax_check.log || echo "0")
-          WARNING_COUNT=$(grep -c "warning:" syntax_check.log || echo "0")
-          COMPILED_FILES=$(grep -c "CXX obj/" syntax_check.log || echo "0")
-
-          echo ""
-          echo "========================================="
-          echo "📊 检查结果:"
-          echo "编译时间: ${ELAPSED} 秒"
-          echo "编译文件数: $COMPILED_FILES"
-          echo "错误数量: $ERROR_COUNT"
-          echo "警告数量: $WARNING_COUNT"
-          echo "========================================="
-
-          # 显示所有错误(不限制数量,因为我们需要看到所有问题)
-          if [ "$ERROR_COUNT" -gt 0 ]; then
-            echo ""
-            echo "🔴 所有编译错误:"
-            echo "========================================="
-            grep "error:" syntax_check.log || true
-            echo "========================================="
-            echo ""
-            echo "❌ 发现 $ERROR_COUNT 个编译错误!"
-            echo "   请修复这些错误后再进行完整编译。"
-            echo ""
-            echo "💡 提示: 下载 syntax-check-errors artifact 查看完整日志"
-            exit 1
-          else
-            echo ""
-            echo "✅ 所有编译检查通过!"
-            echo "   准备进行完整编译..."
-          fi
-
-      - name: 上传错误日志
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: syntax-check-errors
-          path: src/syntax_check.log
-          retention-days: 7
-
   build-ohos-so:
     name: 编译鸿蒙 .so 库 (${{ matrix.arch }})
     runs-on: ubuntu-22.04
-    needs: quick-syntax-check  # 只有语法检查通过才进行完整编译
 
     container:
       image: simtelboyhotyi/ohos-build:latest
@@ -423,11 +307,33 @@ jobs:
           echo "========================================="
           echo "开始编译 libnaive.so"
           echo "========================================="
+          echo "配置: 隐藏警告, 发现10个错误后停止"
+          echo ""
 
           ccache -z
-          ninja -C "out/Release-ohos-${{ matrix.arch }}" naive_shared
+
+          # 编译配置:
+          # -k 10 = 最多允许10个错误,第11个错误时停止
+          # 2>&1 = 合并标准输出和错误输出
+          # grep -v "warning:" = 过滤掉警告信息
+          # 但保留错误信息
+          ninja -C "out/Release-ohos-${{ matrix.arch }}" -k 10 naive_shared 2>&1 | \
+            grep -v "warning:" | \
+            tee build.log || {
+              echo ""
+              echo "========================================="
+              echo "编译失败 - 错误摘要"
+              echo "========================================="
+              # 显示所有错误
+              grep "error:" build.log | head -20
+              echo ""
+              echo "完整日志已保存到 build.log"
+              exit 1
+            }
+
           ccache -s
 
+          echo ""
           echo "========================================="
           echo "编译完成"
           echo "========================================="
