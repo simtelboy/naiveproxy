@@ -64,12 +64,15 @@ jobs:
           if [ ! -f "gn/gn" ]; then
             mkdir -p gn
             cd gn
-            # 使用正确的下载方式,添加 -L 跟随重定向
-            curl -L -o gn https://chrome-infra-packages.appspot.com/dl/gn/gn/linux-amd64/+/latest
+            # 下载 gn (是一个 zip 文件)
+            curl -L -o gn.zip https://chrome-infra-packages.appspot.com/dl/gn/gn/linux-amd64/+/latest
+            # 解压
+            unzip -o gn.zip
+            rm gn.zip
             chmod +x gn
             # 验证下载的文件
             file gn
-            ./gn --version || echo "gn 下载可能有问题"
+            ./gn --version
             cd ..
           fi
           export PATH="$PWD/gn:$PATH"
