@@ -89,6 +89,15 @@
 #define TRACE_EVENT_OBJECT_CREATED_WITH_ID(category, name, id)
 #define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(category, name, id, snapshot)
 #define TRACE_EVENT_OBJECT_DELETED_WITH_ID(category, name, id)
+#define TRACE_EVENT_WITH_FLOW0(category, name, id, flags)
+
+// Trace event flags
+#define TRACE_EVENT_FLAG_NONE 0
+#define TRACE_EVENT_FLAG_FLOW_IN (1u << 0)
+#define TRACE_EVENT_FLAG_FLOW_OUT (1u << 1)
+
+// Trace ID macros
+#define TRACE_ID_LOCAL(id) (id)
 
 // Typed tracing macros (with lambda support) - all disabled
 #define TRACE_EVENT(category, name, ...) do { (void)(category); (void)(name); } while (0)
