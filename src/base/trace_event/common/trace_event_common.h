@@ -88,6 +88,10 @@
 #define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(category, name, id, snapshot)
 #define TRACE_EVENT_OBJECT_DELETED_WITH_ID(category, name, id)
 
+// Typed tracing macros (with lambda support) - all disabled
+#define TRACE_EVENT(category, name, ...) do { (void)(category); (void)(name); } while (0)
+#define TRACE_EVENT_INSTANT(category, name, ...) do { (void)(category); (void)(name); } while (0)
+
 // Stub namespace declarations for compatibility
 namespace perfetto {
 
