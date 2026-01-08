@@ -28,13 +28,13 @@
 #include "third_party/perfetto/include/perfetto/tracing/string_helpers.h"
 #include "third_party/perfetto/protos/perfetto/trace/trace_packet.pbzero.h"  // IWYU pragma: export
 #include "third_party/perfetto/protos/perfetto/trace/track_event/counter_descriptor.gen.h"  // IWYU pragma: export
-#include "protos/perfetto/trace/track_event/counter_descriptor.pbzero.h"  // IWYU pragma: export
-#include "protos/perfetto/trace/track_event/process_descriptor.gen.h"  // IWYU pragma: export
-#include "protos/perfetto/trace/track_event/process_descriptor.pbzero.h"  // IWYU pragma: export
-#include "protos/perfetto/trace/track_event/thread_descriptor.gen.h"  // IWYU pragma: export
-#include "protos/perfetto/trace/track_event/thread_descriptor.pbzero.h"  // IWYU pragma: export
-#include "protos/perfetto/trace/track_event/track_descriptor.gen.h"  // IWYU pragma: export
-#include "protos/perfetto/trace/track_event/track_descriptor.pbzero.h"  // IWYU pragma: export
+#include "third_party/perfetto/protos/perfetto/trace/track_event/counter_descriptor.pbzero.h"  // IWYU pragma: export
+#include "third_party/perfetto/protos/perfetto/trace/track_event/process_descriptor.gen.h"  // IWYU pragma: export
+#include "third_party/perfetto/protos/perfetto/trace/track_event/process_descriptor.pbzero.h"  // IWYU pragma: export
+#include "third_party/perfetto/protos/perfetto/trace/track_event/thread_descriptor.gen.h"  // IWYU pragma: export
+#include "third_party/perfetto/protos/perfetto/trace/track_event/thread_descriptor.pbzero.h"  // IWYU pragma: export
+#include "third_party/perfetto/protos/perfetto/trace/track_event/track_descriptor.gen.h"  // IWYU pragma: export
+#include "third_party/perfetto/protos/perfetto/trace/track_event/track_descriptor.pbzero.h"  // IWYU pragma: export
 
 #include <stdint.h>
 #include <map>
