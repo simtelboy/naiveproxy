@@ -33,27 +33,6 @@ class ChromeMemoryPressureNotification {
   void set_creation_location_iid(uint64_t value) {}
 };
 
-// Stub Chrome track event protobuf message
-class ChromeTrackEvent {
- public:
-  ChromeTrackEvent() = default;
-  ~ChromeTrackEvent() = default;
-
-  // Stub methods
-  void set_name(const char* data, size_t size) {}
-  void set_category(const char* data, size_t size) {}
-  void set_type(int32_t value) {}
-  void set_id(uint64_t value) {}
-
-  // Memory pressure notification support
-  ChromeMemoryPressureNotification* set_chrome_memory_pressure_notification() {
-    return &notification_;
-  }
-
- private:
-  ChromeMemoryPressureNotification notification_;
-};
-
 }  // namespace pbzero
 }  // namespace protos
 }  // namespace perfetto
