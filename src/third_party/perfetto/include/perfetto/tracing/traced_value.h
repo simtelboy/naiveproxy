@@ -41,11 +41,21 @@ namespace internal {
 struct TrackEventIncrementalState;
 }
 
+namespace protos {
+namespace pbzero {
+class ChromeTrackEvent;
+}
+}
+
 // Stub EventContext class
 class EventContext {
  public:
   EventContext() = default;
   ~EventContext() = default;
+
+  // Template method to get event
+  template <typename T>
+  T* event() { return nullptr; }
 
   internal::TrackEventIncrementalState* incremental_state_ = nullptr;
 };
