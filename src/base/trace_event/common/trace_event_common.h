@@ -99,6 +99,10 @@
 // Trace ID macros
 #define TRACE_ID_LOCAL(id) (id)
 
+// Trace event API macros
+#define TRACE_EVENT_API_GET_CATEGORY_GROUP_ENABLED(category) \
+  (static_cast<const unsigned char*>(nullptr))
+
 // Typed tracing macros (with lambda support) - all disabled
 #define TRACE_EVENT(category, name, ...) do { (void)(category); (void)(name); } while (0)
 #define TRACE_EVENT_INSTANT(category, name, ...) do { (void)(category); (void)(name); } while (0)
