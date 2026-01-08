@@ -62,6 +62,16 @@ class EventContext {
   internal::TrackEventIncrementalState* incremental_state_ = nullptr;
 };
 
+// Stub Flow class for flow tracking
+class Flow {
+ public:
+  // ProcessScoped flow
+  static Flow ProcessScoped(uint64_t id) { return Flow(); }
+
+  // Apply flow to context (no-op)
+  void operator()(EventContext& ctx) const {}
+};
+
 // Note: WriteIntoTracedValue and other functions are defined in traced_value_forward.h
 // to avoid redefinition errors
 

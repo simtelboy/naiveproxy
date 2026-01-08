@@ -102,6 +102,8 @@
 // Trace event API macros
 #define TRACE_EVENT_API_GET_CATEGORY_GROUP_ENABLED(category) \
   (static_cast<const unsigned char*>(nullptr))
+#define TRACE_EVENT_CATEGORY_GROUP_ENABLED(category, ret) \
+  do { *(ret) = nullptr; } while (0)
 
 // Typed tracing macros (with lambda support) - all disabled
 #define TRACE_EVENT(category, name, ...) do { (void)(category); (void)(name); } while (0)
