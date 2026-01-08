@@ -315,21 +315,40 @@ jobs:
           # 编译配置:
           # -k 10 = 最多允许10个错误,第11个错误时停止
           # 2>&1 = 合并标准输出和错误输出
-          # grep -v "warning:" = 过滤掉警告信息
-          # 但保留错误信息
-          ninja -C "out/Release-ohos-${{ matrix.arch }}" -k 10 naive_shared 2>&1 | \
-            grep -v "warning:" | \
-            tee build.log || {
-              echo ""
-              echo "========================================="
-              echo "编译失败 - 错误摘要"
-              echo "========================================="
-              # 显示所有错误
-              grep "error:" build.log | head -20
-              echo ""
-              echo "完整日志已保存到 build.log"
-              exit 1
-            }
+          # 保存完整输出到临时文件
+          ninja -C "out/Release-ohos-${{ matrix.arch }}" -k 10 naive_shared 2>&1 | tee full_build.log
+          BUILD_STATUS=${PIPESTATUS[0]}
+
+          # 从完整日志中提取详细的错误信息到 build.log
+          # 包括错误行及其上下文(前后各3行)
+          if [ $BUILD_STATUS -ne 0 ]; then
+            echo "=========================================" > build.log
+            echo "编译错误详细信息" >> build.log
+            echo "=========================================" >> build.log
+            echo "" >> build.log
+
+            # 提取所有错误及其上下文
+            grep -B 3 -A 3 "error:" full_build.log | grep -v "warning:" >> build.log
+
+            echo "" >> build.log
+            echo "=========================================" >> build.log
+            echo "错误统计" >> build.log
+            echo "=========================================" >> build.log
+            ERROR_COUNT=$(grep -c "error:" full_build.log || echo "0")
+            echo "总错误数: $ERROR_COUNT" >> build.log
+
+            # 在控制台显示错误摘要
+            echo ""
+            echo "========================================="
+            echo "编译失败 - 错误摘要"
+            echo "========================================="
+            grep "error:" full_build.log | head -20
+            echo ""
+            echo "完整错误详情已保存到 build.log (包含上下文)"
+            echo "总错误数: $ERROR_COUNT"
+
+            exit 1
+          fi
 
           ccache -s
 
