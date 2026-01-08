@@ -6,6 +6,8 @@
 
 // Include SequenceManagerTask
 #include "third_party/perfetto/protos/perfetto/trace/track_event/sequence_manager_task.pbzero.h"
+// Include the perfetto chrome_track_event
+#include "third_party/perfetto/protos/perfetto/trace/track_event/chrome_track_event.pbzero.h"
 
 namespace perfetto {
 namespace protos {
