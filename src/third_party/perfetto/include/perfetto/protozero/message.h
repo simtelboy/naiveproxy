@@ -24,11 +24,11 @@
 #include <string>
 #include <type_traits>
 
-#include "perfetto/base/export.h"
-#include "perfetto/base/logging.h"
-#include "perfetto/protozero/contiguous_memory_range.h"
-#include "perfetto/protozero/proto_utils.h"
-#include "perfetto/protozero/scattered_stream_writer.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/logging.h"
+#include "third_party/perfetto/include/perfetto/protozero/contiguous_memory_range.h"
+#include "third_party/perfetto/include/perfetto/protozero/proto_utils.h"
+#include "third_party/perfetto/include/perfetto/protozero/scattered_stream_writer.h"
 
 namespace perfetto {
 namespace shm_fuzz {
