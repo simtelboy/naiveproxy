@@ -19,29 +19,14 @@
 
 #include "third_party/perfetto/include/perfetto/base/export.h"
 #include "third_party/perfetto/include/perfetto/base/logging.h"
+#include "third_party/perfetto/include/perfetto/tracing/traced_value_forward.h"
 
 #include <cstddef>
 #include <string>
 
 namespace perfetto {
 
-// A wrapper for marking strings that can't be determined to be static at build
-// time, but are in fact static.
-class PERFETTO_EXPORT_COMPONENT StaticString {
- public:
-  // Implicit constructor for string literals.
-  template <size_t N>
-  constexpr StaticString(const char (&str)[N]) : value(str) {}
-
-  // Implicit constructor for null strings.
-  constexpr StaticString(std::nullptr_t) : value(nullptr) {}
-
-  constexpr explicit StaticString(const char* str) : value(str) {}
-
-  operator bool() const { return !!value; }
-
-  const char* value;
-};
+// StaticString is defined in traced_value_forward.h
 
 // A explicit wrapper for marking strings as dynamic to ensure that perfetto
 // doesn't try to cache the pointer value.
