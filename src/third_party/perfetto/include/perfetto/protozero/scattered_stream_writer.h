@@ -24,10 +24,10 @@
 
 #include <algorithm>
 
-#include "perfetto/base/compiler.h"
-#include "perfetto/base/export.h"
-#include "perfetto/base/logging.h"
-#include "perfetto/protozero/contiguous_memory_range.h"
+#include "third_party/perfetto/include/perfetto/base/compiler.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/logging.h"
+#include "third_party/perfetto/include/perfetto/protozero/contiguous_memory_range.h"
 
 namespace protozero {
 
