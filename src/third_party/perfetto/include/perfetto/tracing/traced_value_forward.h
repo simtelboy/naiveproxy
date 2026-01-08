@@ -37,13 +37,15 @@ inline void WriteIntoTracedProto(TracedValue&& context, const T& value) {
   // Empty stub - does nothing
 }
 
-// Stub StaticString class
+// Stub StaticString class - matches string_helpers.h definition
 class StaticString {
  public:
-  constexpr StaticString(const char* str) : str_(str) {}
-  const char* c_str() const { return str_; }
- private:
-  const char* str_;
+  template <size_t N>
+  constexpr StaticString(const char (&str)[N]) : value(str) {}
+  constexpr StaticString(std::nullptr_t) : value(nullptr) {}
+  constexpr explicit StaticString(const char* str) : value(str) {}
+  operator bool() const { return !!value; }
+  const char* value;
 };
 
 // Stub NamedTrack class (remove unused field warning)
