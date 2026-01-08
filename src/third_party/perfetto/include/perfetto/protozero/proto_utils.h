@@ -22,8 +22,8 @@
 #include <cinttypes>
 #include <type_traits>
 
-#include "perfetto/base/logging.h"
-#include "perfetto/public/pb_utils.h"
+#include "third_party/perfetto/include/perfetto/base/logging.h"
+#include "third_party/perfetto/include/perfetto/public/pb_utils.h"
 
 // Helper macro for the constexpr functions containing
 // the switch statement: if C++14 is supported, this macro

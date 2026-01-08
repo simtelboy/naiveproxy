@@ -26,7 +26,4 @@ class HeapBuffered {
 }  // namespace protozero
 }  // namespace perfetto
 
-// Export protozero to global namespace for compatibility
-namespace protozero = perfetto::protozero;
-
 #endif  // THIRD_PARTY_PERFETTO_INCLUDE_PERFETTO_PROTOZERO_SCATTERED_HEAP_BUFFER_H_
