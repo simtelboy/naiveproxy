@@ -28,14 +28,14 @@
 #include <utility>
 #include <vector>
 
-#include "perfetto/base/compiler.h"
-#include "perfetto/base/export.h"
-#include "perfetto/base/logging.h"
-#include "perfetto/tracing/backend_type.h"
-#include "perfetto/tracing/core/forward_decls.h"
-#include "perfetto/tracing/internal/in_process_tracing_backend.h"
-#include "perfetto/tracing/internal/system_tracing_backend.h"
-#include "perfetto/tracing/tracing_policy.h"
+#include "third_party/perfetto/include/perfetto/base/compiler.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/logging.h"
+#include "third_party/perfetto/include/perfetto/tracing/backend_type.h"
+#include "third_party/perfetto/include/perfetto/tracing/core/forward_decls.h"
+#include "third_party/perfetto/include/perfetto/tracing/internal/in_process_tracing_backend.h"
+#include "third_party/perfetto/include/perfetto/tracing/internal/system_tracing_backend.h"
+#include "third_party/perfetto/include/perfetto/tracing/tracing_policy.h"
 
 namespace perfetto {
 
