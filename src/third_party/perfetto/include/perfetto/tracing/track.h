@@ -198,6 +198,9 @@ struct PERFETTO_EXPORT_COMPONENT ThreadTrack : public Track {
 };
 
 // A track that's identified by an explcit name, id and its parent.
+#ifndef PERFETTO_NAMED_TRACK_DECLARED
+#define PERFETTO_NAMED_TRACK_DECLARED
+#endif
 class PERFETTO_EXPORT_COMPONENT NamedTrack : public Track {
   // A random value mixed into named track uuids to avoid collisions with
   // other types of tracks.
