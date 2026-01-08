@@ -25,9 +25,82 @@ env:
   CACHE_EPOCH: 1
 
 jobs:
+  # 新增:快速语法检查任务(5-10分钟)
+  quick-syntax-check:
+    name: 快速语法检查
+    runs-on: ubuntu-22.04
+    container:
+      image: simtelboyhotyi/ohos-build:latest
+      options: --privileged
+
+    steps:
+      - name: Checkout 代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # 获取最近2次提交,用于对比
+
+      - name: 缓存编译工具链
+        uses: actions/cache@v4
+        with:
+          path: |
+            src/third_party/llvm-build/Release+Asserts/
+            src/gn/
+          key: toolchains-ohos-${{ hashFiles('CHROMIUM_VERSION') }}-v${{ env.CACHE_EPOCH }}
+
+      - name: 快速语法检查
+        working-directory: src
+        run: |
+          echo "========================================="
+          echo "🚀 快速语法检查 (只检查语法,不编译)"
+          echo "========================================="
+
+          # 下载编译器
+          ./get-clang.sh
+          EXTRA_FLAGS='target_os="android"' ./get-clang.sh
+
+          # 生成构建配置
+          gn gen out/SyntaxCheck --args='target_os="android" target_cpu="arm64" is_official_build=true is_debug=false'
+
+          # 使用 -fsyntax-only 进行快速检查
+          echo "开始语法检查..."
+          ninja -C out/SyntaxCheck -k 0 -j $(nproc) 2>&1 | tee syntax_check.log || true
+
+          # 统计错误
+          ERROR_COUNT=$(grep -c "error:" syntax_check.log || echo "0")
+          WARNING_COUNT=$(grep -c "warning:" syntax_check.log || echo "0")
+
+          echo ""
+          echo "========================================="
+          echo "📊 检查结果:"
+          echo "错误数量: $ERROR_COUNT"
+          echo "警告数量: $WARNING_COUNT"
+          echo "========================================="
+
+          # 显示前100个错误
+          if [ "$ERROR_COUNT" -gt 0 ]; then
+            echo ""
+            echo "前100个错误:"
+            grep "error:" syntax_check.log | head -100
+            echo ""
+            echo "❌ 发现语法错误!请修复后再进行完整编译。"
+            exit 1
+          else
+            echo ""
+            echo "✅ 语法检查通过!"
+          fi
+
+      - name: 上传错误日志
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: syntax-check-errors
+          path: src/syntax_check.log
+          retention-days: 7
+
   build-ohos-so:
     name: 编译鸿蒙 .so 库 (${{ matrix.arch }})
     runs-on: ubuntu-22.04
+    needs: quick-syntax-check  # 只有语法检查通过才进行完整编译
 
     container:
       image: simtelboyhotyi/ohos-build:latest

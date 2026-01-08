@@ -1,0 +1,40 @@
+# clangd 配置文件
+# 用于 VSCode, Vim, Emacs 等编辑器的实时语法检查
+
+CompileFlags:
+  Add:
+    - -DBASE_IMPLEMENTATION
+    - -DIS_RAW_PTR_IMPL
+    - -D__STDC_CONSTANT_MACROS
+    - -D__STDC_FORMAT_MACROS
+    - -D_FORTIFY_SOURCE=2
+    - -DNO_UNWIND_TABLES
+    - -D_GNU_SOURCE
+    - -D__ARM_NEON__=1
+    - -DANDROID
+    - -D__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__
+    - -DHAVE_SYS_UIO_H
+    - -DOFFICIAL_BUILD
+    - -DNDEBUG
+    - -DNVALGRIND
+    - -DDYNAMIC_ANNOTATIONS_ENABLED=0
+    - -DUSE_LIBCXX_MODULES
+    - -I../../
+    - -Igen
+    - -I../../buildtools/third_party/libc++
+    - -I../../base/allocator/partition_allocator/src
+    - -I../../third_party/abseil-cpp
+    - -I../../third_party/boringssl/src/include
+    - -I../../third_party/zlib
+    - -I../../third_party/perfetto/include
+    - --target=aarch64-linux-android24
+    - -std=c++20
+
+Diagnostics:
+  ClangTidy:
+    Add:
+      - readability-*
+      - modernize-*
+    Remove:
+      - modernize-use-trailing-return-type
+  UnusedIncludes: Strict
