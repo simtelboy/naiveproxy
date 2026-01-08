@@ -19,9 +19,9 @@
 
 #include <functional>
 
-#include "perfetto/base/export.h"
-#include "perfetto/protozero/message.h"
-#include "perfetto/protozero/scattered_stream_writer.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/protozero/message.h"
+#include "third_party/perfetto/include/perfetto/protozero/scattered_stream_writer.h"
 
 namespace protozero {
 
