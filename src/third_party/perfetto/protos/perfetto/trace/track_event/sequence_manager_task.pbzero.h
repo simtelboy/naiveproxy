@@ -25,6 +25,7 @@ class SequenceManagerTask {
     PRIORITY_HIGHEST = 2,
     PRIORITY_VERY_HIGH = 3,
     PRIORITY_HIGH = 4,
+    NORMAL_PRIORITY = 5,  // Alias for PRIORITY_NORMAL
     PRIORITY_NORMAL = 5,
     PRIORITY_LOW = 6,
     PRIORITY_BEST_EFFORT = 7,
@@ -36,6 +37,16 @@ class SequenceManagerTask {
   void set_queue_name(QueueName value) {}
   void set_priority(Priority value) {}
   void set_task_type(int32_t value) {}
+
+  // Static method to convert QueueName enum to string
+  static const char* QueueName_Name(QueueName value) {
+    switch (value) {
+      case QUEUE_NAME_UNKNOWN: return "QUEUE_NAME_UNKNOWN";
+      case QUEUE_NAME_DEFAULT: return "QUEUE_NAME_DEFAULT";
+      case QUEUE_NAME_CONTROL: return "QUEUE_NAME_CONTROL";
+      default: return "UNKNOWN";
+    }
+  }
 };
 
 }  // namespace pbzero

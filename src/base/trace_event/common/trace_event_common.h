@@ -96,6 +96,11 @@
 #define TRACE_EVENT_FLAG_FLOW_IN (1u << 0)
 #define TRACE_EVENT_FLAG_FLOW_OUT (1u << 1)
 
+// Trace event scope
+#define TRACE_EVENT_SCOPE_THREAD 0
+#define TRACE_EVENT_SCOPE_PROCESS 1
+#define TRACE_EVENT_SCOPE_GLOBAL 2
+
 // Trace ID macros
 #define TRACE_ID_LOCAL(id) (id)
 
@@ -104,10 +109,13 @@
   (static_cast<const unsigned char*>(nullptr))
 #define TRACE_EVENT_CATEGORY_GROUP_ENABLED(category, ret) \
   do { *(ret) = false; } while (0)
+#define TRACE_EVENT_CATEGORY_ENABLED(category) (false)
 
 // Typed tracing macros (with lambda support) - all disabled
 #define TRACE_EVENT(category, name, ...) do { (void)(category); (void)(name); } while (0)
 #define TRACE_EVENT_INSTANT(category, name, ...) do { (void)(category); (void)(name); } while (0)
+#define TRACE_EVENT_INSTANT1(category, name, scope, arg1_name, arg1_val) do { (void)(category); (void)(name); (void)(scope); (void)(arg1_name); (void)(arg1_val); } while (0)
+#define TRACE_COUNTER1(category, name, value) do { (void)(category); (void)(name); (void)(value); } while (0)
 
 // Stub namespace declarations for compatibility
 namespace perfetto {
