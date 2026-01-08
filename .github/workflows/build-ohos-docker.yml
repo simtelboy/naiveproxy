@@ -59,16 +59,32 @@ jobs:
           echo "      速度: 比完整编译快 5-10 倍"
           echo ""
 
-          # 下载编译器
+          # 1. 下载 gn 工具
+          echo "下载 gn 工具..."
+          if [ ! -f "gn/gn" ]; then
+            mkdir -p gn
+            cd gn
+            curl -LO https://chrome-infra-packages.appspot.com/dl/gn/gn/linux-amd64/+/latest
+            mv latest gn
+            chmod +x gn
+            cd ..
+          fi
+          export PATH="$PWD/gn:$PATH"
+          gn --version
+
+          # 2. 下载编译器
+          echo "下载编译器..."
           ./get-clang.sh
           EXTRA_FLAGS='target_os="android"' ./get-clang.sh
 
-          # 生成构建配置
+          # 3. 生成构建配置
+          echo "生成构建配置..."
           gn gen out/SyntaxCheck --args='target_os="android" target_cpu="arm64" is_official_build=true is_debug=false'
 
-          # 方案1: 编译所有 .o 文件但不链接
+          # 4. 方案1: 编译所有 .o 文件但不链接
           # -k 0 = 遇到错误继续编译,显示所有错误
           # 只编译 base 目标(不链接最终可执行文件)
+          echo ""
           echo "开始编译检查 (编译到 .o 文件)..."
           START_TIME=$(date +%s)
 
