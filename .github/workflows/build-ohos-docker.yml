@@ -315,8 +315,9 @@ jobs:
           # 编译配置:
           # -k 10 = 最多允许10个错误,第11个错误时停止
           # 2>&1 = 合并标准输出和错误输出
-          # 保存完整输出到临时文件
-          ninja -C "out/Release-ohos-${{ matrix.arch }}" -k 10 naive_shared 2>&1 | tee full_build.log
+          # grep -v "warning:" = 过滤掉所有警告信息
+          # 保存完整输出到临时文件,同时过滤警告后显示
+          ninja -C "out/Release-ohos-${{ matrix.arch }}" -k 10 naive_shared 2>&1 | tee full_build.log | grep -v "warning:"
           BUILD_STATUS=${PIPESTATUS[0]}
 
           # 如果编译失败,提取并显示详细的错误信息
