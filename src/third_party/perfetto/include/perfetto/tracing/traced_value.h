@@ -5,8 +5,8 @@
 #include <stdint.h>
 #include <string>
 
-// Include forward declarations
-#include "perfetto/tracing/traced_value_forward.h"
+// Include forward declarations - use relative path
+#include "third_party/perfetto/include/perfetto/tracing/traced_value_forward.h"
 
 namespace perfetto {
 
