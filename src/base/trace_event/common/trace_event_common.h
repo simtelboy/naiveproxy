@@ -82,8 +82,9 @@
 #define TRACE_EVENT_INSTANT0(category, name, scope)
 #define TRACE_EVENT_BEGIN0(category, name)
 #define TRACE_EVENT_END0(category, name)
-#define TRACE_EVENT_BEGIN(category, name, ...)
-#define TRACE_EVENT_END(category, name, ...)
+// Support both 1 and 2+ arguments
+#define TRACE_EVENT_BEGIN(...) do { } while (0)
+#define TRACE_EVENT_END(...) do { } while (0)
 #define TRACE_EVENT_ASYNC_BEGIN0(category, name, id)
 #define TRACE_EVENT_ASYNC_END0(category, name, id)
 #define TRACE_EVENT_OBJECT_CREATED_WITH_ID(category, name, id)
@@ -122,6 +123,7 @@
 
 // Async event macros
 #define TRACE_EVENT_NESTABLE_ASYNC_BEGIN0(category, name, id) do { (void)(category); (void)(name); (void)(id); } while (0)
+#define TRACE_EVENT_NESTABLE_ASYNC_BEGIN1(category, name, id, arg1_name, arg1_val) do { (void)(category); (void)(name); (void)(id); (void)(arg1_name); (void)(arg1_val); } while (0)
 #define TRACE_EVENT_NESTABLE_ASYNC_END0(category, name, id) do { (void)(category); (void)(name); (void)(id); } while (0)
 
 // Stub namespace declarations for compatibility

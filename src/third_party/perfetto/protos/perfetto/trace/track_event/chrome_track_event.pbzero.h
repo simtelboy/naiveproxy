@@ -6,6 +6,9 @@
 #include <stdint.h>
 #include <string>
 
+// Include ChromeThreadPoolTask definition
+#include "third_party/perfetto/protos/perfetto/trace/track_event/chrome_thread_pool_task.pbzero.h"
+
 namespace perfetto {
 namespace protos {
 namespace pbzero {
@@ -16,7 +19,6 @@ class ChromeMojoEventInfo;
 class TaskExecution;
 class CurrentTask;
 class SequenceManagerTask;
-class ChromeThreadPoolTask;
 
 // Stub implementation of ChromeTrackEvent
 class ChromeTrackEvent {

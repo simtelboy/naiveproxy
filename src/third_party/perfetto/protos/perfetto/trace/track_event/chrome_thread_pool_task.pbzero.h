@@ -39,6 +39,7 @@ class ChromeThreadPoolTask {
   ChromeThreadPoolTask() = default;
   ~ChromeThreadPoolTask() = default;
 
+  void set_task_priority(Priority value) {}
   void set_priority(Priority value) {}
   void set_execution_mode(ExecutionMode value) {}
   void set_shutdown_behavior(ShutdownBehavior value) {}
