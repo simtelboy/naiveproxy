@@ -5,6 +5,9 @@
 #include <stdint.h>
 #include <string>
 
+// Include forward declarations
+#include "perfetto/tracing/traced_value_forward.h"
+
 namespace perfetto {
 
 // Forward declarations for pbzero types
@@ -14,47 +17,8 @@ class ChromeTrackEvent;
 }
 }
 
-// Stub Dictionary class
-class TracedDictionary {
- public:
-  TracedDictionary() = default;
-  ~TracedDictionary() = default;
-
-  void Add(const char* key, int64_t value) {}
-  void Add(const char* key, const char* value) {}
-  void Add(const char* key, const std::string& value) {}
-};
-
-// Stub Array class
-class TracedArray {
- public:
-  TracedArray() = default;
-  ~TracedArray() = default;
-
-  template <typename T>
-  void Append(const T& value) {}
-};
-
-// Stub implementation
-class TracedValue {
- public:
-  TracedValue() = default;
-  ~TracedValue() = default;
-
-  void WriteInt64(int64_t value) {}
-  void WriteUInt64(uint64_t value) {}
-  void WriteDouble(double value) {}
-  void WriteBoolean(bool value) {}
-  void WriteString(const char* value) {}
-  void WriteString(const std::string& value) {}
-  void WritePointer(const void* value) {}
-
-  // Add WriteDictionary method
-  TracedDictionary WriteDictionary() { return TracedDictionary(); }
-
-  // Add WriteArray method
-  TracedArray WriteArray() { return TracedArray(); }
-};
+// TracedDictionary and TracedArray are already defined in traced_value_forward.h
+// TracedValue is also defined there
 
 // Forward declaration for internal types
 namespace internal {

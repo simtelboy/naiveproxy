@@ -49,16 +49,7 @@ class StaticString {
   const char* value;
 };
 
-// Stub DynamicString class - for runtime strings
-class DynamicString {
- public:
-  explicit DynamicString(const std::string& str) : value(str) {}
-  explicit DynamicString(std::string&& str) : value(std::move(str)) {}
-  explicit DynamicString(const char* str) : value(str ? str : "") {}
-  const std::string& str() const { return value; }
- private:
-  std::string value;
-};
+// DynamicString is defined in string_helpers.h, not here
 
 // Stub TracedArray class
 class TracedArray {
@@ -79,8 +70,31 @@ class TracedDictionary {
   template <typename T>
   void Add(const char* key, const T& value) {}
 
-  template <typename T>
-  void Add(const DynamicString& key, const T& value) {}
+  // Note: DynamicString version will be available after string_helpers.h is included
+  void Add(const char* key, int64_t value) {}
+  void Add(const char* key, const char* value) {}
+  void Add(const char* key, const std::string& value) {}
+};
+
+// Stub TracedValue class - main traced value type
+class TracedValue {
+ public:
+  TracedValue() = default;
+  ~TracedValue() = default;
+
+  void WriteInt64(int64_t value) {}
+  void WriteUInt64(uint64_t value) {}
+  void WriteDouble(double value) {}
+  void WriteBoolean(bool value) {}
+  void WriteString(const char* value) {}
+  void WriteString(const std::string& value) {}
+  void WritePointer(const void* value) {}
+
+  // Add WriteDictionary method
+  TracedDictionary WriteDictionary() { return TracedDictionary(); }
+
+  // Add WriteArray method
+  TracedArray WriteArray() { return TracedArray(); }
 };
 
 // Forward declaration of NamedTrack
