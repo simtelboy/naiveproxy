@@ -1277,11 +1277,16 @@ component("base") {
       "android/statistics_recorder_android.cc",
       "android/token_android.cc",
       "android/token_android.h",
-      "android/trace_event_binding.cc",
-      "android/trace_event_binding.h",
       "android/unguessable_token_android.cc",
       "android/unguessable_token_android.h",
     ]
+    # trace_event_binding depends on Perfetto, exclude for cronet builds
+    if (!is_cronet_build) {
+      sources += [
+        "android/trace_event_binding.cc",
+        "android/trace_event_binding.h",
+      ]
+    }
     deps += [
       "//build:robolectric_buildflags",
     ]
@@ -2299,84 +2304,87 @@ component("base") {
     ]
   }
 
-  sources += [
-    "trace_event/auto_open_close_event.h",
-    "trace_event/builtin_categories.h",
-    "trace_event/heap_profiler.h",
-    "trace_event/interned_args_helper.cc",
-    "trace_event/interned_args_helper.h",
-    "trace_event/log_message.cc",
-    "trace_event/log_message.h",
-    "trace_event/malloc_dump_provider.cc",
-    "trace_event/malloc_dump_provider.h",
-    "trace_event/memory_allocator_dump.cc",
-    "trace_event/memory_allocator_dump.h",
-    "trace_event/memory_dump_manager.cc",
-    "trace_event/memory_dump_manager.h",
-    "trace_event/memory_dump_manager_test_utils.h",
-    "trace_event/memory_dump_provider.h",
-    "trace_event/memory_dump_provider_info.cc",
-    "trace_event/memory_dump_provider_info.h",
-    "trace_event/memory_dump_request_args.cc",
-    "trace_event/memory_dump_request_args.h",
-    "trace_event/memory_dump_scheduler.cc",
-    "trace_event/memory_dump_scheduler.h",
-    "trace_event/memory_infra_background_allowlist.cc",
-    "trace_event/memory_infra_background_allowlist.h",
-    "trace_event/memory_pressure_level_proto.cc",
-    "trace_event/memory_pressure_level_proto.h",
-    "trace_event/memory_usage_estimator.cc",
-    "trace_event/memory_usage_estimator.h",
-    "trace_event/optional_trace_event.h",
-    "trace_event/perfetto_proto_appender.cc",
-    "trace_event/perfetto_proto_appender.h",
-    "trace_event/process_memory_dump.cc",
-    "trace_event/process_memory_dump.h",
-    "trace_event/trace_arguments.cc",
-    "trace_event/trace_arguments.h",
-    "trace_event/trace_buffer.cc",
-    "trace_event/trace_buffer.h",
-    "trace_event/trace_config.cc",
-    "trace_event/trace_config.h",
-    "trace_event/trace_config_category_filter.cc",
-    "trace_event/trace_config_category_filter.h",
-    "trace_event/trace_event.h",
-    "trace_event/trace_event_impl.cc",
-    "trace_event/trace_event_impl.h",
-    "trace_event/trace_log.cc",
-    "trace_event/trace_log.h",
-    "trace_event/traced_value.cc",
-    "trace_event/traced_value.h",
-    "trace_event/traced_value_support.h",
-    "trace_event/tracing_agent.cc",
-    "trace_event/tracing_agent.h",
-    "trace_event/typed_macros.h",
-    "trace_event/typed_macros_embedder_support.h",
-    "trace_event/user_action.cc",
-    "trace_event/user_action.h",
-    "tracing/perfetto_platform.cc",
-    "tracing/perfetto_platform.h",
-    "tracing/perfetto_task_runner.cc",
-    "tracing/perfetto_task_runner.h",
-    "tracing/trace_time.cc",
-    "tracing/trace_time.h",
-    "tracing/tracing_tls.cc",
-    "tracing/tracing_tls.h",
-  ]
+  # Tracing sources - excluded for cronet builds to avoid Perfetto dependency
+  if (!is_cronet_build) {
+    sources += [
+      "trace_event/auto_open_close_event.h",
+      "trace_event/builtin_categories.h",
+      "trace_event/heap_profiler.h",
+      "trace_event/interned_args_helper.cc",
+      "trace_event/interned_args_helper.h",
+      "trace_event/log_message.cc",
+      "trace_event/log_message.h",
+      "trace_event/malloc_dump_provider.cc",
+      "trace_event/malloc_dump_provider.h",
+      "trace_event/memory_allocator_dump.cc",
+      "trace_event/memory_allocator_dump.h",
+      "trace_event/memory_dump_manager.cc",
+      "trace_event/memory_dump_manager.h",
+      "trace_event/memory_dump_manager_test_utils.h",
+      "trace_event/memory_dump_provider.h",
+      "trace_event/memory_dump_provider_info.cc",
+      "trace_event/memory_dump_provider_info.h",
+      "trace_event/memory_dump_request_args.cc",
+      "trace_event/memory_dump_request_args.h",
+      "trace_event/memory_dump_scheduler.cc",
+      "trace_event/memory_dump_scheduler.h",
+      "trace_event/memory_infra_background_allowlist.cc",
+      "trace_event/memory_infra_background_allowlist.h",
+      "trace_event/memory_pressure_level_proto.cc",
+      "trace_event/memory_pressure_level_proto.h",
+      "trace_event/memory_usage_estimator.cc",
+      "trace_event/memory_usage_estimator.h",
+      "trace_event/optional_trace_event.h",
+      "trace_event/perfetto_proto_appender.cc",
+      "trace_event/perfetto_proto_appender.h",
+      "trace_event/process_memory_dump.cc",
+      "trace_event/process_memory_dump.h",
+      "trace_event/trace_arguments.cc",
+      "trace_event/trace_arguments.h",
+      "trace_event/trace_buffer.cc",
+      "trace_event/trace_buffer.h",
+      "trace_event/trace_config.cc",
+      "trace_event/trace_config.h",
+      "trace_event/trace_config_category_filter.cc",
+      "trace_event/trace_config_category_filter.h",
+      "trace_event/trace_event.h",
+      "trace_event/trace_event_impl.cc",
+      "trace_event/trace_event_impl.h",
+      "trace_event/trace_log.cc",
+      "trace_event/trace_log.h",
+      "trace_event/traced_value.cc",
+      "trace_event/traced_value.h",
+      "trace_event/traced_value_support.h",
+      "trace_event/tracing_agent.cc",
+      "trace_event/tracing_agent.h",
+      "trace_event/typed_macros.h",
+      "trace_event/typed_macros_embedder_support.h",
+      "trace_event/user_action.cc",
+      "trace_event/user_action.h",
+      "tracing/perfetto_platform.cc",
+      "tracing/perfetto_platform.h",
+      "tracing/perfetto_task_runner.cc",
+      "tracing/perfetto_task_runner.h",
+      "tracing/trace_time.cc",
+      "tracing/trace_time.h",
+      "tracing/tracing_tls.cc",
+      "tracing/tracing_tls.h",
+    ]
 
-  public_deps += [
-    "//base/tracing/protos:chrome_track_event_zero",
-    "//third_party/perfetto:libperfetto",
-  ]
+    public_deps += [
+      "//base/tracing/protos:chrome_track_event_zero",
+      "//third_party/perfetto:libperfetto",
+    ]
 
-  deps += [
-    "//base/tracing/protos:chrome_track_event",
-    "//third_party/perfetto/include/perfetto/protozero",
-  ]
+    deps += [
+      "//base/tracing/protos:chrome_track_event",
+      "//third_party/perfetto/include/perfetto/protozero",
+    ]
 
-  all_dependent_configs += [ "//third_party/perfetto/gn:public_config" ]
+    all_dependent_configs += [ "//third_party/perfetto/gn:public_config" ]
+  }
 
-  if (is_win) {
+  if (is_win && !is_cronet_build) {
     sources += [
       "trace_event/etw_interceptor_win.cc",
       "trace_event/etw_interceptor_win.h",
@@ -2385,7 +2393,7 @@ component("base") {
     ]
   }
 
-  if (is_android) {
+  if (is_android && !is_cronet_build) {
     sources += [
       "trace_event/application_state_proto_android.cc",
       "trace_event/application_state_proto_android.h",
@@ -2396,7 +2404,7 @@ component("base") {
     ]
   }
 
-  if (use_partition_alloc_as_malloc) {
+  if (use_partition_alloc_as_malloc && !is_cronet_build) {
     sources += [
       "trace_event/address_space_dump_provider.cc",
       "trace_event/address_space_dump_provider.h",
