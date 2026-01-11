@@ -5,18 +5,10 @@
 #ifndef BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
 #define BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
 
-// Stub implementation for OpenHarmony - Perfetto tracing disabled
-
-////////////////////////////////////////////////////////////////////////////////
-// Stub trace macros
-
 #include "base/threading/platform_thread.h"
 #include "base/time/time.h"
 #include "base/tracing_buildflags.h"
 #include "build/build_config.h"
-
-// Disable Perfetto tracing for OpenHarmony
-#define PERFETTO_ENABLE_LEGACY_TRACE_EVENTS 0
 
 // Macros for reading the current trace time (bypassing any virtual time
 // overrides).
@@ -28,15 +20,27 @@
 // variable a unique name based on the line number to prevent name collisions.
 #define INTERNAL_TRACE_EVENT_UID(name_prefix) name_prefix##__LINE__
 
+// Category name macro for disabled-by-default categories
+#define TRACE_DISABLED_BY_DEFAULT(name) "disabled-by-default-" name
+
+// Trace ID macros
+#define TRACE_ID_LOCAL(id) (id)
+
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+// When tracing is enabled, include the real Perfetto implementation
+// The actual macros and types come from Perfetto headers
+#else
+// Stub implementation for when Perfetto tracing is disabled (e.g., cronet builds)
+
+// Disable Perfetto tracing
+#define PERFETTO_ENABLE_LEGACY_TRACE_EVENTS 0
+
 // Stub macros to replace Perfetto trace event macros
 #define PERFETTO_UID(name_prefix) name_prefix##__LINE__
 #define PERFETTO_DEFINE_TEST_CATEGORY_PREFIXES(...)
 #define PERFETTO_DEFINE_CATEGORIES_IN_NAMESPACE_WITH_ATTRS(ns, attrs, ...)
 #define PERFETTO_USE_CATEGORIES_FROM_NAMESPACE(ns)
 #define PERFETTO_TRACK_EVENT_STATIC_STORAGE_IN_NAMESPACE_WITH_ATTRS(ns, attrs)
-
-// Category name macro for disabled-by-default categories
-#define TRACE_DISABLED_BY_DEFAULT(name) "disabled-by-default-" name
 
 // Trace value type constants
 #define TRACE_VALUE_TYPE_BOOL 1
@@ -133,9 +137,6 @@
 #define TRACE_EVENT_SCOPE_NAME_PROCESS "p"
 #define TRACE_EVENT_SCOPE_NAME_THREAD "t"
 
-// Trace ID macros
-#define TRACE_ID_LOCAL(id) (id)
-
 // Trace event API macros
 #define TRACE_EVENT_API_GET_CATEGORY_GROUP_ENABLED(category) \
   (static_cast<const unsigned char*>(nullptr))
@@ -158,8 +159,7 @@
 #define TRACE_EVENT_NESTABLE_ASYNC_BEGIN1(category, name, id, arg1_name, arg1_val) do { (void)(category); (void)(name); (void)(id); (void)(arg1_name); (void)(arg1_val); } while (0)
 #define TRACE_EVENT_NESTABLE_ASYNC_END0(category, name, id) do { (void)(category); (void)(name); (void)(id); } while (0)
 
-// Stub namespace declarations for compatibility - only when tracing is disabled
-#if !BUILDFLAG(ENABLE_BASE_TRACING)
+// Stub namespace declarations for compatibility
 namespace perfetto {
 
 // Forward declarations

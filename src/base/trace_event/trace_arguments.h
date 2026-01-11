@@ -23,9 +23,12 @@
 #include "base/memory/raw_ptr_exclusion.h"
 #include "base/trace_event/common/trace_event_common.h"
 #include "base/tracing_buildflags.h"
+
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 #include "third_party/perfetto/include/perfetto/protozero/scattered_heap_buffer.h"
 #include "third_party/perfetto/include/perfetto/tracing/traced_value.h"
 #include "third_party/perfetto/protos/perfetto/trace/track_event/debug_annotation.pbzero.h"
+#endif
 
 // Trace macro can have one or two optional arguments, each one of them
 // identified by a name (a C string literal) and a value, which can be an
@@ -145,6 +148,7 @@ namespace trace_event {
 // class must implement this interface. Note that unlike other values,
 // these objects will be owned by the TraceArguments instance that points
 // to them.
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 class BASE_EXPORT ConvertableToTraceFormat : public perfetto::DebugAnnotation {
  public:
   ConvertableToTraceFormat() = default;
@@ -176,6 +180,26 @@ class BASE_EXPORT ConvertableToTraceFormat : public perfetto::DebugAnnotation {
   // DebugAnnotation implementation.
   void Add(perfetto::protos::pbzero::DebugAnnotation*) const override;
 };
+#else
+// Stub implementation when tracing is disabled
+class BASE_EXPORT ConvertableToTraceFormat {
+ public:
+  ConvertableToTraceFormat() = default;
+  ConvertableToTraceFormat(const ConvertableToTraceFormat&) = delete;
+  ConvertableToTraceFormat& operator=(const ConvertableToTraceFormat&) = delete;
+  virtual ~ConvertableToTraceFormat() = default;
+
+  virtual void AppendAsTraceFormat(std::string* out) const = 0;
+
+  class BASE_EXPORT ProtoAppender {
+   public:
+    virtual ~ProtoAppender() = default;
+    virtual void AddBuffer(uint8_t* begin, uint8_t* end) = 0;
+    virtual size_t Finalize(uint32_t field_id) = 0;
+  };
+  virtual bool AppendToProto(ProtoAppender* appender) const { return false; }
+};
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 const int kTraceMaxNumArgs = 2;
 
