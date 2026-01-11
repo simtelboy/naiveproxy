@@ -24,8 +24,11 @@
 #include "base/trace_event/common/trace_event_common.h"  // IWYU pragma: export
 #include "base/trace_event/trace_arguments.h"
 #include "base/trace_event/trace_event_impl.h"
-#include "base/trace_event/traced_value_support.h"
 #include "base/tracing_buildflags.h"
+
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+#include "base/trace_event/traced_value_support.h"
+#endif
 
 // Legacy TRACE_EVENT_API entrypoints. Do not use from new code.
 
@@ -193,6 +196,7 @@ class TraceScopedTrackableObject {
   IDType id_;
 };
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 // Tracks that are used to group other tracks may not get any events of their
 // own, so their descriptor needs to be explicitly registered. This class wraps
 // a track to automatically register/unregistered its descriptor in the
@@ -221,6 +225,7 @@ class TrackRegistration {
  private:
   TrackType track_;
 };
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 }  // namespace trace_event
 }  // namespace base

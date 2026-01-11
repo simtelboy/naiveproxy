@@ -5,6 +5,10 @@
 #ifndef BASE_TRACE_EVENT_INTERNED_ARGS_HELPER_H_
 #define BASE_TRACE_EVENT_INTERNED_ARGS_HELPER_H_
 
+#include "base/tracing_buildflags.h"
+
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+
 #include <optional>
 #include <string>
 
@@ -177,5 +181,7 @@ struct BASE_EXPORT InternedUnsymbolizedSourceLocation
 
 }  // namespace trace_event
 }  // namespace base
+
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 #endif  // BASE_TRACE_EVENT_INTERNED_ARGS_HELPER_H_

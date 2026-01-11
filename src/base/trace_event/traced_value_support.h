@@ -5,6 +5,10 @@
 #ifndef BASE_TRACE_EVENT_TRACED_VALUE_SUPPORT_H_
 #define BASE_TRACE_EVENT_TRACED_VALUE_SUPPORT_H_
 
+#include "base/tracing_buildflags.h"
+
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+
 #include <optional>
 #include <string_view>
 
@@ -232,5 +236,7 @@ struct TraceFormatTraits<::std::wstring_view> {
 };
 
 }  // namespace perfetto
+
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 #endif  // BASE_TRACE_EVENT_TRACED_VALUE_SUPPORT_H_
