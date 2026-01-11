@@ -2611,7 +2611,11 @@ buildflag_header("sanitizer_buildflags") {
 buildflag_header("tracing_buildflags") {
   header = "tracing_buildflags.h"
 
+  # Enable base tracing only for non-cronet builds
+  _enable_base_tracing = !is_cronet_build
+
   flags = [
+    "ENABLE_BASE_TRACING=$_enable_base_tracing",
     "USE_PERFETTO_TRACE_PROCESSOR=$use_perfetto_trace_processor",
     "OPTIONAL_TRACE_EVENTS_ENABLED=$optional_trace_events_enabled",
   ]

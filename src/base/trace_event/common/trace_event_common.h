@@ -12,6 +12,7 @@
 
 #include "base/threading/platform_thread.h"
 #include "base/time/time.h"
+#include "base/tracing_buildflags.h"
 #include "build/build_config.h"
 
 // Disable Perfetto tracing for OpenHarmony
@@ -152,7 +153,8 @@
 #define TRACE_EVENT_NESTABLE_ASYNC_BEGIN1(category, name, id, arg1_name, arg1_val) do { (void)(category); (void)(name); (void)(id); (void)(arg1_name); (void)(arg1_val); } while (0)
 #define TRACE_EVENT_NESTABLE_ASYNC_END0(category, name, id) do { (void)(category); (void)(name); (void)(id); } while (0)
 
-// Stub namespace declarations for compatibility
+// Stub namespace declarations for compatibility - only when tracing is disabled
+#if !BUILDFLAG(ENABLE_BASE_TRACING)
 namespace perfetto {
 
 // Forward declarations
@@ -234,6 +236,11 @@ struct Track {
   template <typename T>
   static Track FromPointer(const T* ptr) {
     return Track(reinterpret_cast<uint64_t>(ptr));
+  }
+
+  template <typename T>
+  static Track FromPointer(const T* ptr, Track parent) {
+    return Track(reinterpret_cast<uint64_t>(ptr), parent.uuid);
   }
 
   static Track Global(uint64_t id) { return Track(id); }
@@ -386,5 +393,7 @@ class TrackEvent {
   static uint32_t GetTraceClockId() { return 0; }
 };
 }  // namespace base
+
+#endif  // !BUILDFLAG(ENABLE_BASE_TRACING)
 
 #endif  // BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_

@@ -13,8 +13,12 @@
 #include "base/power_monitor/power_observer.h"
 #include "base/time/time.h"
 #include "base/trace_event/trace_event.h"
+#include "base/tracing_buildflags.h"
 #include "build/build_config.h"
+
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 #include "third_party/perfetto/include/perfetto/tracing/track.h"
+#endif
 
 namespace base {
 
@@ -26,7 +30,11 @@ class PowerMonitorSource;
 // initialization happens before any other methods are invoked, including
 // IsInitialized(). IsInitialized() exists only as a convenience for detection
 // of test contexts where the PowerMonitor global is never created.
-class BASE_EXPORT PowerMonitor : public perfetto::TrackEventSessionObserver {
+class BASE_EXPORT PowerMonitor
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+    : public perfetto::TrackEventSessionObserver
+#endif
+{
  public:
   static PowerMonitor* GetInstance();
 
@@ -112,8 +120,10 @@ class BASE_EXPORT PowerMonitor : public perfetto::TrackEventSessionObserver {
   PowerMonitor();
   ~PowerMonitor() override;
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   // perfetto::TrackEventSessionObserver overrides:
   void OnStart(const perfetto::DataSourceBase::StartArgs&) override;
+#endif
 
   const PowerMonitorSource* Source() const;
 
@@ -137,8 +147,10 @@ class BASE_EXPORT PowerMonitor : public perfetto::TrackEventSessionObserver {
   mutable Lock battery_power_status_lock_;
 
   bool emit_global_event_ = false;
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   const perfetto::NamedTrack suspend_track_;
   const perfetto::NamedTrack battery_power_track_;
+#endif
   PowerThermalObserver::DeviceThermalState power_thermal_state_
       GUARDED_BY(power_thermal_state_lock_) =
           PowerThermalObserver::DeviceThermalState::kUnknown;
