@@ -26,26 +26,7 @@
 
 namespace perfetto {
 
-// StaticString is defined in traced_value_forward.h
-
-// A explicit wrapper for marking strings as dynamic to ensure that perfetto
-// doesn't try to cache the pointer value.
-class PERFETTO_EXPORT_COMPONENT DynamicString {
- public:
-  explicit DynamicString(const std::string& str)
-      : value(str.data()), length(str.length()) {}
-  explicit DynamicString(const char* str) : value(str) {
-    PERFETTO_DCHECK(str);
-    length = strlen(str);
-  }
-  DynamicString(const char* str, size_t len) : value(str), length(len) {}
-  constexpr DynamicString() : value(nullptr), length(0) {}
-
-  operator bool() const { return !!value; }
-
-  const char* value;
-  size_t length;
-};
+// StaticString and DynamicString are defined in traced_value_forward.h
 
 namespace internal {
 
