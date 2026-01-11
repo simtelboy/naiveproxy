@@ -49,9 +49,11 @@ class DebugAnnotation {
   // Proto value
   void set_proto_value(const void* data, size_t size) {}
 
-  // Scattered bytes support for protozero
+  // Scattered bytes support for protozero - returns size_t (bytes written)
   template <typename T>
-  void AppendScatteredBytes(uint32_t field_id, const T* ranges, size_t num_ranges) {}
+  size_t AppendScatteredBytes(uint32_t field_id, const T* ranges, size_t num_ranges) {
+    return 0;
+  }
 
   // Virtual method for derived classes
   virtual void Add(DebugAnnotation*) const {}

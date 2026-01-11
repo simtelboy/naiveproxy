@@ -1,60 +1,31 @@
-/*
- * Copyright (C) 2019 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2024 Stub implementation for OpenHarmony
 #ifndef INCLUDE_PERFETTO_EXT_TRACE_PROCESSOR_EXPORT_JSON_H_
 #define INCLUDE_PERFETTO_EXT_TRACE_PROCESSOR_EXPORT_JSON_H_
 
-#include <stdio.h>
+#include "third_party/perfetto/include/perfetto/base/export.h"
 
 #include <functional>
-
-#include "perfetto/base/export.h"
-#include "perfetto/trace_processor/status.h"
+#include <string>
 
 namespace perfetto {
 namespace trace_processor {
-
-class TraceProcessorStorage;
-
 namespace json {
 
-using ArgumentNameFilterPredicate = std::function<bool(const char* arg_name)>;
-using ArgumentFilterPredicate =
-    std::function<bool(const char* category_group_name,
-                       const char* event_name,
-                       ArgumentNameFilterPredicate*)>;
-using MetadataFilterPredicate = std::function<bool(const char* metadata_name)>;
-using LabelFilterPredicate = std::function<bool(const char* label_name)>;
-
+// Stub OutputWriter for JSON export
 class PERFETTO_EXPORT_COMPONENT OutputWriter {
  public:
-  OutputWriter();
-  virtual ~OutputWriter();
-
-  virtual base::Status AppendString(const std::string&) = 0;
+  virtual ~OutputWriter() = default;
+  virtual void Write(const std::string& str) = 0;
 };
 
-// Public for Chrome. Exports the trace loaded in TraceProcessorStorage to json,
-// applying argument, metadata and label filtering using the callbacks.
-base::Status PERFETTO_EXPORT_COMPONENT
-ExportJson(TraceProcessorStorage*,
-           OutputWriter*,
-           ArgumentFilterPredicate = nullptr,
-           MetadataFilterPredicate = nullptr,
-           LabelFilterPredicate = nullptr);
+// Stub function for exporting trace to JSON
+inline int ExportJson(void* tp,
+                      OutputWriter* output,
+                      std::function<bool(const char*)> argument_filter = nullptr,
+                      std::function<bool(const char*)> metadata_filter = nullptr,
+                      std::function<bool(const char*)> label_filter = nullptr) {
+  return 0;
+}
 
 }  // namespace json
 }  // namespace trace_processor

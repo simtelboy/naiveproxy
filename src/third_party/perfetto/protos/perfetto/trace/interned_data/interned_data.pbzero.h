@@ -9,18 +9,15 @@ namespace perfetto {
 namespace protos {
 namespace pbzero {
 
-// Forward declarations for nested message types
+// Forward declarations - these are defined in their own headers
+// Do NOT define them here to avoid redefinition errors
 class SourceLocation;
 class LogMessageBody;
 class InternedString;
 class Mapping;
 class Frame;
 class Callstack;
-class EventCategory;
-class EventName;
-class DebugAnnotationName;
-class DebugAnnotationValueTypeName;
-class HistogramName;
+class UnsymbolizedSourceLocation;
 
 // Stub for InternedData protobuf message
 class InternedData {
@@ -44,119 +41,78 @@ class InternedData {
   static constexpr int kCallstacksFieldNumber = 7;
   static constexpr int kHistogramNamesFieldNumber = 25;
 
-  // Stub methods - return dummy nested message pointers
-  template <typename T>
-  T* add_source_locations() { return nullptr; }
+  // Non-template add methods that return pointers to stub types
+  SourceLocation* add_source_locations();
+  LogMessageBody* add_log_message_body();
+  InternedString* add_build_ids();
+  InternedString* add_mapping_paths();
+  InternedString* add_function_names();
+  Mapping* add_mappings();
+  Frame* add_frames();
+  Callstack* add_callstacks();
+  UnsymbolizedSourceLocation* add_unsymbolized_source_locations();
 
-  template <typename T>
-  T* add_log_message_body() { return nullptr; }
+  // Stub EventCategory for interning
+  class EventCategory {
+   public:
+    void set_iid(uint64_t) {}
+    void set_name(const char*) {}
+    void set_name(const char*, size_t) {}
+    void set_name(const std::string&) {}
+  };
+  EventCategory* add_event_categories() { return nullptr; }
 
-  template <typename T>
-  T* add_build_ids() { return nullptr; }
+  // Stub EventName for interning
+  class EventName {
+   public:
+    void set_iid(uint64_t) {}
+    void set_name(const char*) {}
+    void set_name(const std::string&) {}
+  };
+  EventName* add_event_names() { return nullptr; }
 
-  template <typename T>
-  T* add_mapping_paths() { return nullptr; }
+  // Stub DebugAnnotationName for interning
+  class DebugAnnotationName {
+   public:
+    void set_iid(uint64_t) {}
+    void set_name(const char*) {}
+    void set_name(const std::string&) {}
+  };
+  DebugAnnotationName* add_debug_annotation_names() { return nullptr; }
 
-  template <typename T>
-  T* add_function_names() { return nullptr; }
+  // Stub DebugAnnotationValueTypeName for interning
+  class DebugAnnotationValueTypeName {
+   public:
+    void set_iid(uint64_t) {}
+    void set_name(const char*) {}
+    void set_name(const std::string&) {}
+  };
+  DebugAnnotationValueTypeName* add_debug_annotation_value_type_names() { return nullptr; }
 
-  template <typename T>
-  T* add_mappings() { return nullptr; }
-
-  template <typename T>
-  T* add_frames() { return nullptr; }
-
-  template <typename T>
-  T* add_callstacks() { return nullptr; }
-
-  template <typename T>
-  T* add_event_categories() { return nullptr; }
-
-  template <typename T>
-  T* add_event_names() { return nullptr; }
-
-  template <typename T>
-  T* add_debug_annotation_names() { return nullptr; }
-
-  template <typename T>
-  T* add_debug_annotation_value_type_names() { return nullptr; }
-
-  template <typename T>
-  T* add_histogram_names() { return nullptr; }
+  // Stub HistogramName for interning
+  class HistogramName {
+   public:
+    void set_iid(uint64_t) {}
+    void set_name(const char*) {}
+    void set_name(const std::string&) {}
+  };
+  HistogramName* add_histogram_names() { return nullptr; }
 
   // Stub methods - do nothing
   void set_iid(uint64_t) {}
   void set_value(const char*) {}
 };
 
-// Stub SourceLocation message
-class SourceLocation {
- public:
-  void set_iid(uint64_t) {}
-  void set_file_name(const char*) {}
-  void set_file_name(const std::string&) {}
-  void set_function_name(const char*) {}
-  void set_function_name(const std::string&) {}
-  void set_line_number(uint32_t) {}
-};
-
-// Stub LogMessageBody message
-class LogMessageBody {
- public:
-  void set_iid(uint64_t) {}
-  void set_body(const char*) {}
-  void set_body(const std::string&) {}
-};
-
-// Stub InternedString message
-class InternedString {
- public:
-  void set_iid(uint64_t) {}
-  void set_str(const char*) {}
-  void set_str(const char*, size_t) {}
-  void set_str(const std::string&) {}
-};
-
-// Stub EventCategory message
-class EventCategory {
- public:
-  void set_iid(uint64_t) {}
-  void set_name(const char*) {}
-  void set_name(const char*, size_t) {}
-  void set_name(const std::string&) {}
-};
-
-// Stub EventName message
-class EventName {
- public:
-  void set_iid(uint64_t) {}
-  void set_name(const char*) {}
-  void set_name(const std::string&) {}
-};
-
-// Stub DebugAnnotationName message
-class DebugAnnotationName {
- public:
-  void set_iid(uint64_t) {}
-  void set_name(const char*) {}
-  void set_name(const std::string&) {}
-};
-
-// Stub DebugAnnotationValueTypeName message
-class DebugAnnotationValueTypeName {
- public:
-  void set_iid(uint64_t) {}
-  void set_name(const char*) {}
-  void set_name(const std::string&) {}
-};
-
-// Stub HistogramName message
-class HistogramName {
- public:
-  void set_iid(uint64_t) {}
-  void set_name(const char*) {}
-  void set_name(const std::string&) {}
-};
+// Inline implementations - return nullptr for all
+inline SourceLocation* InternedData::add_source_locations() { return nullptr; }
+inline LogMessageBody* InternedData::add_log_message_body() { return nullptr; }
+inline InternedString* InternedData::add_build_ids() { return nullptr; }
+inline InternedString* InternedData::add_mapping_paths() { return nullptr; }
+inline InternedString* InternedData::add_function_names() { return nullptr; }
+inline Mapping* InternedData::add_mappings() { return nullptr; }
+inline Frame* InternedData::add_frames() { return nullptr; }
+inline Callstack* InternedData::add_callstacks() { return nullptr; }
+inline UnsymbolizedSourceLocation* InternedData::add_unsymbolized_source_locations() { return nullptr; }
 
 }  // namespace pbzero
 }  // namespace protos

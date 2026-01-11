@@ -11,7 +11,7 @@ namespace pbzero {
 // ChromeApplicationStateInfo stub
 class ChromeApplicationStateInfo {
  public:
-  // ApplicationState enum
+  // ApplicationState enum - used as ChromeApplicationState type alias
   enum ApplicationState : int32_t {
     APPLICATION_STATE_UNKNOWN = 0,
     APPLICATION_STATE_HAS_RUNNING_ACTIVITIES = 1,
@@ -20,10 +20,14 @@ class ChromeApplicationStateInfo {
     APPLICATION_STATE_HAS_DESTROYED_ACTIVITIES = 4,
   };
 
+  // Type alias for compatibility - ChromeApplicationState is the same as ApplicationState
+  using ChromeApplicationState = ApplicationState;
+
   ChromeApplicationStateInfo() = default;
   ~ChromeApplicationStateInfo() = default;
 
   void set_application_state(ApplicationState value) {}
+  void set_application_state(ChromeApplicationState value) {}
 };
 
 }  // namespace pbzero

@@ -17,6 +17,7 @@ class MemoryTrackerSnapshot_ProcessSnapshot_MemoryEdge;
 // Stub MemoryTrackerSnapshot message
 class MemoryTrackerSnapshot {
  public:
+  // Type aliases for nested classes
   using ProcessSnapshot = MemoryTrackerSnapshot_ProcessSnapshot;
 
   // LevelOfDetail enum
@@ -38,6 +39,7 @@ class MemoryTrackerSnapshot {
 // Stub ProcessSnapshot message
 class MemoryTrackerSnapshot_ProcessSnapshot {
  public:
+  // Type aliases for nested classes
   using MemoryNode = MemoryTrackerSnapshot_ProcessSnapshot_MemoryNode;
   using MemoryEdge = MemoryTrackerSnapshot_ProcessSnapshot_MemoryEdge;
 
@@ -50,34 +52,37 @@ class MemoryTrackerSnapshot_ProcessSnapshot {
   MemoryEdge* add_memory_edges() { return nullptr; }
 };
 
+// Stub MemoryNodeEntry message (nested in MemoryNode)
+class MemoryTrackerSnapshot_ProcessSnapshot_MemoryNode_MemoryNodeEntry {
+ public:
+  // Units enum
+  enum Units : int32_t {
+    UNSPECIFIED = 0,
+    BYTES = 1,
+    COUNT = 2,
+  };
+
+  MemoryTrackerSnapshot_ProcessSnapshot_MemoryNode_MemoryNodeEntry() = default;
+  ~MemoryTrackerSnapshot_ProcessSnapshot_MemoryNode_MemoryNodeEntry() = default;
+
+  void set_name(const char* value) {}
+  void set_name(const std::string& value) {}
+  void set_units(Units value) {}
+  void set_value_uint64(uint64_t value) {}
+  void set_value_string(const char* value) {}
+  void set_value_string(const std::string& value) {}
+};
+
 // Stub MemoryNode message
 class MemoryTrackerSnapshot_ProcessSnapshot_MemoryNode {
  public:
+  // Type alias for nested entry class
+  using MemoryNodeEntry = MemoryTrackerSnapshot_ProcessSnapshot_MemoryNode_MemoryNodeEntry;
+
   // Flags enum
   enum Flags : int32_t {
     FLAG_NONE = 0,
     FLAG_WEAK = 1,
-  };
-
-  // MemoryNodeEntry for entries
-  class MemoryNodeEntry {
-   public:
-    // Units enum
-    enum Units : int32_t {
-      UNSPECIFIED = 0,
-      BYTES = 1,
-      COUNT = 2,
-    };
-
-    MemoryNodeEntry() = default;
-    ~MemoryNodeEntry() = default;
-
-    void set_name(const char* value) {}
-    void set_name(const std::string& value) {}
-    void set_units(Units value) {}
-    void set_value_uint64(uint64_t value) {}
-    void set_value_string(const char* value) {}
-    void set_value_string(const std::string& value) {}
   };
 
   MemoryTrackerSnapshot_ProcessSnapshot_MemoryNode() = default;

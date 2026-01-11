@@ -32,6 +32,7 @@
 #define PERFETTO_DEFINE_TEST_CATEGORY_PREFIXES(...)
 #define PERFETTO_DEFINE_CATEGORIES_IN_NAMESPACE_WITH_ATTRS(ns, attrs, ...)
 #define PERFETTO_USE_CATEGORIES_FROM_NAMESPACE(ns)
+#define PERFETTO_TRACK_EVENT_STATIC_STORAGE_IN_NAMESPACE_WITH_ATTRS(ns, attrs)
 
 // Category name macro for disabled-by-default categories
 #define TRACE_DISABLED_BY_DEFAULT(name) "disabled-by-default-" name
@@ -91,6 +92,7 @@
 #define TRACE_EVENT_OBJECT_SNAPSHOT_WITH_ID(category, name, id, snapshot)
 #define TRACE_EVENT_OBJECT_DELETED_WITH_ID(category, name, id)
 #define TRACE_EVENT_WITH_FLOW0(category, name, id, flags)
+#define TRACE_COUNTER_ID1(category, name, id, value) do { (void)(category); (void)(name); (void)(id); (void)(value); } while (0)
 
 // Trace event flags
 #define TRACE_EVENT_FLAG_NONE 0
@@ -120,6 +122,11 @@
 #define TRACE_EVENT_SCOPE_PROCESS 1
 #define TRACE_EVENT_SCOPE_GLOBAL 2
 
+// Trace event scope names
+#define TRACE_EVENT_SCOPE_NAME_GLOBAL "g"
+#define TRACE_EVENT_SCOPE_NAME_PROCESS "p"
+#define TRACE_EVENT_SCOPE_NAME_THREAD "t"
+
 // Trace ID macros
 #define TRACE_ID_LOCAL(id) (id)
 
@@ -129,6 +136,7 @@
 #define TRACE_EVENT_CATEGORY_GROUP_ENABLED(category, ret) \
   do { *(ret) = false; } while (0)
 #define TRACE_EVENT_CATEGORY_ENABLED(category) (false)
+#define TRACE_EVENT_API_GET_CATEGORY_GROUP_NAME(category) ""
 
 // Typed tracing macros (with lambda support) - all disabled
 #define TRACE_EVENT(category, name, ...) do { (void)(category); (void)(name); } while (0)
@@ -157,10 +165,32 @@ class DebugAnnotation;
 // Main DebugAnnotation in perfetto namespace (for inheritance)
 using DebugAnnotation = protos::pbzero::DebugAnnotation;
 
-// DataSourceBase stub
+// Forward declare DataSourceConfig
+class DataSourceConfig;
+
+// DataSourceBase stub with SetupArgs and StopArgs
 class DataSourceBase {
  public:
-  struct StartArgs {};
+  virtual ~DataSourceBase() = default;
+
+  struct SetupArgs {
+    const DataSourceConfig* config = nullptr;
+    uint32_t internal_instance_index = 0;
+  };
+
+  struct StartArgs {
+    uint32_t internal_instance_index = 0;
+  };
+
+  struct StopArgs {
+    virtual ~StopArgs() = default;
+    virtual std::function<void()> HandleStopAsynchronously() const { return nullptr; }
+    uint32_t internal_instance_index = 0;
+  };
+
+  virtual void OnSetup(const SetupArgs&) {}
+  virtual void OnStart(const StartArgs&) {}
+  virtual void OnStop(const StopArgs&) {}
 };
 
 // TrackEventSessionObserver stub
@@ -182,20 +212,25 @@ class Category {
   };
 };
 
-// Note: Tracing class is defined in perfetto/tracing/tracing.h
-// which is included at the end of this file
-
-// Note: ThreadTrack is defined in perfetto/tracing/track.h
-// We don't define it here to avoid conflicts
+// ThreadTrack stub
+class ThreadTrack {
+ public:
+  static ThreadTrack Current() { return ThreadTrack(); }
+  static ThreadTrack ForThread(int64_t) { return ThreadTrack(); }
+  uint64_t uuid = 0;
+};
 
 namespace legacy {
+enum PerfettoLegacyCurrentThreadId { kCurrentThreadId };
+
 template <typename T>
-class ThreadTrack {};
-template <typename T>
-ThreadTrack<T> ConvertThreadId(const T&) { return ThreadTrack<T>(); }
+ThreadTrack ConvertThreadId(const T&) { return ThreadTrack(); }
 }  // namespace legacy
 
-struct TraceTimestamp {};
+struct TraceTimestamp {
+  uint32_t clock_id = 0;
+  uint64_t value = 0;
+};
 
 template <typename T>
 struct TraceTimestampTraits {
@@ -217,6 +252,18 @@ struct has_traced_value_support {
 template <typename T>
 inline void* CreateTracedValueFromProto(T*) { return nullptr; }
 
+// TrackEventTlsStateUserData base class
+class TrackEventTlsStateUserData {
+ public:
+  virtual ~TrackEventTlsStateUserData() = default;
+};
+
+// TrackEventInternal stub
+class TrackEventInternal {
+ public:
+  static uint32_t GetClockId() { return 0; }
+};
+
 }  // namespace internal
 
 // Import protozero namespace for convenience
@@ -236,6 +283,8 @@ class TrackEvent {
   template <typename T>
   static void EraseTrackDescriptor(const T&) {}
   static void AddSessionObserver(perfetto::TrackEventSessionObserver*) {}
+  static void Register() {}
+  static uint32_t GetTraceClockId() { return 0; }
 };
 }  // namespace base
 
