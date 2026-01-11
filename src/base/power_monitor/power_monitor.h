@@ -118,7 +118,11 @@ class BASE_EXPORT PowerMonitor
   friend class base::NoDestructor<PowerMonitor>;
 
   PowerMonitor();
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   ~PowerMonitor() override;
+#else
+  ~PowerMonitor();
+#endif
 
 #if BUILDFLAG(ENABLE_BASE_TRACING)
   // perfetto::TrackEventSessionObserver overrides:

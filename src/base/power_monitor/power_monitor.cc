@@ -10,12 +10,14 @@
 #include "base/no_destructor.h"
 #include "base/power_monitor/power_monitor_source.h"
 #include "base/trace_event/trace_event.h"
+#include "base/tracing_buildflags.h"
 #include "build/build_config.h"
 #include "power_observer.h"
 
 namespace base {
 namespace {
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 perfetto::StaticString BatteryStatusToString(
     PowerStateObserver::BatteryPowerStatus status) {
   switch (status) {
@@ -28,6 +30,7 @@ perfetto::StaticString BatteryStatusToString(
   }
   NOTREACHED();
 }
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 }  // namespace
 
@@ -36,9 +39,11 @@ void PowerMonitor::Initialize(std::unique_ptr<PowerMonitorSource> source,
   DCHECK(!IsInitialized());
   source_ = std::move(source);
   emit_global_event_ = emit_global_event;
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   if (emit_global_event_) {
     TrackEvent::AddSessionObserver(this);
   }
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
   // When a power source is associated with the power monitor, ensure the
   // initial state is propagated to observers, if needed.
@@ -177,12 +182,14 @@ void PowerMonitor::NotifyPowerStateChange(
                      ? "On"
                      : "Off")
              << " battery";
+#if BUILDFLAG(ENABLE_BASE_TRACING)
     if (emit_global_event_) {
       TRACE_EVENT_END("base.power", battery_power_track_);
       TRACE_EVENT_BEGIN("base.power",
                         BatteryStatusToString(battery_power_status),
                         battery_power_track_);
     }
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
   }
 
   AutoLock auto_lock(battery_power_status_lock_);
@@ -197,17 +204,21 @@ void PowerMonitor::NotifyPowerStateChange(
 void PowerMonitor::NotifySuspend() {
   DCHECK(IsInitialized());
   DVLOG(1) << "Power Suspending";
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   if (emit_global_event_) {
     TRACE_EVENT_INSTANT("base.power", "PowerMonitor::NotifySuspend",
                         suspend_track_);
   }
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
   AutoLock auto_lock(is_system_suspended_lock_);
   if (!is_system_suspended_) {
+#if BUILDFLAG(ENABLE_BASE_TRACING)
     if (emit_global_event_) {
       TRACE_EVENT_BEGIN("base.power", "PowerMonitor::Suspended",
                         suspend_track_);
     }
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
     is_system_suspended_ = true;
     last_system_resume_time_ = TimeTicks::Max();
     power_suspend_observers_->Notify(FROM_HERE,
@@ -218,18 +229,22 @@ void PowerMonitor::NotifySuspend() {
 void PowerMonitor::NotifyResume() {
   DCHECK(IsInitialized());
   DVLOG(1) << "Power Resuming";
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   if (emit_global_event_) {
     TRACE_EVENT_INSTANT("base.power", "PowerMonitor::NotifyResume",
                         suspend_track_);
   }
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
   TimeTicks resume_time = TimeTicks::Now();
 
   AutoLock auto_lock(is_system_suspended_lock_);
   if (is_system_suspended_) {
+#if BUILDFLAG(ENABLE_BASE_TRACING)
     if (emit_global_event_) {
       TRACE_EVENT_END("base.power", suspend_track_);
     }
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
     is_system_suspended_ = false;
     last_system_resume_time_ = resume_time;
     power_suspend_observers_->Notify(FROM_HERE,
@@ -269,8 +284,11 @@ PowerMonitor* PowerMonitor::GetInstance() {
 }
 
 PowerMonitor::PowerMonitor()
-    : suspend_track_("SuspendStatus", 0, perfetto::Track()),
+    :
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+      suspend_track_("SuspendStatus", 0, perfetto::Track()),
       battery_power_track_("BatteryPowerStatus", 0, perfetto::Track()),
+#endif
       power_state_observers_(
           base::MakeRefCounted<ObserverListThreadSafe<PowerStateObserver>>()),
       power_suspend_observers_(
@@ -281,6 +299,7 @@ PowerMonitor::PowerMonitor()
 
 PowerMonitor::~PowerMonitor() = default;
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void PowerMonitor::OnStart(const perfetto::DataSourceBase::StartArgs&) {
   if (!emit_global_event_) {
     return;
@@ -301,5 +320,6 @@ void PowerMonitor::OnStart(const perfetto::DataSourceBase::StartArgs&) {
                       battery_power_track_);
   }
 }
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 }  // namespace base
