@@ -10,6 +10,7 @@
 #include "protos/perfetto/config/data_source_config.gen.h"
 #include "protos/perfetto/common/data_source_descriptor.gen.h"
 #include "protos/perfetto/config/interceptor_config.gen.h"
+#include "protos/perfetto/config/trace_config.gen.h"
 
 namespace perfetto {
 
@@ -18,6 +19,7 @@ namespace perfetto {
 using DataSourceConfig = ::perfetto::protos::gen::DataSourceConfig;
 using DataSourceDescriptor = ::perfetto::protos::gen::DataSourceDescriptor;
 using InterceptorDescriptor = ::perfetto::protos::gen::InterceptorDescriptor;
+using TraceConfig = ::perfetto::protos::gen::TraceConfig;
 
 }  // namespace perfetto
 
