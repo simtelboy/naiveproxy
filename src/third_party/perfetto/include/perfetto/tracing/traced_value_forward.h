@@ -120,10 +120,12 @@ class TracedValue {
 };
 
 // Forward declaration of NamedTrack
-// Full definition is in perfetto/tracing/track.h
+// Full definition is in trace_event_common.h or perfetto/tracing/track.h
+#ifndef PERFETTO_NAMED_TRACK_DEFINED
 #ifndef PERFETTO_NAMED_TRACK_DECLARED
 #define PERFETTO_NAMED_TRACK_DECLARED
 class NamedTrack;
+#endif
 #endif
 
 }  // namespace perfetto

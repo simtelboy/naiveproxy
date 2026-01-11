@@ -264,6 +264,43 @@ struct CounterTrack : public Track {
   CounterTrack& set_is_incremental(bool) { return *this; }
 };
 
+// NamedTrack stub - complete definition needed for std::optional<NamedTrack>
+class NamedTrack : public Track {
+ public:
+  NamedTrack() = default;
+  ~NamedTrack() = default;
+
+  // Copy and move constructors
+  NamedTrack(const NamedTrack&) = default;
+  NamedTrack(NamedTrack&&) = default;
+  NamedTrack& operator=(const NamedTrack&) = default;
+  NamedTrack& operator=(NamedTrack&&) = default;
+
+  // Constructor with name
+  explicit NamedTrack(const char* name, uint64_t id = 0, Track parent = Track())
+      : Track(id, parent.uuid), name_(name) {}
+
+  // Static factory methods
+  static NamedTrack ThreadScoped(const char* name, uint64_t id = 0) {
+    return NamedTrack(name, id, ThreadTrack::Current());
+  }
+
+  template <typename T>
+  static NamedTrack FromPointer(const char* name, const T* ptr, Track parent = Track()) {
+    return NamedTrack(name, reinterpret_cast<uint64_t>(ptr), parent);
+  }
+
+  static NamedTrack Global(const char* name, uint64_t id = 0) {
+    return NamedTrack(name, id, Track());
+  }
+
+ private:
+  const char* name_ = nullptr;
+};
+
+// Mark NamedTrack as fully defined
+#define PERFETTO_NAMED_TRACK_DEFINED 1
+
 namespace legacy {
 enum PerfettoLegacyCurrentThreadId { kCurrentThreadId };
 
