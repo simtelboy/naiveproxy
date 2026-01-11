@@ -2,6 +2,12 @@
 #ifndef INCLUDE_PERFETTO_TRACING_CORE_FORWARD_DECLS_H_
 #define INCLUDE_PERFETTO_TRACING_CORE_FORWARD_DECLS_H_
 
+// If trace_event_common.h has already been included, skip this file
+// to avoid redefinition errors
+#ifdef BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
+// Types already defined in trace_event_common.h
+#else
+
 #include <stdint.h>
 #include <string>
 #include <memory>
@@ -22,5 +28,7 @@ using InterceptorDescriptor = ::perfetto::protos::gen::InterceptorDescriptor;
 using TraceConfig = ::perfetto::protos::gen::TraceConfig;
 
 }  // namespace perfetto
+
+#endif  // BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
 
 #endif  // INCLUDE_PERFETTO_TRACING_CORE_FORWARD_DECLS_H_

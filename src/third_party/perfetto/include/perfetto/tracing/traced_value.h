@@ -27,10 +27,13 @@ namespace internal {
 struct TrackEventIncrementalState;
 
 // TrackEventTlsStateUserData base class for TLS state
+// Only define if not already defined in trace_event_common.h
+#ifndef BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
 class TrackEventTlsStateUserData {
  public:
   virtual ~TrackEventTlsStateUserData() = default;
 };
+#endif
 
 }  // namespace internal
 

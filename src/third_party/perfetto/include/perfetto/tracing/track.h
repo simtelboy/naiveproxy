@@ -17,6 +17,13 @@
 #ifndef INCLUDE_PERFETTO_TRACING_TRACK_H_
 #define INCLUDE_PERFETTO_TRACING_TRACK_H_
 
+// If trace_event_common.h has already been included, skip this file
+// to avoid redefinition errors (Track, ThreadTrack, ProcessTrack, CounterTrack
+// are already defined there as stubs)
+#ifdef BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
+// Types already defined in trace_event_common.h
+#else
+
 // Define this macro to indicate that track.h is included
 // This prevents the stub NamedTrack in traced_value_forward.h from being defined
 #define PERFETTO_TRACK_H_INCLUDED
@@ -588,5 +595,7 @@ class PERFETTO_EXPORT_COMPONENT TrackRegistry {
 
 }  // namespace internal
 }  // namespace perfetto
+
+#endif  // BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
 
 #endif  // INCLUDE_PERFETTO_TRACING_TRACK_H_

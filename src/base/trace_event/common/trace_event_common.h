@@ -160,13 +160,19 @@ namespace protos {
 namespace pbzero {
 class DebugAnnotation;
 }  // namespace pbzero
+
+namespace gen {
+class DataSourceConfig;
+class TrackEventConfig;
+}  // namespace gen
 }  // namespace protos
 
 // Main DebugAnnotation in perfetto namespace (for inheritance)
 using DebugAnnotation = protos::pbzero::DebugAnnotation;
 
-// Forward declare DataSourceConfig
-class DataSourceConfig;
+// Use the gen namespace types
+using DataSourceConfig = protos::gen::DataSourceConfig;
+using TrackEventConfig = protos::gen::TrackEventConfig;
 
 // DataSourceBase stub with SetupArgs and StopArgs
 class DataSourceBase {
@@ -197,7 +203,9 @@ class DataSourceBase {
 class TrackEventSessionObserver {
  public:
   virtual ~TrackEventSessionObserver() = default;
+  virtual void OnSetup(const DataSourceBase::SetupArgs&) {}
   virtual void OnStart(const DataSourceBase::StartArgs&) {}
+  virtual void OnStop(const DataSourceBase::StopArgs&) {}
 };
 
 class Category {
@@ -212,12 +220,48 @@ class Category {
   };
 };
 
-// ThreadTrack stub
-class ThreadTrack {
- public:
-  static ThreadTrack Current() { return ThreadTrack(); }
-  static ThreadTrack ForThread(int64_t) { return ThreadTrack(); }
+// Track base class
+struct Track {
   uint64_t uuid = 0;
+  uint64_t parent_uuid = 0;
+
+  constexpr Track() = default;
+  explicit constexpr Track(uint64_t uuid_, uint64_t parent_uuid_ = 0)
+      : uuid(uuid_), parent_uuid(parent_uuid_) {}
+
+  explicit operator bool() const { return uuid != 0; }
+
+  template <typename T>
+  static Track FromPointer(const T* ptr) {
+    return Track(reinterpret_cast<uint64_t>(ptr));
+  }
+
+  static Track Global(uint64_t id) { return Track(id); }
+};
+
+// ThreadTrack stub
+struct ThreadTrack : public Track {
+  static ThreadTrack Current() { return ThreadTrack(); }
+  static ThreadTrack ForThread(uint64_t) { return ThreadTrack(); }
+};
+
+// ProcessTrack stub
+struct ProcessTrack : public Track {
+  static ProcessTrack Current() { return ProcessTrack(); }
+  static ProcessTrack ForProcess(uint64_t) { return ProcessTrack(); }
+};
+
+// CounterTrack stub
+struct CounterTrack : public Track {
+  explicit CounterTrack(const char*) {}
+  CounterTrack(const char*, Track) {}
+
+  static CounterTrack Global(const char*) { return CounterTrack(""); }
+
+  CounterTrack& set_unit(int) { return *this; }
+  CounterTrack& set_unit_name(const char*) { return *this; }
+  CounterTrack& set_unit_multiplier(uint64_t) { return *this; }
+  CounterTrack& set_is_incremental(bool) { return *this; }
 };
 
 namespace legacy {
@@ -266,14 +310,31 @@ class TrackEventInternal {
 
 }  // namespace internal
 
+// Tracing class stub
+class Tracing {
+ public:
+  struct InitArgs {
+    uint32_t backends = 0;
+  };
+
+  static void Initialize(const InitArgs&) {}
+  static void ResetForTesting() {}
+  static bool IsInitialized() { return false; }
+};
+
+// Backend types
+enum BackendType : uint32_t {
+  kUnspecifiedBackend = 0,
+  kInProcessBackend = 1 << 0,
+  kSystemBackend = 1 << 1,
+  kCustomBackend = 1 << 2,
+};
+
 // Import protozero namespace for convenience
 namespace protozero {}
 using namespace protozero;
 
 }  // namespace perfetto
-
-// Include the real Tracing class after the stub definitions
-#include "third_party/perfetto/include/perfetto/tracing/tracing.h"
 
 namespace base {
 class TrackEvent {
@@ -283,6 +344,7 @@ class TrackEvent {
   template <typename T>
   static void EraseTrackDescriptor(const T&) {}
   static void AddSessionObserver(perfetto::TrackEventSessionObserver*) {}
+  static void RemoveSessionObserver(perfetto::TrackEventSessionObserver*) {}
   static void Register() {}
   static uint32_t GetTraceClockId() { return 0; }
 };

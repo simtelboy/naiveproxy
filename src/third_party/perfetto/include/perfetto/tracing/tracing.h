@@ -17,6 +17,12 @@
 #ifndef INCLUDE_PERFETTO_TRACING_TRACING_H_
 #define INCLUDE_PERFETTO_TRACING_TRACING_H_
 
+// If trace_event_common.h has already been included, skip this file
+// to avoid redefinition errors (Tracing class is already defined there as stub)
+#ifdef BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
+// Types already defined in trace_event_common.h
+#else
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -561,5 +567,7 @@ PERFETTO_ALWAYS_INLINE inline std::unique_ptr<TracingSession> Tracing::NewTrace(
 }
 
 }  // namespace perfetto
+
+#endif  // BASE_TRACE_EVENT_COMMON_TRACE_EVENT_COMMON_H_
 
 #endif  // INCLUDE_PERFETTO_TRACING_TRACING_H_
