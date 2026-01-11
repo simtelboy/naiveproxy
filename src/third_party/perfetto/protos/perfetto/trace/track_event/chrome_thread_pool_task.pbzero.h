@@ -43,6 +43,7 @@ class ChromeThreadPoolTask {
   void set_priority(Priority value) {}
   void set_execution_mode(ExecutionMode value) {}
   void set_shutdown_behavior(ShutdownBehavior value) {}
+  void set_sequence_token(int64_t value) {}
 };
 
 }  // namespace pbzero

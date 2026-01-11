@@ -3,6 +3,8 @@
 #define INCLUDE_PERFETTO_TRACING_TRACED_VALUE_FORWARD_H_
 
 #include <cstddef>
+#include <cstring>
+#include <string>
 #include <utility>
 
 namespace perfetto {
@@ -49,7 +51,22 @@ class StaticString {
   const char* value;
 };
 
-// DynamicString is defined in string_helpers.h, not here
+// DynamicString class - for runtime strings
+class DynamicString {
+ public:
+  explicit DynamicString(const std::string& str)
+      : value(str.data()), length(str.length()) {}
+  explicit DynamicString(const char* str) : value(str) {
+    length = str ? strlen(str) : 0;
+  }
+  DynamicString(const char* str, size_t len) : value(str), length(len) {}
+  constexpr DynamicString() : value(nullptr), length(0) {}
+
+  operator bool() const { return !!value; }
+
+  const char* value;
+  size_t length;
+};
 
 // Stub TracedArray class
 class TracedArray {
@@ -70,10 +87,15 @@ class TracedDictionary {
   template <typename T>
   void Add(const char* key, const T& value) {}
 
-  // Note: DynamicString version will be available after string_helpers.h is included
+  template <typename T>
+  void Add(DynamicString key, const T& value) {}
+
   void Add(const char* key, int64_t value) {}
   void Add(const char* key, const char* value) {}
   void Add(const char* key, const std::string& value) {}
+  void Add(DynamicString key, int64_t value) {}
+  void Add(DynamicString key, const char* value) {}
+  void Add(DynamicString key, const std::string& value) {}
 };
 
 // Stub TracedValue class - main traced value type

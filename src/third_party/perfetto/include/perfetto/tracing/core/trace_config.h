@@ -21,18 +21,15 @@
 // using ::perfetto::Foo = ::perfetto::protos::gen::Foo.
 // See comments in forward_decls.h for the historical reasons of this
 // indirection layer.
-#include "perfetto/tracing/core/forward_decls.h"
+#include "third_party/perfetto/include/perfetto/tracing/core/forward_decls.h"
 
 #include "protos/perfetto/config/trace_config.gen.h"
 
 namespace perfetto {
 
-inline TraceConfig::TriggerConfig::TriggerMode GetTriggerMode(
-    const TraceConfig& cfg) {
-  auto mode = cfg.trigger_config().trigger_mode();
-  if (cfg.trigger_config().use_clone_snapshot_if_available())
-    mode = TraceConfig::TriggerConfig::CLONE_SNAPSHOT;
-  return mode;
+// Stub implementation - original uses TriggerConfig which we don't have
+inline int GetTriggerMode(const TraceConfig&) {
+  return 0;
 }
 
 }  // namespace perfetto
