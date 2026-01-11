@@ -21,8 +21,8 @@
 
 #include <functional>
 
-#include "perfetto/base/export.h"
-#include "perfetto/base/platform_handle.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/platform_handle.h"
 
 namespace perfetto {
 namespace base {

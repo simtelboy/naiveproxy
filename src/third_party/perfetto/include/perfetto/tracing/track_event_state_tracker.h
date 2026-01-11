@@ -17,9 +17,9 @@
 #ifndef INCLUDE_PERFETTO_TRACING_TRACK_EVENT_STATE_TRACKER_H_
 #define INCLUDE_PERFETTO_TRACING_TRACK_EVENT_STATE_TRACKER_H_
 
-#include "perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
 
-#include "protos/perfetto/trace/track_event/track_event.pbzero.h"
+#include "third_party/perfetto/protos/perfetto/trace/track_event/track_event.pbzero.h"
 
 #include <map>
 #include <string>

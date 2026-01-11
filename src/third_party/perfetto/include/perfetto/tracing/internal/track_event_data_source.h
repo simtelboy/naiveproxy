@@ -17,8 +17,8 @@
 #ifndef INCLUDE_PERFETTO_TRACING_INTERNAL_TRACK_EVENT_DATA_SOURCE_H_
 #define INCLUDE_PERFETTO_TRACING_INTERNAL_TRACK_EVENT_DATA_SOURCE_H_
 
-#include "perfetto/base/template_util.h"
-#include "perfetto/base/thread_annotations.h"
+#include "third_party/perfetto/include/perfetto/base/template_util.h"
+#include "third_party/perfetto/include/perfetto/base/thread_annotations.h"
 #include "perfetto/protozero/message_handle.h"
 #include "perfetto/tracing/core/data_source_config.h"
 #include "perfetto/tracing/data_source.h"
@@ -28,9 +28,9 @@
 #include "perfetto/tracing/internal/write_track_event_args.h"
 #include "perfetto/tracing/track.h"
 #include "perfetto/tracing/track_event_category_registry.h"
-#include "protos/perfetto/common/builtin_clock.pbzero.h"
-#include "protos/perfetto/config/track_event/track_event_config.gen.h"
-#include "protos/perfetto/trace/track_event/track_event.pbzero.h"
+#include "third_party/perfetto/protos/perfetto/common/builtin_clock.pbzero.h"
+#include "third_party/perfetto/protos/perfetto/config/track_event/track_event_config.gen.h"
+#include "third_party/perfetto/protos/perfetto/trace/track_event/track_event.pbzero.h"
 
 #include <type_traits>
 

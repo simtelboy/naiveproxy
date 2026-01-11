@@ -22,9 +22,9 @@
 #include <string_view>
 #include <vector>
 
-#include "perfetto/base/compiler.h"
-#include "perfetto/base/export.h"
-#include "perfetto/base/logging.h"
+#include "third_party/perfetto/include/perfetto/base/compiler.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/logging.h"
 
 namespace perfetto {
 namespace base {

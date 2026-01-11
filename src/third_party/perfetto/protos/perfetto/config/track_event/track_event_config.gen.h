@@ -58,6 +58,16 @@ class TrackEventConfig {
   // Timestamp unit multiplier
   uint64_t timestamp_unit_multiplier() const { return 1; }
   void set_timestamp_unit_multiplier(uint64_t value) {}
+
+  // Filter dynamic event names
+  bool filter_dynamic_event_names() const { return false; }
+  void set_filter_dynamic_event_names(bool value) {}
+
+  // Serialize to string
+  std::string SerializeAsString() const { return std::string(); }
+
+  // Parse from string
+  bool ParseFromString(const std::string& data) { return true; }
 };
 
 }  // namespace gen

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
 #include "perfetto/tracing/track_event_interned_data_index.h"
 
 #ifndef INCLUDE_PERFETTO_TRACING_INTERNAL_TRACK_EVENT_INTERNED_FIELDS_H_

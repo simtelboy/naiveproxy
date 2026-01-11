@@ -17,8 +17,8 @@
 #ifndef INCLUDE_PERFETTO_TRACING_INTERNAL_CHECKED_SCOPE_H_
 #define INCLUDE_PERFETTO_TRACING_INTERNAL_CHECKED_SCOPE_H_
 
-#include "perfetto/base/export.h"
-#include "perfetto/base/logging.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/logging.h"
 
 namespace perfetto {
 namespace internal {

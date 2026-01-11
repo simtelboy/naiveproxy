@@ -24,8 +24,8 @@
 #include <optional>
 #include <string>
 
-#include "perfetto/base/build_config.h"
-#include "perfetto/base/logging.h"
+#include "third_party/perfetto/include/perfetto/base/build_config.h"
+#include "third_party/perfetto/include/perfetto/base/logging.h"
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
 #include <mach/mach_init.h>

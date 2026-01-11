@@ -17,9 +17,9 @@
 #ifndef INCLUDE_PERFETTO_TRACING_DEBUG_ANNOTATION_H_
 #define INCLUDE_PERFETTO_TRACING_DEBUG_ANNOTATION_H_
 
-#include "perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
 #include "perfetto/tracing/traced_value_forward.h"
-#include "protos/perfetto/trace/track_event/debug_annotation.pbzero.h"
+#include "third_party/perfetto/protos/perfetto/trace/track_event/debug_annotation.pbzero.h"
 
 #include <stdint.h>
 

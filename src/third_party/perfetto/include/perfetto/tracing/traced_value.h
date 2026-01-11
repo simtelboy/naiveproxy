@@ -14,6 +14,8 @@ namespace perfetto {
 namespace protos {
 namespace pbzero {
 class ChromeTrackEvent;
+class InternedData;
+class TrackEvent;
 }
 }
 
@@ -23,7 +25,14 @@ class ChromeTrackEvent;
 // Forward declaration for internal types
 namespace internal {
 struct TrackEventIncrementalState;
-}
+
+// TrackEventTlsStateUserData base class for TLS state
+class TrackEventTlsStateUserData {
+ public:
+  virtual ~TrackEventTlsStateUserData() = default;
+};
+
+}  // namespace internal
 
 // Forward declare ChromeTrackEvent to avoid include issues
 namespace protos {
@@ -45,6 +54,23 @@ class EventContext {
 
   // Specialization for ChromeTrackEvent (default when no template arg)
   protos::pbzero::ChromeTrackEvent* event() { return nullptr; }
+
+  // Get incremental state
+  internal::TrackEventIncrementalState* GetIncrementalState() {
+    return incremental_state_;
+  }
+
+  // Get TLS user data
+  template <typename T>
+  T* GetTlsUserData() { return nullptr; }
+
+  // Set TLS user data
+  template <typename T>
+  void SetTlsUserData(std::unique_ptr<T> data) {}
+
+  // Add debug annotation
+  template <typename NameType, typename ValueType>
+  void AddDebugAnnotation(NameType&& name, ValueType&& value) {}
 
   internal::TrackEventIncrementalState* incremental_state_ = nullptr;
 };

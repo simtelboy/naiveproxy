@@ -22,7 +22,7 @@
 // events in new code, the PERFETTO_ENABLE_LEGACY_TRACE_EVENTS macro must be set
 // to 1 activate the compatibility layer.
 
-#include "perfetto/base/compiler.h"
+#include "third_party/perfetto/include/perfetto/base/compiler.h"
 #include "perfetto/tracing/track_event.h"
 
 #include <stdint.h>

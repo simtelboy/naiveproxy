@@ -17,10 +17,10 @@
 #ifndef INCLUDE_PERFETTO_TRACING_INTERNAL_TRACK_EVENT_LEGACY_H_
 #define INCLUDE_PERFETTO_TRACING_INTERNAL_TRACK_EVENT_LEGACY_H_
 
-#include "perfetto/base/build_config.h"
+#include "third_party/perfetto/include/perfetto/base/build_config.h"
 #include "perfetto/tracing/event_context.h"
 #include "perfetto/tracing/track.h"
-#include "protos/perfetto/trace/track_event/track_event.pbzero.h"
+#include "third_party/perfetto/protos/perfetto/trace/track_event/track_event.pbzero.h"
 
 #ifndef PERFETTO_ENABLE_LEGACY_TRACE_EVENTS
 #define PERFETTO_ENABLE_LEGACY_TRACE_EVENTS 0

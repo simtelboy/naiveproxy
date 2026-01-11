@@ -17,7 +17,7 @@
 #ifndef INCLUDE_PERFETTO_TRACING_INTERNAL_TRACING_BACKEND_FAKE_H_
 #define INCLUDE_PERFETTO_TRACING_INTERNAL_TRACING_BACKEND_FAKE_H_
 
-#include "perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
 #include "perfetto/tracing/tracing_backend.h"
 
 namespace perfetto {

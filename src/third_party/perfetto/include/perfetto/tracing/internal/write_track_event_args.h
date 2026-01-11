@@ -17,7 +17,7 @@
 #ifndef INCLUDE_PERFETTO_TRACING_INTERNAL_WRITE_TRACK_EVENT_ARGS_H_
 #define INCLUDE_PERFETTO_TRACING_INTERNAL_WRITE_TRACK_EVENT_ARGS_H_
 
-#include "perfetto/base/compiler.h"
+#include "third_party/perfetto/include/perfetto/base/compiler.h"
 #include "perfetto/tracing/event_context.h"
 #include "perfetto/tracing/traced_proto.h"
 #include "perfetto/tracing/track_event_args.h"

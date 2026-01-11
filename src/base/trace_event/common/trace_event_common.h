@@ -94,8 +94,26 @@
 
 // Trace event flags
 #define TRACE_EVENT_FLAG_NONE 0
-#define TRACE_EVENT_FLAG_FLOW_IN (1u << 0)
-#define TRACE_EVENT_FLAG_FLOW_OUT (1u << 1)
+#define TRACE_EVENT_FLAG_COPY (1u << 0)
+#define TRACE_EVENT_FLAG_HAS_ID (1u << 1)
+#define TRACE_EVENT_FLAG_SCOPE_OFFSET (1u << 2)
+#define TRACE_EVENT_FLAG_SCOPE_EXTRA (1u << 3)
+#define TRACE_EVENT_FLAG_EXPLICIT_TIMESTAMP (1u << 4)
+#define TRACE_EVENT_FLAG_ASYNC_TTS (1u << 5)
+#define TRACE_EVENT_FLAG_BIND_TO_ENCLOSING (1u << 6)
+#define TRACE_EVENT_FLAG_FLOW_IN (1u << 7)
+#define TRACE_EVENT_FLAG_FLOW_OUT (1u << 8)
+#define TRACE_EVENT_FLAG_HAS_CONTEXT_ID (1u << 9)
+#define TRACE_EVENT_FLAG_HAS_PROCESS_ID (1u << 10)
+#define TRACE_EVENT_FLAG_HAS_LOCAL_ID (1u << 11)
+#define TRACE_EVENT_FLAG_HAS_GLOBAL_ID (1u << 12)
+#define TRACE_EVENT_FLAG_TYPED_PROTO_ARGS (1u << 15)
+#define TRACE_EVENT_FLAG_JAVA_STRING_LITERALS (1u << 16)
+
+// Scope mask for extracting scope from flags
+#define TRACE_EVENT_FLAG_SCOPE_MASK \
+  (static_cast<unsigned int>(TRACE_EVENT_FLAG_SCOPE_OFFSET | \
+                             TRACE_EVENT_FLAG_SCOPE_EXTRA))
 
 // Trace event scope
 #define TRACE_EVENT_SCOPE_THREAD 0

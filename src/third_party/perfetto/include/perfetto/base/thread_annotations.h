@@ -53,7 +53,7 @@
 // you want to refer to is not in scope, you may use a member pointer
 // (e.g. &MyClass::mutex_) to refer to a mutex in some (unknown) object.
 
-#include "perfetto/base/build_config.h"
+#include "third_party/perfetto/include/perfetto/base/build_config.h"
 
 #ifdef THREAD_SANITIZER
 #include <sanitizer/tsan_interface.h>

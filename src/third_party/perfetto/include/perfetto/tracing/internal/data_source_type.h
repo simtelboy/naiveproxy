@@ -1,8 +1,8 @@
 #ifndef INCLUDE_PERFETTO_TRACING_INTERNAL_DATA_SOURCE_TYPE_H_
 #define INCLUDE_PERFETTO_TRACING_INTERNAL_DATA_SOURCE_TYPE_H_
 
-#include "perfetto/base/build_config.h"
-#include "perfetto/base/export.h"
+#include "third_party/perfetto/include/perfetto/base/build_config.h"
+#include "third_party/perfetto/include/perfetto/base/export.h"
 #include "perfetto/tracing/core/forward_decls.h"
 #include "perfetto/tracing/internal/data_source_internal.h"
 #include "perfetto/tracing/internal/tracing_muxer.h"
