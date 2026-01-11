@@ -21,7 +21,7 @@
 // using ::perfetto::Foo = ::perfetto::protos::gen::Foo.
 // See comments in forward_decls.h for the historical reasons of this
 // indirection layer.
-#include "perfetto/tracing/core/forward_decls.h"
+#include "third_party/perfetto/include/perfetto/tracing/core/forward_decls.h"
 
 #include "protos/perfetto/common/data_source_descriptor.gen.h"
 
