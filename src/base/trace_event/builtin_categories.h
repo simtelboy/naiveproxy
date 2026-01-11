@@ -10,6 +10,8 @@
 #include "base/tracing_buildflags.h"
 #include "build/build_config.h"
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+
 PERFETTO_DEFINE_TEST_CATEGORY_PREFIXES("cat",
                                        "foo",
                                        "test",
@@ -596,5 +598,7 @@ PERFETTO_DEFINE_CATEGORIES_IN_NAMESPACE_WITH_ATTRS(
 // clang-format on
 
 PERFETTO_USE_CATEGORIES_FROM_NAMESPACE(base);
+
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 #endif  // BASE_TRACE_EVENT_BUILTIN_CATEGORIES_H_

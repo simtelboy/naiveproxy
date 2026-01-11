@@ -249,8 +249,12 @@ union BASE_EXPORT TraceValue {
   RAW_PTR_EXCLUSION ConvertableToTraceFormat* as_convertable;
   // This field is not a raw_ptr<> because it was filtered by the rewriter for:
   // #union
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   RAW_PTR_EXCLUSION perfetto::protozero::HeapBuffered<
       perfetto::protos::pbzero::DebugAnnotation>* as_proto;
+#else
+  RAW_PTR_EXCLUSION void* as_proto;
+#endif
 
   // Static method to create a new TraceValue instance from a given
   // initialization value. Note that this deduces the TRACE_VALUE_TYPE_XXX
@@ -331,8 +335,12 @@ union BASE_EXPORT TraceValue {
   // TypeCheck<T> is true iff T can be used to initialize a TraceValue instance.
   template <typename T>
   static constexpr bool TypeCheck =
+#if BUILDFLAG(ENABLE_BASE_TRACING)
       HasHelperSupport<T> ||
       perfetto::internal::has_traced_value_support<std::decay_t<T>>::value;
+#else
+      HasHelperSupport<T>;
+#endif
 
   // InitialValue<T>() returns the TRACE_VALUE_TYPE_XXX
   // corresponding to initialization values of type T.
@@ -365,6 +373,7 @@ union BASE_EXPORT TraceValue {
     Helper<ValueType>::SetValue(this, std::forward<T>(value));
   }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   template <class T>
     requires(
         !HasHelperSupport<T> &&
@@ -376,6 +385,7 @@ union BASE_EXPORT TraceValue {
         perfetto::internal::CreateTracedValueFromProto(as_proto->get()),
         std::forward<T>(value));
   }
+#endif
 };
 
 // TraceValue::Helper for integers and enums.
