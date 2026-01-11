@@ -83,7 +83,11 @@
 #define TRACE_EVENT2(category, name, arg1_name, arg1_val, arg2_name, arg2_val)
 #define TRACE_EVENT_INSTANT0(category, name, scope)
 #define TRACE_EVENT_BEGIN0(category, name)
+#define TRACE_EVENT_BEGIN1(category, name, arg1_name, arg1_val)
+#define TRACE_EVENT_BEGIN2(category, name, arg1_name, arg1_val, arg2_name, arg2_val)
 #define TRACE_EVENT_END0(category, name)
+#define TRACE_EVENT_END1(category, name, arg1_name, arg1_val)
+#define TRACE_EVENT_END2(category, name, arg1_name, arg1_val, arg2_name, arg2_val)
 // Support both 1 and 2+ arguments
 #define TRACE_EVENT_BEGIN(...) do { } while (0)
 #define TRACE_EVENT_END(...) do { } while (0)
@@ -94,6 +98,7 @@
 #define TRACE_EVENT_OBJECT_DELETED_WITH_ID(category, name, id)
 #define TRACE_EVENT_WITH_FLOW0(category, name, id, flags)
 #define TRACE_COUNTER_ID1(category, name, id, value) do { (void)(category); (void)(name); (void)(id); (void)(value); } while (0)
+#define TRACE_COUNTER(category, name, value) do { (void)(category); (void)(name); (void)(value); } while (0)
 
 // Trace event flags
 #define TRACE_EVENT_FLAG_NONE 0
@@ -377,6 +382,80 @@ enum BackendType : uint32_t {
 // Import protozero namespace for convenience
 namespace protozero {}
 using namespace protozero;
+
+// Forward declarations
+class TracedArray;
+class TracedDictionary;
+
+// TracedValue stub for tracing support
+class TracedValue {
+ public:
+  TracedValue() = default;
+  ~TracedValue() = default;
+
+  // Allow move
+  TracedValue(TracedValue&&) = default;
+  TracedValue& operator=(TracedValue&&) = default;
+
+  // Disable copy
+  TracedValue(const TracedValue&) = delete;
+  TracedValue& operator=(const TracedValue&) = delete;
+
+  // Convert to dictionary
+  TracedDictionary WriteDictionary() &&;
+};
+
+// TracedDictionary stub
+class TracedDictionary {
+ public:
+  TracedDictionary() = default;
+  ~TracedDictionary() = default;
+
+  TracedDictionary(TracedDictionary&&) = default;
+  TracedDictionary& operator=(TracedDictionary&&) = default;
+
+  template <typename T>
+  void Add(const char*, T&&) {}
+
+  TracedArray AddArray(const char*);
+
+  TracedDictionary AddDictionary(const char*) { return TracedDictionary(); }
+};
+
+// TracedArray stub
+class TracedArray {
+ public:
+  TracedArray() = default;
+  ~TracedArray() = default;
+
+  TracedArray(TracedArray&&) = default;
+  TracedArray& operator=(TracedArray&&) = default;
+
+  template <typename T>
+  void Append(T&&) {}
+
+  TracedDictionary AppendDictionary() { return TracedDictionary(); }
+};
+
+// Define methods after all classes are complete
+inline TracedArray TracedDictionary::AddArray(const char*) { return TracedArray(); }
+inline TracedDictionary TracedValue::WriteDictionary() && { return TracedDictionary(); }
+
+// StaticString stub
+class StaticString {
+ public:
+  const char* value = nullptr;
+  constexpr StaticString() = default;
+  constexpr StaticString(const char* str) : value(str) {}
+  constexpr operator const char*() const { return value; }
+};
+
+// EventContext stub for trace event callbacks
+class EventContext {
+ public:
+  template <typename T>
+  T* event() { return nullptr; }
+};
 
 }  // namespace perfetto
 

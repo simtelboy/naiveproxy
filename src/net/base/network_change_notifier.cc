@@ -22,6 +22,7 @@
 #include "base/threading/thread_checker.h"
 #include "base/timer/timer.h"
 #include "base/trace_event/trace_event.h"
+#include "base/tracing_buildflags.h"
 #include "build/build_config.h"
 #include "net/base/network_change_notifier_factory.h"
 #include "net/base/network_interfaces.h"
@@ -865,7 +866,10 @@ NetworkChangeNotifier::NetworkChangeNotifier(
     /*= NetworkChangeCalculatorParams()*/,
     SystemDnsConfigChangeNotifier* system_dns_config_notifier /*= nullptr */,
     bool omit_observers_in_constructor_for_testing /*= false */)
-    : track_("NetworkChangeNotifier"),
+    :
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+      track_("NetworkChangeNotifier"),
+#endif
       system_dns_config_notifier_(system_dns_config_notifier),
       system_dns_config_observer_(std::make_unique<SystemDnsConfigObserver>()) {
   {

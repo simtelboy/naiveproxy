@@ -1804,6 +1804,14 @@ component("net") {
     deps += [ "//mojo/public/cpp/bindings:default_construct_tag" ]
   }
 
+  # Exclude trace_net_log_observer for cronet builds as it requires full Perfetto support
+  if (is_cronet_build) {
+    sources -= [
+      "log/trace_net_log_observer.cc",
+      "log/trace_net_log_observer.h",
+    ]
+  }
+
   if (enable_disk_cache_sql_backend) {
     sources += [
       "disk_cache/sql/cache_entry_key.cc",
