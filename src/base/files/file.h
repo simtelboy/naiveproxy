@@ -19,6 +19,7 @@
 #include "base/files/platform_file.h"
 #include "base/time/time.h"
 #include "base/trace_event/base_tracing_forward.h"
+#include "base/tracing_buildflags.h"
 #include "build/build_config.h"
 
 #if BUILDFLAG(IS_ANDROID)
@@ -353,7 +354,9 @@ class BASE_EXPORT File {
   bool async() const { return async_; }
 
   // Serialise this object into a trace.
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   void WriteIntoTrace(perfetto::TracedValue context) const;
+#endif
 
 #if BUILDFLAG(IS_APPLE)
   // Initializes experiments. Must be invoked early in process startup, but

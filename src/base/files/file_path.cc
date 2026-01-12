@@ -1613,9 +1613,11 @@ FilePath FilePath::NormalizePathSeparators() const {
   return NormalizePathSeparatorsTo(kSeparators[0]);
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void FilePath::WriteIntoTrace(perfetto::TracedValue context) const {
   perfetto::WriteIntoTracedValue(std::move(context), value());
 }
+#endif
 
 FilePath FilePath::NormalizePathSeparatorsTo(
     CharType normalized_separator) const {

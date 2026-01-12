@@ -247,6 +247,7 @@ std::string File::ErrorToString(Error error) {
   NOTREACHED();
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void File::WriteIntoTrace(perfetto::TracedValue context) const {
   auto dict = std::move(context).WriteDictionary();
   dict.Add("is_valid", IsValid());
@@ -254,5 +255,6 @@ void File::WriteIntoTrace(perfetto::TracedValue context) const {
   dict.Add("async", async_);
   dict.Add("error_details", ErrorToString(error_details_));
 }
+#endif
 
 }  // namespace base

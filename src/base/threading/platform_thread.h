@@ -21,6 +21,7 @@
 #include "base/process/process_handle.h"
 #include "base/threading/platform_thread_ref.h"
 #include "base/trace_event/base_tracing_forward.h"
+#include "base/tracing_buildflags.h"
 #include "base/types/strong_alias.h"
 #include "build/build_config.h"
 
@@ -109,7 +110,9 @@ class BASE_EXPORT PlatformThreadId {
                                    const PlatformThreadId& rhs) = default;
 
   // Allow serialising into a trace.
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   void WriteIntoTrace(perfetto::TracedValue&& context) const;
+#endif
 
  private:
   // TODO(crbug.com/393384253): Use a system-specific invalid value, which might

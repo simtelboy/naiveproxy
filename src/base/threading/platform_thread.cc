@@ -20,9 +20,11 @@ constinit thread_local ThreadType current_thread_type = ThreadType::kDefault;
 
 }  // namespace
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void PlatformThreadId::WriteIntoTrace(perfetto::TracedValue&& context) const {
   perfetto::WriteIntoTracedValue(std::move(context), value_);
 }
+#endif
 
 // static
 void PlatformThreadBase::SetCurrentThreadType(ThreadType thread_type) {

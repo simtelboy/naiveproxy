@@ -30,6 +30,7 @@
 #include "base/containers/flat_map.h"
 #include "base/containers/span.h"
 #include "base/trace_event/base_tracing_forward.h"
+#include "base/tracing_buildflags.h"
 #include "base/types/pass_key.h"
 #include "base/value_iterators.h"
 
@@ -222,7 +223,9 @@ class BASE_EXPORT GSL_OWNER ListValue {
   std::string DebugString() const;
 
   // Write this object into a trace.
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   void WriteIntoTrace(perfetto::TracedValue) const;
+#endif
 
  private:
   using ListStorage = std::vector<Value>;
@@ -556,7 +559,9 @@ class BASE_EXPORT GSL_OWNER DictValue {
   std::string DebugString() const;
 
   // Write this object into a trace.
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   void WriteIntoTrace(perfetto::TracedValue) const;
+#endif
 
  private:
   BASE_EXPORT friend bool operator==(const DictValue& lhs,
@@ -868,7 +873,9 @@ class BASE_EXPORT GSL_OWNER Value {
   std::string DebugString() const;
 
   // Write this object into a trace.
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   void WriteIntoTrace(perfetto::TracedValue) const;
+#endif
 
   template <typename Visitor>
   auto Visit(Visitor&& visitor) const {

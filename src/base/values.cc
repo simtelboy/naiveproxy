@@ -960,12 +960,14 @@ std::string DictValue::DebugString() const {
   return DebugStringImpl(*this);
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void DictValue::WriteIntoTrace(perfetto::TracedValue context) const {
   perfetto::TracedDictionary dict = std::move(context).WriteDictionary();
   for (auto kv : *this) {
     dict.Add(perfetto::DynamicString(kv.first), kv.second);
   }
 }
+#endif
 
 bool operator==(const DictValue& lhs, const DictValue& rhs) {
   auto deref_2nd = [](const auto& p) { return std::tie(p.first, *p.second); };
@@ -1301,12 +1303,14 @@ std::string ListValue::DebugString() const {
   return DebugStringImpl(*this);
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void ListValue::WriteIntoTrace(perfetto::TracedValue context) const {
   perfetto::TracedArray array = std::move(context).WriteArray();
   for (const auto& item : *this) {
     array.Append(item);
   }
 }
+#endif
 
 ListValue::ListValue(const std::vector<Value>& storage) {
   storage_.reserve(storage.size());
@@ -1363,6 +1367,7 @@ std::string Value::DebugString() const {
   return DebugStringImpl(*this);
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void Value::WriteIntoTrace(perfetto::TracedValue context) const {
   Visit([&](const auto& member) {
     using T = std::decay_t<decltype(member)>;
@@ -1385,6 +1390,7 @@ void Value::WriteIntoTrace(perfetto::TracedValue context) const {
     }
   });
 }
+#endif
 
 ValueView::ValueView(const Value& value)
     : data_view_(

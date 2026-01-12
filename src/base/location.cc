@@ -86,12 +86,14 @@ std::string Location::ToString() const {
   return StringPrintf("pc:%p", program_counter_);
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void Location::WriteIntoTrace(perfetto::TracedValue context) const {
   auto dict = std::move(context).WriteDictionary();
   dict.Add("function_name", function_name_);
   dict.Add("file_name", file_name_);
   dict.Add("line_number", line_number_);
 }
+#endif
 
 #if defined(COMPILER_MSVC)
 #define RETURN_ADDRESS() _ReturnAddress()
