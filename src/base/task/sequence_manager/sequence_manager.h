@@ -22,6 +22,11 @@
 #include "base/task/sequenced_task_runner.h"
 #include "base/task/single_thread_task_runner.h"
 #include "base/time/default_tick_clock.h"
+#include "base/tracing_buildflags.h"
+
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+#include "base/tracing/protos/chrome_track_event.pbzero.h"
+#endif
 
 namespace base {
 
@@ -29,6 +34,24 @@ class MessagePump;
 class TaskObserver;
 
 namespace sequence_manager {
+
+#if !BUILDFLAG(ENABLE_BASE_TRACING)
+// Stub types when tracing is disabled
+namespace perfetto_stub {
+namespace protos {
+namespace pbzero {
+class SequenceManagerTask {
+ public:
+  enum Priority : int32_t {
+    UNKNOWN = 0,
+    NORMAL = 1,
+  };
+};
+}  // namespace pbzero
+}  // namespace protos
+}  // namespace perfetto_stub
+#endif  // !BUILDFLAG(ENABLE_BASE_TRACING)
+
 class TimeDomain;
 
 // SequenceManager manages TaskQueues which have different properties
@@ -81,6 +104,7 @@ class BASE_EXPORT SequenceManager {
       return default_priority_;
     }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
     void SetProtoPriorityConverter(
         perfetto::protos::pbzero::SequenceManagerTask::Priority (
             *proto_priority_converter)(TaskQueue::QueuePriority)) {
@@ -89,13 +113,28 @@ class BASE_EXPORT SequenceManager {
 
     perfetto::protos::pbzero::SequenceManagerTask::Priority TaskPriorityToProto(
         TaskQueue::QueuePriority priority) const;
+#else
+    void SetProtoPriorityConverter(
+        perfetto_stub::protos::pbzero::SequenceManagerTask::Priority (
+            *proto_priority_converter)(TaskQueue::QueuePriority)) {
+      proto_priority_converter_ = proto_priority_converter;
+    }
+
+    perfetto_stub::protos::pbzero::SequenceManagerTask::Priority TaskPriorityToProto(
+        TaskQueue::QueuePriority priority) const;
+#endif
 
    private:
     TaskQueue::QueuePriority priority_count_;
     TaskQueue::QueuePriority default_priority_;
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
     perfetto::protos::pbzero::SequenceManagerTask::Priority (
         *proto_priority_converter_)(TaskQueue::QueuePriority) = nullptr;
+#else
+    perfetto_stub::protos::pbzero::SequenceManagerTask::Priority (
+        *proto_priority_converter_)(TaskQueue::QueuePriority) = nullptr;
+#endif
 
 #if DCHECK_IS_ON()
    public:

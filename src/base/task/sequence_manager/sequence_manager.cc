@@ -6,10 +6,13 @@
 
 #include <utility>
 
+#include "base/tracing_buildflags.h"
+
 namespace base::sequence_manager {
 
 namespace {
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 perfetto::protos::pbzero::SequenceManagerTask::Priority
 DefaultTaskPriorityToProto(TaskQueue::QueuePriority priority) {
   DCHECK_EQ(priority, static_cast<TaskQueue::QueuePriority>(
@@ -17,6 +20,14 @@ DefaultTaskPriorityToProto(TaskQueue::QueuePriority priority) {
   return perfetto::protos::pbzero::SequenceManagerTask::Priority::
       NORMAL_PRIORITY;
 }
+#else
+perfetto_stub::protos::pbzero::SequenceManagerTask::Priority
+DefaultTaskPriorityToProto(TaskQueue::QueuePriority priority) {
+  DCHECK_EQ(priority, static_cast<TaskQueue::QueuePriority>(
+                          TaskQueue::DefaultQueuePriority::kNormalPriority));
+  return perfetto_stub::protos::pbzero::SequenceManagerTask::Priority::NORMAL;
+}
+#endif
 
 void CheckPriorities(TaskQueue::QueuePriority priority_count,
                      TaskQueue::QueuePriority default_priority) {
@@ -71,6 +82,7 @@ SequenceManager::PrioritySettings::PrioritySettings(
 }
 #endif
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 perfetto::protos::pbzero::SequenceManagerTask::Priority
 SequenceManager::PrioritySettings::TaskPriorityToProto(
     TaskQueue::QueuePriority priority) const {
@@ -80,6 +92,17 @@ SequenceManager::PrioritySettings::TaskPriorityToProto(
       << "A tracing priority-to-proto-priority function was not provided";
   return proto_priority_converter_(priority);
 }
+#else
+perfetto_stub::protos::pbzero::SequenceManagerTask::Priority
+SequenceManager::PrioritySettings::TaskPriorityToProto(
+    TaskQueue::QueuePriority priority) const {
+  // `proto_priority_converter_` will be null in some unit tests, but those
+  // tests should not be tracing.
+  DCHECK(proto_priority_converter_)
+      << "A tracing priority-to-proto-priority function was not provided";
+  return proto_priority_converter_(priority);
+}
+#endif
 
 SequenceManager::PrioritySettings::~PrioritySettings() = default;
 

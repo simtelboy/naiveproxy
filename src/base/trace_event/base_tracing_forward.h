@@ -12,6 +12,11 @@
 
 #if BUILDFLAG(ENABLE_BASE_TRACING)
 #include "third_party/perfetto/include/perfetto/tracing/traced_value_forward.h"  // nogncheck
+#else
+// Forward declarations / stubs when tracing is disabled
+namespace perfetto {
+class EventContext;
+}  // namespace perfetto
 #endif
 
 #endif  // BASE_TRACE_EVENT_BASE_TRACING_FORWARD_H_

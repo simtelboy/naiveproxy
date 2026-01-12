@@ -14,11 +14,8 @@
 #include "base/task/common/lazy_now.h"
 #include "base/task/sequence_manager/task_queue.h"
 #include "base/task/sequence_manager/tasks.h"
+#include "base/trace_event/base_tracing_forward.h"
 #include "build/build_config.h"
-
-namespace perfetto {
-class EventContext;
-}
 
 namespace base {
 namespace sequence_manager {
