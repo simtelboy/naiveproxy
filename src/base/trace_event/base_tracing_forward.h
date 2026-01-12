@@ -10,6 +10,8 @@
 
 #include "base/tracing_buildflags.h"
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 #include "third_party/perfetto/include/perfetto/tracing/traced_value_forward.h"  // nogncheck
+#endif
 
 #endif  // BASE_TRACE_EVENT_BASE_TRACING_FORWARD_H_
