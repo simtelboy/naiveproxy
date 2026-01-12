@@ -112,6 +112,7 @@
 #include "base/compiler_specific.h"
 #include "base/containers/span_forward_internal.h"
 #include "base/trace_event/base_tracing_forward.h"
+#include "base/tracing_buildflags.h"
 #include "build/build_config.h"
 
 // Windows-style drive letter support and pathname separator characters can be
@@ -494,7 +495,9 @@ class BASE_EXPORT FilePath {
   }
 
   // Serialise this object into a trace.
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   void WriteIntoTrace(perfetto::TracedValue context) const;
+#endif
 
 #if BUILDFLAG(IS_APPLE)
   // Returns the string in the special canonical decomposed form as defined for

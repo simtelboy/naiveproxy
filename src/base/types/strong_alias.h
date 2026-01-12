@@ -12,6 +12,7 @@
 #include <utility>
 
 #include "base/trace_event/base_tracing_forward.h"
+#include "base/tracing_buildflags.h"
 #include "base/types/supports_ostream_operator.h"
 
 namespace base {
@@ -125,11 +126,13 @@ class StrongAlias {
 
   // If UnderlyingType can be serialised into trace, its alias is also
   // serialisable.
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   template <class U = UnderlyingType>
   typename perfetto::check_traced_value_support<U>::type WriteIntoTrace(
       perfetto::TracedValue&& context) const {
     perfetto::WriteIntoTracedValue(std::move(context), value_);
   }
+#endif
 
  protected:
   UnderlyingType value_;

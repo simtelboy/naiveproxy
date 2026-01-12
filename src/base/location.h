@@ -11,6 +11,7 @@
 #include "base/base_export.h"
 #include "base/memory/raw_ptr_exclusion.h"
 #include "base/trace_event/base_tracing_forward.h"
+#include "base/tracing_buildflags.h"
 #include "build/build_config.h"
 
 namespace base {
@@ -73,7 +74,9 @@ class BASE_EXPORT Location {
   std::string ToString() const;
 
   // Write a representation of this object into a trace.
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   void WriteIntoTrace(perfetto::TracedValue context) const;
+#endif
 
   static Location Current(const char* function_name = __builtin_FUNCTION(),
                           const char* file_name = __builtin_FILE(),
