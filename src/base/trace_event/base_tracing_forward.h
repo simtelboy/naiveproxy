@@ -16,6 +16,12 @@
 // Forward declarations / stubs when tracing is disabled
 namespace perfetto {
 class EventContext;
+class TracedValue {
+ public:
+  TracedValue() = default;
+  TracedValue(TracedValue&&) = default;
+  TracedValue& operator=(TracedValue&&) = default;
+};
 }  // namespace perfetto
 #endif
 

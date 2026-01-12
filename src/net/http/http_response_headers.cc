@@ -29,6 +29,7 @@
 #include "base/strings/stringprintf.h"
 #include "base/time/time.h"
 #include "base/trace_event/trace_event.h"
+#include "base/tracing_buildflags.h"
 #include "base/values.h"
 #include "net/base/features.h"
 #include "net/base/parse_number.h"
@@ -1595,7 +1596,9 @@ bool HttpResponseHeaders::IsCookieResponseHeader(std::string_view name) {
   return false;
 }
 
-void HttpResponseHeaders::WriteIntoTrace(perfetto::TracedValue context) const {
+void HttpResponseHeaders::WriteIntoTrace(
+    perfetto::TracedValue context) const {
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   perfetto::TracedDictionary dict = std::move(context).WriteDictionary();
   dict.Add("response_code", response_code_);
 
@@ -1605,6 +1608,7 @@ void HttpResponseHeaders::WriteIntoTrace(perfetto::TracedValue context) const {
     header.Add("name", header_name(parsed));
     header.Add("value", header_value(parsed));
   }
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 }
 
 bool HttpResponseHeaders::StrictlyEquals(
