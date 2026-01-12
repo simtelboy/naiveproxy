@@ -24,10 +24,13 @@
 #include "base/trace_event/heap_profiler.h"
 #include "base/trace_event/interned_args_helper.h"
 #include "base/trace_event/trace_event.h"
-#include "base/tracing/protos/chrome_track_event.pbzero.h"
 #include "base/tracing_buildflags.h"
+
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+#include "base/tracing/protos/chrome_track_event.pbzero.h"
 #include "third_party/perfetto/protos/perfetto/trace/track_event/chrome_mojo_event_info.pbzero.h"
 #include "third_party/perfetto/protos/perfetto/trace/track_event/task_execution.pbzero.h"
+#endif
 
 namespace base {
 
@@ -74,6 +77,7 @@ TaskAnnotator::LongTaskTracker* GetCurrentLongTaskTracker() {
   return current_long_task_tracker;
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 perfetto::protos::pbzero::ChromeTaskAnnotator::DelayPolicy ToProtoEnum(
     subtle::DelayPolicy type) {
   using ProtoType = perfetto::protos::pbzero::ChromeTaskAnnotator::DelayPolicy;
@@ -86,6 +90,7 @@ perfetto::protos::pbzero::ChromeTaskAnnotator::DelayPolicy ToProtoEnum(
       return ProtoType::PRECISE;
   }
 }
+#endif
 
 }  // namespace
 
@@ -256,6 +261,7 @@ void TaskAnnotator::ClearObserverForTesting() {
   g_task_annotator_observer = nullptr;
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 // TRACE_EVENT argument helper, writing the task location data into
 // EventContext.
 void TaskAnnotator::EmitTaskLocation(perfetto::EventContext& ctx,
@@ -339,6 +345,22 @@ void TaskAnnotator::MaybeEmitIPCHash(perfetto::EventContext& ctx,
   auto* annotator = event->set_chrome_task_annotator();
   annotator->set_ipc_hash(task.ipc_hash);
 }
+#else
+// Stub implementations when tracing is disabled
+void TaskAnnotator::EmitTaskLocation(perfetto::EventContext&,
+                                     const PendingTask&) {}
+
+void TaskAnnotator::MaybeEmitIncomingTaskFlow(perfetto::EventContext&,
+                                              const PendingTask&) const {}
+
+void TaskAnnotator::EmitTaskTimingDetails(perfetto::EventContext&) {}
+
+void TaskAnnotator::MaybeEmitDelayAndPolicy(perfetto::EventContext&,
+                                            const PendingTask&) {}
+
+void TaskAnnotator::MaybeEmitIPCHash(perfetto::EventContext&,
+                                     const PendingTask&) const {}
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 TaskAnnotator::ScopedSetIpcHash::ScopedSetIpcHash(uint32_t ipc_hash)
     : ScopedSetIpcHash(ipc_hash, nullptr) {}
@@ -416,6 +438,7 @@ void TaskAnnotator::LongTaskTracker::SetIpcDetails(const char* interface_name,
   ipc_method_info_ = method_info;
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void TaskAnnotator::LongTaskTracker::EmitReceivedIPCDetails(
     perfetto::EventContext& ctx) {
   if (!ipc_interface_name_ || !ipc_hash_ || !ipc_method_info_) {
@@ -475,5 +498,11 @@ void TaskAnnotator::LongTaskTracker::MaybeTraceInterestingTaskDetails() {
                     task_end_time_);
   }
 }
+#else
+void TaskAnnotator::LongTaskTracker::EmitReceivedIPCDetails(
+    perfetto::EventContext&) {}
+
+void TaskAnnotator::LongTaskTracker::MaybeTraceInterestingTaskDetails() {}
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 }  // namespace base

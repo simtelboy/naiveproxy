@@ -504,9 +504,11 @@ bool GURL::IsAboutPath(std::string_view actual_path,
           base::StartsWith(actual_path, allowed_path));
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void GURL::WriteIntoTrace(perfetto::TracedValue context) const {
   std::move(context).WriteString(possibly_invalid_spec());
 }
+#endif
 
 std::ostream& operator<<(std::ostream& out, const GURL& url) {
   return out << url.possibly_invalid_spec();

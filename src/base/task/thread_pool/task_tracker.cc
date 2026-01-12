@@ -32,16 +32,22 @@
 #include "base/threading/thread_restrictions.h"
 #include "base/time/time.h"
 #include "base/trace_event/trace_event.h"
-#include "base/tracing/protos/chrome_track_event.pbzero.h"
+#include "base/tracing_buildflags.h"
 #include "base/values.h"
 #include "build/build_config.h"
+
+#if BUILDFLAG(ENABLE_BASE_TRACING)
+#include "base/tracing/protos/chrome_track_event.pbzero.h"
+#endif
 
 namespace base::internal {
 
 namespace {
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 using perfetto::protos::pbzero::ChromeThreadPoolTask;
 using perfetto::protos::pbzero::ChromeTrackEvent;
+#endif
 
 constexpr const char* kExecutionModeString[] = {"parallel", "sequenced",
                                                 "single thread", "job"};
@@ -58,6 +64,7 @@ bool HasLogBestEffortTasksSwitch() {
              switches::kLogBestEffortTasks);
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 ChromeThreadPoolTask::Priority TaskPriorityToProto(TaskPriority priority) {
   switch (priority) {
     case TaskPriority::BEST_EFFORT:
@@ -94,6 +101,7 @@ ChromeThreadPoolTask::ShutdownBehavior ShutdownBehaviorToProto(
       return ChromeThreadPoolTask::SHUTDOWN_BEHAVIOR_BLOCK_SHUTDOWN;
   }
 }
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 // If this is greater than 0 on a given thread, it will ignore the DCHECK which
 // prevents posting BLOCK_SHUTDOWN tasks after shutdown. There are cases where
@@ -629,6 +637,7 @@ void TaskTracker::InvokeFlushCallbacksForTesting() {
   }
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void TaskTracker::EmitThreadPoolTraceEventMetadata(perfetto::EventContext& ctx,
                                                    const TaskTraits& traits,
                                                    TaskSource* task_source,
@@ -654,6 +663,12 @@ void TaskTracker::EmitThreadPoolTraceEventMetadata(perfetto::EventContext& ctx,
     }
   }
 }
+#else
+void TaskTracker::EmitThreadPoolTraceEventMetadata(perfetto::EventContext&,
+                                                   const TaskTraits&,
+                                                   TaskSource*,
+                                                   const SequenceToken&) {}
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 NOINLINE void TaskTracker::RunContinueOnShutdown(Task& task,
                                                  const TaskTraits& traits,

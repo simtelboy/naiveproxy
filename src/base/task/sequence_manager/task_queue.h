@@ -21,7 +21,11 @@
 #include "base/threading/platform_thread.h"
 #include "base/time/time.h"
 #include "base/trace_event/base_tracing_forward.h"
+#include "base/tracing_buildflags.h"
+
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 #include "base/tracing/protos/chrome_track_event.pbzero.h"
+#endif
 
 namespace perfetto {
 class EventContext;
@@ -33,7 +37,15 @@ class TaskObserver;
 
 namespace sequence_manager {
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 using QueueName = ::perfetto::protos::pbzero::SequenceManagerTask::QueueName;
+#else
+// Stub enum when tracing is disabled
+enum class QueueName : int32_t {
+  UNKNOWN_TQ = 0,
+  DEFAULT_TQ = 1,
+};
+#endif
 
 namespace internal {
 class SequenceManagerImpl;

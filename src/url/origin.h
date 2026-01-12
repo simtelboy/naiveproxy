@@ -18,6 +18,7 @@
 #include "base/gtest_prod_util.h"
 #include "base/strings/string_util.h"
 #include "base/trace_event/base_tracing_forward.h"
+#include "base/tracing_buildflags.h"
 #include "base/unguessable_token.h"
 #include "build/build_config.h"
 #include "build/buildflag.h"
@@ -333,7 +334,9 @@ class COMPONENT_EXPORT(URL) Origin {
                             uint64_t tokenLowBits);
 #endif  // BUILDFLAG(IS_ANDROID)
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   void WriteIntoTrace(perfetto::TracedValue context) const;
+#endif
 
   // Estimates dynamic memory usage.
   // See base/trace_event/memory_usage_estimator.h for more info.

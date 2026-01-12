@@ -15,6 +15,7 @@
 #include "base/compiler_specific.h"
 #include "base/component_export.h"
 #include "base/trace_event/base_tracing_forward.h"
+#include "base/tracing_buildflags.h"
 #include "url/third_party/mozilla/url_parse.h"
 #include "url/url_canon.h"
 #include "url/url_canon_stdstring.h"
@@ -438,7 +439,9 @@ class COMPONENT_EXPORT(URL) GURL {
   static bool IsAboutPath(std::string_view actual_path,
                           std::string_view allowed_path);
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   void WriteIntoTrace(perfetto::TracedValue context) const;
+#endif
 
   template <typename H>
   friend H AbslHashValue(H h, const GURL& c) {

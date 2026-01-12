@@ -38,6 +38,7 @@
 #include "base/time/time.h"
 #include "base/trace_event/interned_args_helper.h"
 #include "base/trace_event/trace_event.h"
+#include "base/tracing_buildflags.h"
 #include "build/build_config.h"
 #include "third_party/abseil-cpp/absl/container/inlined_vector.h"
 
@@ -359,7 +360,17 @@ void TaskQueueImpl::UnregisterTaskQueue() {
 }
 
 const char* TaskQueueImpl::GetName() const {
+#if BUILDFLAG(ENABLE_BASE_TRACING)
   return perfetto::protos::pbzero::SequenceManagerTask::QueueName_Name(name_);
+#else
+  // Return a generic name when tracing is disabled
+  switch (name_) {
+    case QueueName::DEFAULT_TQ:
+      return "default_tq";
+    default:
+      return "unknown_tq";
+  }
+#endif
 }
 
 QueueName TaskQueueImpl::GetProtoName() const {

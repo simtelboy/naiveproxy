@@ -395,9 +395,11 @@ std::optional<Origin> Origin::Deserialize(std::string_view value) {
   return origin;
 }
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 void Origin::WriteIntoTrace(perfetto::TracedValue context) const {
   std::move(context).WriteString(GetDebugString());
 }
+#endif
 
 size_t Origin::EstimateMemoryUsage() const {
   return base::trace_event::EstimateMemoryUsage(tuple_);

@@ -457,6 +457,36 @@ class EventContext {
   T* event() { return nullptr; }
 };
 
+// Flow stub for trace event flow
+class Flow {
+ public:
+  constexpr Flow() = default;
+  explicit constexpr Flow(uint64_t) {}
+
+  static Flow Global(uint64_t) { return Flow(); }
+  static Flow ProcessScoped(uint64_t) { return Flow(); }
+
+  template <typename T>
+  static Flow FromPointer(const T*) { return Flow(); }
+
+  void operator()(EventContext&) const {}
+};
+
+// TerminatingFlow stub
+class TerminatingFlow {
+ public:
+  constexpr TerminatingFlow() = default;
+  explicit constexpr TerminatingFlow(uint64_t) {}
+
+  static TerminatingFlow Global(uint64_t) { return TerminatingFlow(); }
+  static TerminatingFlow ProcessScoped(uint64_t) { return TerminatingFlow(); }
+
+  template <typename T>
+  static TerminatingFlow FromPointer(const T*) { return TerminatingFlow(); }
+
+  void operator()(EventContext&) const {}
+};
+
 }  // namespace perfetto
 
 namespace base {
