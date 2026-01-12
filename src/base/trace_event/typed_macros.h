@@ -9,10 +9,12 @@
 #include "base/tracing_buildflags.h"
 #include "build/build_config.h"
 
+#if BUILDFLAG(ENABLE_BASE_TRACING)
 // Needed not for this file, but for every user of the TRACE_EVENT macros for
 // the lambda definition. So included here for convenience.
 #include "base/tracing/protos/chrome_track_event.pbzero.h"
 #include "third_party/perfetto/include/perfetto/tracing/event_context.h"
 #include "third_party/perfetto/include/perfetto/tracing/string_helpers.h"
+#endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 #endif  // BASE_TRACE_EVENT_TYPED_MACROS_H_
