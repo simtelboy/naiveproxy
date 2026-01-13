@@ -19,16 +19,16 @@ class SourceLocation {
   SourceLocation() = default;
   ~SourceLocation() = default;
 
-  void set_iid(uint64_t value) {}
-  void set_file_name(const char* value) {}
-  void set_file_name(const std::string& value) {}
-  void set_function_name(const char* value) {}
-  void set_function_name(const std::string& value) {}
-  void set_line_number(uint32_t value) {}
+  void set_iid(uint64_t) {}
+  void set_file_name(const char*) {}
+  void set_file_name(const std::string&) {}
+  void set_function_name(const char*) {}
+  void set_function_name(const std::string&) {}
+  void set_line_number(uint32_t) {}
 
   uint64_t iid() const { return 0; }
-  const std::string& file_name() const { static std::string s; return s; }
-  const std::string& function_name() const { static std::string s; return s; }
+  std::string file_name() const { return std::string(); }
+  std::string function_name() const { return std::string(); }
   uint32_t line_number() const { return 0; }
 };
 
