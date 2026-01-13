@@ -118,6 +118,8 @@ jobs:
               output_name = "naive"
 
               sources = [
+                "tools/naive/naive_api.cc",
+                "tools/naive/naive_api.h",
                 "tools/naive/http_proxy_server_socket.cc",
                 "tools/naive/http_proxy_server_socket.h",
                 "tools/naive/naive_config.cc",
@@ -132,7 +134,6 @@ jobs:
                 "tools/naive/naive_protocol.h",
                 "tools/naive/naive_proxy.cc",
                 "tools/naive/naive_proxy.h",
-                "tools/naive/naive_proxy_bin.cc",
                 "tools/naive/naive_proxy_delegate.cc",
                 "tools/naive/naive_proxy_delegate.h",
                 "tools/naive/redirect_resolver.cc",
@@ -144,6 +145,7 @@ jobs:
               deps = [
                 ":net",
                 "//base",
+                "//url",
               ]
 
               configs -= [ "//build/config/gcc:symbol_visibility_hidden" ]

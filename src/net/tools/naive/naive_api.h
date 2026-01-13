@@ -8,6 +8,13 @@
 extern "C" {
 #endif
 
+// 导出宏定义
+#if defined(_WIN32)
+#define NAIVE_EXPORT __declspec(dllexport)
+#else
+#define NAIVE_EXPORT __attribute__((visibility("default")))
+#endif
+
 // API 版本
 #define NAIVE_API_VERSION 1
 
@@ -30,37 +37,30 @@ extern "C" {
 typedef void (*NaiveLogCallback)(int level, const char* message);
 
 // 获取 API 版本
-int naive_get_version(void);
+NAIVE_EXPORT int naive_get_version(void);
 
 // 设置日志回调
-void naive_set_log_callback(NaiveLogCallback callback);
+NAIVE_EXPORT void naive_set_log_callback(NaiveLogCallback callback);
 
 // 使用 JSON 配置字符串启动代理
-// config_json: JSON 格式的配置字符串
+// config_json: JSON 格式的配置字符串，例如：
+// {
+//   "listen": "socks://127.0.0.1:1080",
+//   "proxy": "https://user:pass@server.com:443"
+// }
 // 返回: NAIVE_OK 成功，其他为错误码
-int naive_start(const char* config_json);
-
-// 使用配置文件路径启动代理
-// config_path: 配置文件路径
-// 返回: NAIVE_OK 成功，其他为错误码
-int naive_start_with_file(const char* config_path);
+NAIVE_EXPORT int naive_start(const char* config_json);
 
 // 停止代理
 // 返回: NAIVE_OK 成功，其他为错误码
-int naive_stop(void);
+NAIVE_EXPORT int naive_stop(void);
 
 // 检查代理是否正在运行
 // 返回: 1 正在运行，0 未运行
-int naive_is_running(void);
+NAIVE_EXPORT int naive_is_running(void);
 
 // 获取最后一次错误信息
-const char* naive_get_last_error(void);
-
-// 使用命令行参数启动（兼容原有 main 函数）
-// argc: 参数数量
-// argv: 参数数组
-// 返回: 退出码
-int naive_main(int argc, char* argv[]);
+NAIVE_EXPORT const char* naive_get_last_error(void);
 
 #ifdef __cplusplus
 }
