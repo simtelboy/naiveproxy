@@ -160,9 +160,11 @@
 #define TRACE_EVENT_NESTABLE_ASYNC_END0(category, name, id) do { (void)(category); (void)(name); (void)(id); } while (0)
 
 // Stub namespace declarations for compatibility
-// Suppress weak-vtables warning for stub classes defined in header
+// Suppress warnings for stub classes defined in header
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wweak-vtables"
+#pragma clang diagnostic ignored "-Wunused-member-function"
+#pragma clang diagnostic ignored "-Wunneeded-member-function"
 
 namespace perfetto {
 

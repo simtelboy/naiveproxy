@@ -182,9 +182,11 @@ class BASE_EXPORT ConvertableToTraceFormat : public perfetto::DebugAnnotation {
 };
 #else
 // Stub implementation when tracing is disabled
-// Suppress weak-vtables warning for stub class defined in header
+// Suppress warnings for stub class defined in header
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wweak-vtables"
+#pragma clang diagnostic ignored "-Wunused-member-function"
+#pragma clang diagnostic ignored "-Wunneeded-member-function"
 
 class BASE_EXPORT ConvertableToTraceFormat {
  public:
