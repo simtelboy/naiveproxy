@@ -197,7 +197,9 @@ class BASE_EXPORT ConvertableToTraceFormat {
     virtual void AddBuffer(uint8_t* begin, uint8_t* end) = 0;
     virtual size_t Finalize(uint32_t field_id) = 0;
   };
-  virtual bool AppendToProto(ProtoAppender* appender) const { return false; }
+  virtual bool AppendToProto([[maybe_unused]] ProtoAppender* appender) const {
+    return false;
+  }
 };
 #endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
@@ -651,9 +653,11 @@ class BASE_EXPORT TraceArguments {
       if (types_[n] == TRACE_VALUE_TYPE_CONVERTABLE) {
         delete values_[n].as_convertable;
       }
+#if BUILDFLAG(ENABLE_BASE_TRACING)
       if (types_[n] == TRACE_VALUE_TYPE_PROTO) {
         delete values_[n].as_proto;
       }
+#endif
     }
   }
 

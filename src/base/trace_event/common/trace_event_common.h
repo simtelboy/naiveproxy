@@ -197,7 +197,9 @@ class DataSourceBase {
 
   struct StopArgs {
     virtual ~StopArgs() = default;
-    virtual std::function<void()> HandleStopAsynchronously() const { return nullptr; }
+    virtual std::function<void()> HandleStopAsynchronously() const {
+      return std::function<void()>();
+    }
     uint32_t internal_instance_index = 0;
   };
 
@@ -307,7 +309,7 @@ class NamedTrack : public Track {
   }
 
  private:
-  const char* name_ = nullptr;
+  [[maybe_unused]] const char* name_ = nullptr;
 };
 
 // Mark NamedTrack as fully defined
