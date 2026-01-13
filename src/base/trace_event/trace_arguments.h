@@ -182,6 +182,10 @@ class BASE_EXPORT ConvertableToTraceFormat : public perfetto::DebugAnnotation {
 };
 #else
 // Stub implementation when tracing is disabled
+// Suppress weak-vtables warning for stub class defined in header
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wweak-vtables"
+
 class BASE_EXPORT ConvertableToTraceFormat {
  public:
   ConvertableToTraceFormat() = default;
@@ -201,6 +205,8 @@ class BASE_EXPORT ConvertableToTraceFormat {
     return false;
   }
 };
+
+#pragma clang diagnostic pop
 #endif  // BUILDFLAG(ENABLE_BASE_TRACING)
 
 const int kTraceMaxNumArgs = 2;

@@ -160,6 +160,10 @@
 #define TRACE_EVENT_NESTABLE_ASYNC_END0(category, name, id) do { (void)(category); (void)(name); (void)(id); } while (0)
 
 // Stub namespace declarations for compatibility
+// Suppress weak-vtables warning for stub classes defined in header
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wweak-vtables"
+
 namespace perfetto {
 
 // Forward declarations
@@ -504,6 +508,8 @@ class TrackEvent {
   static uint32_t GetTraceClockId() { return 0; }
 };
 }  // namespace base
+
+#pragma clang diagnostic pop
 
 #endif  // !BUILDFLAG(ENABLE_BASE_TRACING)
 
