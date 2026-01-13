@@ -202,8 +202,8 @@ class DataSourceBase {
   };
 
   struct StopArgs {
-    virtual ~StopArgs() = default;
-    virtual std::function<void()> HandleStopAsynchronously() const {
+    ~StopArgs() = default;
+    std::function<void()> HandleStopAsynchronously() const {
       return std::function<void()>();
     }
     uint32_t internal_instance_index = 0;

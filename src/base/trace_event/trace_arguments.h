@@ -199,11 +199,11 @@ class BASE_EXPORT ConvertableToTraceFormat {
 
   class BASE_EXPORT ProtoAppender {
    public:
-    virtual ~ProtoAppender() = default;
-    virtual void AddBuffer(uint8_t* begin, uint8_t* end) = 0;
-    virtual size_t Finalize(uint32_t field_id) = 0;
+    ~ProtoAppender() = default;
+    void AddBuffer(uint8_t*, uint8_t*) {}
+    size_t Finalize(uint32_t) { return 0; }
   };
-  virtual bool AppendToProto([[maybe_unused]] ProtoAppender* appender) const {
+  bool AppendToProto([[maybe_unused]] ProtoAppender* appender) const {
     return false;
   }
 };
