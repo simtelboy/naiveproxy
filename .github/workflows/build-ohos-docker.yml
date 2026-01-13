@@ -383,6 +383,16 @@ jobs:
             echo ""
             echo "依赖库:"
             readelf -d "$SO_FILE" | grep NEEDED || true
+            echo ""
+            echo "========================================="
+            echo "导出符号 (前50个):"
+            echo "========================================="
+            nm -D "$SO_FILE" | grep " T \| W " | head -50 || readelf -s "$SO_FILE" | grep -E "FUNC.*GLOBAL" | head -50 || true
+            echo ""
+            echo "========================================="
+            echo "查找 main 函数:"
+            echo "========================================="
+            nm -D "$SO_FILE" | grep -i main || echo "未找到 main 符号"
           else
             echo "❌ 编译失败：找不到 $SO_FILE"
             exit 1
