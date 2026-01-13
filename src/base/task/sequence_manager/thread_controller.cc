@@ -590,7 +590,7 @@ void ThreadController::RunLevelTracker::TimeKeeper::RecordEndOfPhase(
   const TimeTicks phase_end = lazy_now.Now();
   RecordTimeInPhase(phase, last_phase_end_, phase_end);
 
-  const char* event_name = PhaseToEventName(phase);
+  [[maybe_unused]] const char* event_name = PhaseToEventName(phase);
   TRACE_EVENT_BEGIN(TRACE_DISABLED_BY_DEFAULT("base"),
                     perfetto::StaticString(event_name), *perfetto_track_,
                     last_phase_end_);

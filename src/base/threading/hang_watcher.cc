@@ -900,7 +900,7 @@ void HangWatcher::WatchStateSnapShot::Init(
       if (ThreadTypeLoggingLevelGreaterOrEqual(watch_state.get()->thread_type(),
                                                LoggingLevel::kUmaOnly)) {
         const PlatformThreadId thread_id = watch_state.get()->GetThreadID();
-        const auto track = perfetto::Track::FromPointer(
+        [[maybe_unused]] const auto track = perfetto::Track::FromPointer(
             this, perfetto::ThreadTrack::ForThread(thread_id.raw()));
         TRACE_EVENT_BEGIN("latency", "HangWatcher::ThreadHung", track,
                           now - monitoring_period);
