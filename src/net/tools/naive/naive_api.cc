@@ -23,6 +23,7 @@
 #include "net/tools/naive/naive_config.h"
 #include "net/tools/naive/naive_proxy.h"
 #include "net/http/http_network_session.h"
+#include "net/http/http_transaction_factory.h"
 #include "net/log/net_log.h"
 #include "net/proxy_resolution/configured_proxy_resolution_service.h"
 #include "net/proxy_resolution/proxy_config.h"
@@ -118,7 +119,7 @@ void ProxyThreadFunc(const std::string& config_json) {
       kDefaultMaxSocketsPerGroup * kExpectedMaxUsers);
 
   // 解析配置
-  auto json_value = base::JSONReader::Read(config_json);
+  auto json_value = base::JSONReader::Read(config_json, base::JSON_PARSE_RFC);
   if (!json_value || !json_value->is_dict()) {
     g_last_error = "Invalid JSON config";
     InternalLog(NAIVE_LOG_ERROR, g_last_error.c_str());
