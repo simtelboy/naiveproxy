@@ -151,11 +151,6 @@ jobs:
               configs -= [ "//build/config/gcc:symbol_visibility_hidden" ]
               configs += [ "//build/config/gcc:symbol_visibility_default" ]
 
-              # 禁用会移除代码的优化
-              configs -= [ "//build/config/compiler:thin_lto" ]
-              configs -= [ "//build/config/compiler:default_optimization" ]
-              configs += [ "//build/config/compiler:no_optimize" ]
-
               # 确保符号被导出
               ldflags = [
                 "-Wl,--export-dynamic",
