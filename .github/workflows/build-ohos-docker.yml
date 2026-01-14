@@ -151,8 +151,10 @@ jobs:
               configs -= [ "//build/config/gcc:symbol_visibility_hidden" ]
               configs += [ "//build/config/gcc:symbol_visibility_default" ]
 
-              # 确保符号被导出
+              # 使用版本脚本强制导出符号
+              inputs = [ "tools/naive/naive.map" ]
               ldflags = [
+                "-Wl,--version-script=" + rebase_path("tools/naive/naive.map", root_build_dir),
                 "-Wl,--export-dynamic",
                 "-Wl,--no-gc-sections",
               ]
@@ -397,12 +399,17 @@ jobs:
             echo "========================================="
             echo "导出符号 (前50个):"
             echo "========================================="
-            nm -D "$SO_FILE" | grep " T \| W " | head -50 || readelf -s "$SO_FILE" | grep -E "FUNC.*GLOBAL" | head -50 || true
+            nm -D "$SO_FILE" 2>/dev/null | grep -v " U " | head -50 || true
             echo ""
             echo "========================================="
-            echo "查找 main 函数:"
+            echo "查找 naive API 函数:"
             echo "========================================="
-            nm -D "$SO_FILE" | grep -i main || echo "未找到 main 符号"
+            nm -D "$SO_FILE" 2>/dev/null | grep -i naive || echo "未找到 naive 符号"
+            echo ""
+            echo "========================================="
+            echo "所有定义的符号 (非 UND):"
+            echo "========================================="
+            readelf --dyn-syms "$SO_FILE" 2>/dev/null | grep -v "UND" | head -30 || true
           else
             echo "❌ 编译失败：找不到 $SO_FILE"
             exit 1

@@ -1,0 +1,11 @@
+{
+  global:
+    naive_get_version;
+    naive_set_log_callback;
+    naive_start;
+    naive_stop;
+    naive_is_running;
+    naive_get_last_error;
+  local:
+    *;
+};
