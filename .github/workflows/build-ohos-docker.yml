@@ -150,6 +150,17 @@ jobs:
 
               configs -= [ "//build/config/gcc:symbol_visibility_hidden" ]
               configs += [ "//build/config/gcc:symbol_visibility_default" ]
+
+              # 禁用会移除代码的优化
+              configs -= [ "//build/config/compiler:thin_lto" ]
+              configs -= [ "//build/config/compiler:default_optimization" ]
+              configs += [ "//build/config/compiler:no_optimize" ]
+
+              # 确保符号被导出
+              ldflags = [
+                "-Wl,--export-dynamic",
+                "-Wl,--no-gc-sections",
+              ]
             }
           }
           EOFBUILDGN
@@ -256,10 +267,10 @@ jobs:
           mkdir -p "$TMPDIR"
 
           FLAGS='
-            is_official_build=true
+            is_official_build=false
             exclude_unwind_tables=true
             enable_resource_allowlist_generation=false
-            symbol_level=0
+            symbol_level=1
 
             is_clang=true
             use_sysroot=false
@@ -294,6 +305,9 @@ jobs:
             enable_backup_ref_ptr_support=false
             enable_dangling_raw_ptr_checks=false
             enable_shadow_metadata=false
+
+            use_thin_lto=false
+            is_cfi=false
           '
 
           FLAGS="$FLAGS
