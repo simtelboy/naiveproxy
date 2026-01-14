@@ -244,3 +244,15 @@ NAIVE_EXPORT const char* naive_get_last_error(void) {
 }
 
 }  // extern "C"
+
+// 强制保留导出符号，防止被链接器优化掉
+namespace {
+__attribute__((used)) static void* const kExportedSymbols[] = {
+    reinterpret_cast<void*>(&naive_get_version),
+    reinterpret_cast<void*>(&naive_set_log_callback),
+    reinterpret_cast<void*>(&naive_start),
+    reinterpret_cast<void*>(&naive_stop),
+    reinterpret_cast<void*>(&naive_is_running),
+    reinterpret_cast<void*>(&naive_get_last_error),
+};
+}  // namespace

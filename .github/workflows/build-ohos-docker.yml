@@ -262,10 +262,10 @@ jobs:
           mkdir -p "$TMPDIR"
 
           FLAGS='
-            is_official_build=false
+            is_official_build=true
             exclude_unwind_tables=true
             enable_resource_allowlist_generation=false
-            symbol_level=1
+            symbol_level=0
 
             is_clang=true
             use_sysroot=false
@@ -302,7 +302,6 @@ jobs:
             enable_shadow_metadata=false
 
             use_thin_lto=false
-            is_cfi=false
           '
 
           FLAGS="$FLAGS
